@@ -1,5 +1,5 @@
 # Lemmy-keyboard-navigation
-A tampermonkey script to navigate Lemmy with keyboard arrows based on boobslider100@lem.ee's script 
+A tampermonkey script to navigate Lemmy with keyboard arrows based on boobslider100@lem.ee's script. Modifications from initial script: added keyboard arrow navigation, upvote/downvote, changed styling slightly to resemble RES
 
 Instructions
 - make sure you have [tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo) installed
