@@ -3,8 +3,9 @@
 // @namespace   Violentmonkey Scripts
 // @match       *://*/*
 // @grant       none
-// @version     1.1
-// @author      -
+// @version     1.2
+// @author      vmavromatis
+// @license     GPL3
 // @description 07/07/2023, 00:02:02
 // ==/UserScript==
 
@@ -14,7 +15,7 @@
 @match            https://lemmy.world/*
 @match            https://lemm.ee/*
 @match            *:*
-@version          1.1
+@version          1.2
 @run-at           document-start
 ==/UserScript==
 */
