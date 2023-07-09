@@ -35,12 +35,15 @@ const prevPageKey = 'ArrowLeft';
 const upvoteKey = 'KeyA';
 const downvoteKey = 'KeyZ';
 
-
+// Stop arrows from moving the page
 window.addEventListener("keydown", function(e) {
     if(["ArrowUp","ArrowDown"].indexOf(e.code) > -1) {
         e.preventDefault();
     }
 }, false);
+
+// Remove scroll animations
+document.documentElement.style = "scroll-behavior: auto";
 
 const css = [
 ".selected {",
