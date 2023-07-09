@@ -9,8 +9,8 @@ Instructions
 ```
 Down = Next post/comment
 Up = Previous post/comment
-Right = Next page
-Left = Previous page
+Right = Next parent comment
+Left = Previous parent comment
 A = Upvote
 Z = Downvote
 X = Expand
