@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        lemmy-keyboard-navigation
 // @namespace   Violentmonkey Scripts
-// @match       *://*/*
+// @match       https://*lemmy.world*/*
 // @grant       none
 // @version     1.3
 // @author      vmavromatis
@@ -45,6 +45,7 @@ window.addEventListener("keydown", function(e) {
 // Remove scroll animations
 document.documentElement.style = "scroll-behavior: auto";
 
+// Set CSS for selected entry
 const css = [
 ".selected {",
 "  background-color: " + backgroundColor + " !important;",
