@@ -131,26 +131,21 @@ function handleKeyPress(event) {
     switch (event.code) {
         case nextKey:
         case prevKey:
+        case nextPageKey:
+        case prevPageKey:
             let selectedEntry;
 
             // Next button
             if (event.code === nextKey) {
-                // if shift key also pressed
-                if (event.shiftKey) {
+                    selectedEntry = getNextEntry(currentEntry)
+            } else if (event.code === nextPageKey) {
                     selectedEntry = getNextEntrySameLevel(currentEntry);
-                } else {
-                    selectedEntry = getNextEntry(currentEntry);
-                }
             }
-
             // Previous button
             if (event.code === prevKey) {
-                // if shift key also pressed
-                if (event.shiftKey) {
+                    selectedEntry = getPrevEntry(currentEntry)
+            } else if (event.code === prevPageKey) {
                     selectedEntry = getPrevEntrySameLevel(currentEntry);
-                } else {
-                    selectedEntry = getPrevEntry(currentEntry);
-                }
             }
 
             if (selectedEntry) {
@@ -356,4 +351,3 @@ function scrollIntoViewWithOffset(e, offset) {
 
 
 }
-
