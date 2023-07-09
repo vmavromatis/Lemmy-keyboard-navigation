@@ -7,10 +7,10 @@ Instructions
 - Voila! You may now navigate https://lemmy.world/ (or any other lemmy instance of your choice) with your keyboard
 
 ```
-Down = Next post/comment
-Up = Previous post/comment
-Right = Next parent comment
-Left = Previous parent comment
+Down = Next post / comment
+Up = Previous post / comment
+Right = Next page / parent comment
+Left = Previous page / parent comment
 A = Upvote
 Z = Downvote
 X = Expand
