@@ -14,6 +14,7 @@
 @name             lemmy-keyboard-navigation
 @match            https://lemmy.world/*
 @match            https://lemm.ee/*
+@match            https://lemmy.ml/*
 @match            *:*
 @version          1.3
 @run-at           document-start
