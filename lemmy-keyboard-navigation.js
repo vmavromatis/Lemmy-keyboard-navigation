@@ -3,10 +3,10 @@
 // @namespace   Violentmonkey Scripts
 // @match       *://*/*
 // @grant       none
-// @version     1.2
+// @version     1.3
 // @author      vmavromatis
 // @license     GPL3
-// @description 07/07/2023, 00:02:02
+// @description 09/07/2023
 // ==/UserScript==
 
 /*
@@ -15,7 +15,7 @@
 @match            https://lemmy.world/*
 @match            https://lemm.ee/*
 @match            *:*
-@version          1.2
+@version          1.3
 @run-at           document-start
 ==/UserScript==
 */
@@ -150,7 +150,6 @@ function handleKeyPress(event) {
                 if (expand) expandEntry();
             }
             break;
-        case expandKey:
             toggleExpand();
             expand = isExpanded() ? true : false;
             break;
@@ -159,6 +158,10 @@ function handleKeyPress(event) {
             break;
         case downvoteKey:
             downVote();
+            break;
+        case expandKey:
+            toggleExpand();
+            expand = isExpanded() ? true : false;
             break;
         case openCommentsKey:
             if (event.shiftKey) {
@@ -182,16 +185,26 @@ function handleKeyPress(event) {
         case nextPageKey:
         case prevPageKey:
             const pageButtons = Array.from(document.querySelectorAll(".paginator>button"));
-            if (pageButtons) {
+
+            if (pageButtons && (document.getElementsByClassName('paginator').length > 0)) {
                 const buttonText = event.code === nextPageKey ? "Next" : "Prev";
                 pageButtons.find(btn => btn.innerHTML === buttonText).click();
-            } else if (event.code === nextPageKey) {
-           let selectedEntry;
-                    selectedEntry = getNextEntrySameLevel(currentEntry);
-            } else if (event.code === prevPageKey) {
-           let selectedEntry;
-                    selectedEntry = getPrevEntrySameLevel(currentEntry);
-           }
+            }
+            // Jump next block of comments
+            if (event.code === nextPageKey) {
+                    commentBlock = getNextEntrySameLevel(currentEntry)
+            }
+            // Jump previous block of comments
+            if (event.code === prevPageKey) {
+                    commentBlock = getPrevEntrySameLevel(currentEntry)
+            }
+
+            if (commentBlock) {
+                if (expand) collapseEntry();
+                selectEntry(commentBlock, true);
+                if (expand) expandEntry();
+            }
+    }
 }
 
 function getNextEntry(e) {
@@ -347,4 +360,6 @@ function scrollIntoViewWithOffset(e, offset) {
             top: y
         });
     }
+
+
 }
