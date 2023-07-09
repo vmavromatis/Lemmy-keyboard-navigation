@@ -1,8 +1,8 @@
 # Lemmy-keyboard-navigation
-A tampermonkey script to navigate Lemmy with keyboard arrows based on boobslider100@lem.ee's script (added keyboard arrow navigation, upvote/downvote, changed styling slightly to resemble RES)
+A userscript to navigate Lemmy with keyboard arrows based on boobslider100@lem.ee's script (added keyboard arrow navigation, upvote/downvote, changed styling slightly to resemble RES)
 
-## Instructions:
-- Make sure you have [tampermonkey]([https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo](https://www.tampermonkey.net/)) or [Violentmonkey](https://violentmonkey.github.io/) installed 
+## Installation & Usage:
+- Make sure you have [Tampermonkey](https://www.tampermonkey.net/) or [Violentmonkey](https://violentmonkey.github.io/) installed 
 - [Click](https://greasyfork.org/en/scripts/470498-lemmy-keyboard-navigation) to install script
 - Voila! You may now navigate https://lemmy.world/ (or any other lemmy instance of your choice) with your keyboard
 
