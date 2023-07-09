@@ -344,6 +344,4 @@ function scrollIntoViewWithOffset(e, offset) {
             top: y
         });
     }
-
-
 }
