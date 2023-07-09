@@ -132,23 +132,15 @@ function handleKeyPress(event) {
     switch (event.code) {
         case nextKey:
         case prevKey:
-        case nextPageKey:
-        case prevPageKey:
             let selectedEntry;
-
             // Next button
             if (event.code === nextKey) {
                     selectedEntry = getNextEntry(currentEntry)
-            } else if (event.code === nextPageKey) {
-                    selectedEntry = getNextEntrySameLevel(currentEntry);
             }
             // Previous button
             if (event.code === prevKey) {
                     selectedEntry = getPrevEntry(currentEntry)
-            } else if (event.code === prevPageKey) {
-                    selectedEntry = getPrevEntrySameLevel(currentEntry);
             }
-
             if (selectedEntry) {
                 if (expand) collapseEntry();
                 selectEntry(selectedEntry, true);
@@ -187,13 +179,16 @@ function handleKeyPress(event) {
         case nextPageKey:
         case prevPageKey:
             const pageButtons = Array.from(document.querySelectorAll(".paginator>button"));
-
             if (pageButtons) {
                 const buttonText = event.code === nextPageKey ? "Next" : "Prev";
                 pageButtons.find(btn => btn.innerHTML === buttonText).click();
-            }
-
-    }
+            } else if (event.code === nextPageKey) {
+           let selectedEntry;
+                    selectedEntry = getNextEntrySameLevel(currentEntry);
+            } else if (event.code === prevPageKey) {
+           let selectedEntry;
+                    selectedEntry = getPrevEntrySameLevel(currentEntry);
+           }
 }
 
 function getNextEntry(e) {
