@@ -3,7 +3,7 @@ A userscript to navigate Lemmy with keyboard arrows based on `boobslider100@lem.
 
 ## Installation & Usage:
 - Make sure you have [Tampermonkey](https://www.tampermonkey.net/) or [Violentmonkey](https://violentmonkey.github.io/) installed 
-- [Click here](https://greasyfork.org/en/scripts/470498-lemmy-keyboard-navigation) to install script from Greasyfork (there is a webhook that auto-syncs with this repo so make any PRs here)
+- [Click here](https://greasyfork.org/en/scripts/470498-lemmy-keyboard-navigation) to install script from Greasyfork (there is a webhook that auto-syncs with this repo)
 - Voila! You may now navigate https://lemmy.world/ (or any other lemmy instance of your choice) with your keyboard
 
 ```
