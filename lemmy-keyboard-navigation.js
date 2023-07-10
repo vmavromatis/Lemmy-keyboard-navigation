@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name        lemmy-keyboard-navigation
 // @namespace   Violentmonkey Scripts
-// @match       https://*lemmy.world*/*
+// @match       *://*/*
 // @grant       none
-// @version     1.3
+// @version     1.4
 // @author      vmavromatis
 // @license     GPL3
 // @description 09/07/2023
@@ -16,7 +16,7 @@
 @match            https://lemm.ee/*
 @match            https://lemmy.ml/*
 @match            *:*
-@version          1.3
+@version          1.4
 @run-at           document-start
 ==/UserScript==
 */
