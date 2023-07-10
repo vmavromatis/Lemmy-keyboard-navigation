@@ -1,25 +1,16 @@
 // ==UserScript==
 // @name        lemmy-keyboard-navigation
 // @namespace   Violentmonkey Scripts
-// @match       *://*/*
+// @match       https://lemmy.world/*
+// @match       https://lemm.ee/*
+// @match       https://lemmy.ml/*
 // @grant       none
 // @version     1.4
 // @author      vmavromatis
 // @license     GPL3
 // @description 09/07/2023
+// @run-at      document_idle
 // ==/UserScript==
-
-/*
-==UserScript==
-@name             lemmy-keyboard-navigation
-@match            https://lemmy.world/*
-@match            https://lemm.ee/*
-@match            https://lemmy.ml/*
-@match            *:*
-@version          1.4
-@run-at           document-start
-==/UserScript==
-*/
 
 // Set selected entry colors
 const backgroundColor = '#373737';
