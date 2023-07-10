@@ -15,7 +15,7 @@ A = Upvote
 Z = Downvote
 X = Expand
 C = View Comments
-R = Reply to comment
+R = Reply
 Enter = View Link
 ```
 
