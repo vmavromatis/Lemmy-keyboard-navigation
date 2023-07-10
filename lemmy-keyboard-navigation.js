@@ -5,10 +5,10 @@
 // @match       https://lemm.ee/*
 // @match       https://lemmy.ml/*
 // @grant       none
-// @version     1.4
+// @version     1.5
 // @author      vmavromatis
 // @license     GPL3
-// @description 09/07/2023
+// @description 10/07/2023
 // @run-at      document_idle
 // ==/UserScript==
 
@@ -26,6 +26,7 @@ const nextPageKey = 'ArrowRight';
 const prevPageKey = 'ArrowLeft';
 const upvoteKey = 'KeyA';
 const downvoteKey = 'KeyZ';
+const replyKey = 'KeyR';
 
 // Stop arrows from moving the page
 window.addEventListener("keydown", function(e) {
@@ -151,6 +152,9 @@ function handleKeyPress(event) {
             break;
         case downvoteKey:
             downVote();
+            break;
+        case replyKey:
+            reply();
             break;
         case expandKey:
             toggleExpand();
@@ -299,6 +303,16 @@ function downVote() {
         downvoteButton.click();
     }
 }
+
+function reply() {
+    const replyButton = currentEntry.querySelector("button[data-tippy-content='reply']");
+
+    if (replyButton) {
+        event.preventDefault();
+        replyButton.click();
+    }
+}
+
 
 function toggleExpand() {
     const expandButton = currentEntry.querySelector("button[aria-label='Expand here']");
