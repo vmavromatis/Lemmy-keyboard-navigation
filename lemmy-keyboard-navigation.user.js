@@ -1,17 +1,28 @@
 // ==UserScript==
 // @name        lemmy-keyboard-navigation
 // @namespace   Violentmonkey Scripts
-// @match       https://lemmy.world/*
-// @match       https://lemm.ee/*
-// @match       https://lemmy.ml/*
+// @match       https://*
 // @grant       none
 // @version     1.5
 // @author      vmavromatis
+// @author      howdy@thesimplecorner.org
 // @license     GPL3
-// @description 10/07/2023
+// @description 12/07/2023
 // @run-at      document_idle
 // ==/UserScript==
 
+//Add isLemmySite implementation
+(function () {
+  "use strict";
+  if (!isLemmySite()) {
+    return;
+  }
+  function isLemmySite() {
+    return (
+      document.querySelector('meta[name="Description"]').content === "Lemmy"
+    );
+  }
+    
 // Set selected entry colors
 const backgroundColor = '#373737';
 const textColor = 'white';
@@ -370,3 +381,6 @@ function scrollIntoViewWithOffset(e, offset) {
 
 
 }
+    
+});
+
