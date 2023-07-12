@@ -9,7 +9,7 @@
 // @icon          https://raw.githubusercontent.com/vmavromatis/Lemmy-keyboard-navigation/main/icon.png?inline=true
 // @homepageURL	  https://github.com/vmavromatis/Lemmy-keyboard-navigation
 // @namespace     https://github.com/vmavromatis/Lemmy-keyboard-navigation
-// @description   12/07/2023
+// @description   Easily navigate Lemmy with keyboard arrows
 // ==/UserScript==
 
 //isLemmySite
