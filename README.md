@@ -8,7 +8,6 @@ A userscript to navigate Lemmy with keyboard arrows based on `boobslider100@lem.
 
 
 
-
 |                         Key Bindings                                 |
 |----------------------------------------------------------------------|
 | <kbd>**↓**</kbd> Next post / Comment                                 |
@@ -21,6 +20,13 @@ A userscript to navigate Lemmy with keyboard arrows based on `boobslider100@lem.
 | <kbd>C</kbd> = View Comments (<kbd>⇧ Shift+C</kbd> to open new tab)  |
 | <kbd>R</kbd> = Reply                                                 |
 | <kbd>⏎ Enter</kbd> = View Link                                       |
+
+### Post View
+![keyboard-layout1](https://github.com/vmavromatis/Lemmy-keyboard-navigation/assets/8668731/ae1e30a0-e0e5-456d-96bc-5dd67df0a35f)
+
+### Comment View
+![keyboard-layout2](https://github.com/vmavromatis/Lemmy-keyboard-navigation/assets/8668731/3b5ea82b-21c5-44bb-a3de-432b9f1d4f50)
+
 
 ## Licence: 
 GPL 3.0
