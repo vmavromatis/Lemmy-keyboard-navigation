@@ -1,13 +1,15 @@
 // ==UserScript==
-// @name        lemmy-keyboard-navigation
-// @namespace   Violentmonkey Scripts
-// @match       https://*/*
-// @grant       none
-// @version     1.6
-// @author      vmavromatis
-// @author      howdy@thesimplecorner.org
-// @license     GPL3
-// @description 12/07/2023
+// @name          lemmy-keyboard-navigation
+// @match         https://*/*
+// @grant         none
+// @version       1.7
+// @author        vmavromatis
+// @author        howdy@thesimplecorner.org
+// @license       GPL3
+// @icon          https://raw.githubusercontent.com/vmavromatis/Lemmy-keyboard-navigation/main/icon.png?inline=true
+// @homepageURL	  https://github.com/vmavromatis/Lemmy-keyboard-navigation
+// @namespace     https://github.com/vmavromatis/Lemmy-keyboard-navigation
+// @description   12/07/2023
 // ==/UserScript==
 
 //isLemmySite
@@ -21,7 +23,7 @@
       document.querySelector('meta[name="Description"]').content === "Lemmy"
     );
   }
-    
+
 // Set selected entry colors
 const backgroundColor = '#373737';
 const textColor = 'white';
@@ -56,6 +58,15 @@ const css = [
 "}"
 ].join("\n");
 
+// Global variables
+let currentEntry;
+let commentBlock;
+let addStyle
+let PRO_addStyle
+let entries = [];
+let previousUrl = "";
+let expand = false;
+
 if (typeof GM_addStyle !== "undefined") {
     GM_addStyle(css);
 } else if (typeof PRO_addStyle !== "undefined") {
@@ -76,11 +87,7 @@ if (typeof GM_addStyle !== "undefined") {
 }
 const selectedClass = "selected";
 
-let currentEntry;
-let commentBlock;
-let entries = [];
-let previousUrl = "";
-let expand = false;
+
 
 const targetNode = document.documentElement;
 const config = { childList: true, subtree: true };
@@ -139,7 +146,7 @@ function handleKeyPress(event) {
 
     switch (event.code) {
         case nextKey:
-        case prevKey:
+        case prevKey:{
             let selectedEntry;
             // Next button
             if (event.code === nextKey) {
@@ -157,7 +164,7 @@ function handleKeyPress(event) {
             break;
             toggleExpand();
             expand = isExpanded() ? true : false;
-            break;
+            }break;
         case upvoteKey:
             upVote();
             break;
@@ -165,8 +172,10 @@ function handleKeyPress(event) {
             downVote();
             break;
         case replyKey:
+            // Allow Mac refresh with CMD+R
+            if (event.key !== 'Meta') {
             reply(event);
-            break;
+            }break;
         case expandKey:
             toggleExpand();
             expand = isExpanded() ? true : false;
@@ -180,7 +189,7 @@ function handleKeyPress(event) {
                 currentEntry.querySelector("a.btn[title$='Comments']").click();
             }
             break;
-        case openLinkKey:
+        case openLinkKey:{
             const linkElement = currentEntry.querySelector(".col.flex-grow-0.px-0>div>a")
             if (linkElement) {
                 if (event.shiftKey) {
@@ -189,9 +198,9 @@ function handleKeyPress(event) {
                     linkElement.click();
                 }
             }
-            break;
+            }break;
         case nextPageKey:
-        case prevPageKey:
+        case prevPageKey:{
             const pageButtons = Array.from(document.querySelectorAll(".paginator>button"));
 
             if (pageButtons && (document.getElementsByClassName('paginator').length > 0)) {
@@ -211,7 +220,7 @@ function handleKeyPress(event) {
                 if (expand) collapseEntry();
                 selectEntry(commentBlock, true);
                 if (expand) expandEntry();
-            }
+            }}
     }
 }
 
@@ -381,6 +390,5 @@ function scrollIntoViewWithOffset(e, offset) {
 
 
 }
-    
-})();
 
+})();
