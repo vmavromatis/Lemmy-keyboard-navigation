@@ -1,17 +1,27 @@
 // ==UserScript==
 // @name        lemmy-keyboard-navigation
 // @namespace   Violentmonkey Scripts
-// @match       https://lemmy.world/*
-// @match       https://lemm.ee/*
-// @match       https://lemmy.ml/*
+// @match       https://*/*
 // @grant       none
-// @version     1.5
+// @version     1.6
 // @author      vmavromatis
+// @author      howdy@thesimplecorner.org
 // @license     GPL3
-// @description 10/07/2023
-// @run-at      document_idle
+// @description 12/07/2023
 // ==/UserScript==
 
+//isLemmySite
+(function () {
+  "use strict";
+  if (!isLemmySite()) {
+    return;
+  }
+  function isLemmySite() {
+    return (
+      document.querySelector('meta[name="Description"]').content === "Lemmy"
+    );
+  }
+    
 // Set selected entry colors
 const backgroundColor = '#373737';
 const textColor = 'white';
@@ -154,7 +164,7 @@ function handleKeyPress(event) {
             downVote();
             break;
         case replyKey:
-            reply();
+            reply(event);
             break;
         case expandKey:
             toggleExpand();
@@ -304,7 +314,7 @@ function downVote() {
     }
 }
 
-function reply() {
+function reply(event) {
     const replyButton = currentEntry.querySelector("button[data-tippy-content='reply']");
 
     if (replyButton) {
@@ -370,3 +380,6 @@ function scrollIntoViewWithOffset(e, offset) {
 
 
 }
+    
+})();
+
