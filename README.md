@@ -6,18 +6,17 @@ A userscript to navigate Lemmy with keyboard arrows based on `boobslider100@lem.
 - [Click here](https://greasyfork.org/en/scripts/470498-lemmy-keyboard-navigation) to install script from Greasyfork (there is a webhook that auto-syncs with this repo)
 - Voila! You may now navigate https://lemmy.world/ (or any other lemmy instance of your choice) with your keyboard
 
-```
-Down = Next post / comment
-Up = Previous post / comment
-Right = Next page / parent comment
-Left = Previous page / parent comment
-A = Upvote
-Z = Downvote
-X = Expand
-C = View Comments
-R = Reply
-Enter = View Link
-```
+
+<kbd>**↓**</kbd> Next post / comment\
+<kbd>**↑**</kbd> = Previous post / comment\
+<kbd>**→**</kbd> = Next page / same level comment\
+<kbd>**←**</kbd> = Previous page / same level comment\
+<kbd>A</kbd> = Upvote\
+<kbd>Z</kbd> = Downvote\
+<kbd>X</kbd> = Expand/Collapse\
+<kbd>C</kbd> = View Comments (<kbd>⇧ Shift+C</kbd> to open new tab)\
+<kbd>R</kbd> = Reply\
+<kbd>⏎ Enter</kbd> = View Link
 
 ## Licence: 
 GPL 3.0
