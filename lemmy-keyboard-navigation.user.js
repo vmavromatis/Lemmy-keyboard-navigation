@@ -77,6 +77,7 @@ if (typeof GM_addStyle !== "undefined") {
 const selectedClass = "selected";
 
 let currentEntry;
+let commentBlock;
 let entries = [];
 let previousUrl = "";
 let expand = false;
