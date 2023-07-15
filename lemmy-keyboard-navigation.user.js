@@ -31,11 +31,15 @@ const textColor = 'white';
 // Set navigation keys with keycodes here: https://www.toptal.com/developers/keycode
 const nextKey = 'ArrowDown';
 const prevKey = 'ArrowUp';
+const nextKeyVim = 'KeyJ';
+const prevKeyVim = 'KeyK';
 const expandKey = 'KeyX';
 const openCommentsKey = 'KeyC';
 const openLinkKey = 'Enter';
 const nextPageKey = 'ArrowRight';
 const prevPageKey = 'ArrowLeft';
+const nextPageKeyVim = 'KeyL';
+const prevPageKeyVim = 'KeyH';
 const upvoteKey = 'KeyA';
 const downvoteKey = 'KeyZ';
 const replyKey = 'KeyR';
@@ -145,15 +149,17 @@ function handleKeyPress(event) {
     }
 
     switch (event.code) {
+        case nextKeyVim:
+        case prevKeyVim:
         case nextKey:
         case prevKey:{
             let selectedEntry;
             // Next button
-            if (event.code === nextKey) {
+            if (event.code === nextKey || event.code === nextKeyVim) {
                     selectedEntry = getNextEntry(currentEntry)
             }
             // Previous button
-            if (event.code === prevKey) {
+            if (event.code === prevKey || event.code === prevKeyVim) {
                     selectedEntry = getPrevEntry(currentEntry)
             }
             if (selectedEntry) {
@@ -199,6 +205,8 @@ function handleKeyPress(event) {
                 }
             }
             }break;
+        case nextPageKeyVim:
+        case prevPageKeyVim:
         case nextPageKey:
         case prevPageKey:{
             const pageButtons = Array.from(document.querySelectorAll(".paginator>button"));
@@ -208,11 +216,11 @@ function handleKeyPress(event) {
                 pageButtons.find(btn => btn.innerHTML === buttonText).click();
             }
             // Jump next block of comments
-            if (event.code === nextPageKey) {
+            if (event.code === nextPageKey || event.code === nextPageKeyVim) {
                     commentBlock = getNextEntrySameLevel(currentEntry)
             }
             // Jump previous block of comments
-            if (event.code === prevPageKey) {
+            if (event.code === prevPageKey || event.code === prevPageKeyVim) {
                     commentBlock = getPrevEntrySameLevel(currentEntry)
             }
 
