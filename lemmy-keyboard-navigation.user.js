@@ -156,11 +156,23 @@ function handleKeyPress(event) {
             let selectedEntry;
             // Next button
             if (event.code === nextKey || event.code === nextKeyVim) {
-                    selectedEntry = getNextEntry(currentEntry)
+                    if (event.shiftKey){
+                      selectedEntry = getNextEntrySameLevel(currentEntry)
+
+                    }
+                    else{
+                      selectedEntry = getNextEntry(currentEntry)
+                    }
             }
             // Previous button
             if (event.code === prevKey || event.code === prevKeyVim) {
-                    selectedEntry = getPrevEntry(currentEntry)
+                    if (event.shiftKey){
+                      selectedEntry = getPrevEntrySameLevel(currentEntry)
+
+                    }
+                    else{
+                      selectedEntry = getPrevEntry(currentEntry)
+                    }
             }
             if (selectedEntry) {
                 if (expand) collapseEntry();
