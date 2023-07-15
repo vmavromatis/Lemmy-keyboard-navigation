@@ -345,6 +345,8 @@ function reply(event) {
 function toggleExpand() {
     const expandButton = currentEntry.querySelector("button[aria-label='Expand here']");
     const textExpandButton = currentEntry.querySelector(".post-title>button");
+    const commentExpandButton = currentEntry.querySelector(".ms-2>div>button");
+    const moreExpandButton = currentEntry.querySelector(".ms-1>button");
 
     if (expandButton) {
         expandButton.click();
@@ -375,6 +377,15 @@ function toggleExpand() {
                 );
             }
         });
+    }
+
+    if (commentExpandButton) {
+        commentExpandButton.click();
+    }
+
+    if (moreExpandButton) {
+        moreExpandButton.click();
+        selectEntry(getPrevEntry(currentEntry), true);
     }
 }
 
