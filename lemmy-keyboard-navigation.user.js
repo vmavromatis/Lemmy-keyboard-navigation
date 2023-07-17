@@ -2,7 +2,7 @@
 // @name          lemmy-keyboard-navigation
 // @match         https://*/*
 // @grant         none
-// @version       1.7
+// @version       1.8
 // @author        vmavromatis
 // @author        howdy@thesimplecorner.org
 // @license       GPL3
@@ -16,7 +16,7 @@
 (function () {
   "use strict";
   if (!isLemmySite()) {
-    return;
+    return false;
   }
   function isLemmySite() {
     return (
