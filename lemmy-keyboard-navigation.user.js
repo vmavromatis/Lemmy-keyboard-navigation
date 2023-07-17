@@ -2,12 +2,13 @@
 // @name          lemmy-keyboard-navigation
 // @match         https://*/*
 // @grant         none
-// @version       1.8
+// @version       1.9
 // @author        vmavromatis
 // @author        howdy@thesimplecorner.org
+// @author        InfinibyteF4
 // @license       GPL3
 // @icon          https://raw.githubusercontent.com/vmavromatis/Lemmy-keyboard-navigation/main/icon.png?inline=true
-// @homepageURL	  https://github.com/vmavromatis/Lemmy-keyboard-navigation
+// @homepageURL   https://github.com/vmavromatis/Lemmy-keyboard-navigation
 // @namespace     https://github.com/vmavromatis/Lemmy-keyboard-navigation
 // @description   Easily navigate Lemmy with keyboard arrows
 // ==/UserScript==
@@ -16,7 +17,7 @@
 (function () {
   "use strict";
   if (!isLemmySite()) {
-    return false;
+    return;
   }
   function isLemmySite() {
     return (
@@ -28,28 +29,29 @@
 const backgroundColor = '#373737';
 const textColor = 'white';
 
-// Set navigation keys with keycodes here: https://www.toptal.com/developers/keycode
-const nextKey = 'ArrowDown';
-const prevKey = 'ArrowUp';
-const nextKeyVim = 'KeyJ';
-const prevKeyVim = 'KeyK';
-const expandKey = 'KeyX';
-const openCommentsKey = 'KeyC';
-const openLinkKey = 'Enter';
-const nextPageKey = 'ArrowRight';
-const prevPageKey = 'ArrowLeft';
-const nextPageKeyVim = 'KeyL';
-const prevPageKeyVim = 'KeyH';
-const upvoteKey = 'KeyA';
-const downvoteKey = 'KeyZ';
-const replyKey = 'KeyR';
-
 // Stop arrows from moving the page
 window.addEventListener("keydown", function(e) {
     if(["ArrowUp","ArrowDown"].indexOf(e.code) > -1) {
         e.preventDefault();
     }
 }, false);
+
+// Set navigation keys with keycodes here: https://www.toptal.com/developers/keycode
+const nextKey = 'KeyJ';
+const prevKey = 'KeyK';
+const expandKey = 'KeyX';
+const openCommentsKey = 'KeyC';
+const openLinkandcollapseKey = 'Enter';
+const nextPageKey = 'KeyL';
+const prevPageKey = 'KeyH';
+const upvoteKey = 'KeyA';
+const downvoteKey = 'KeyZ';
+const replycommKey = 'KeyR';
+const saveKey = 'KeyS';
+const nextKeyArrow = 'ArrowDown';
+const prevKeyArrow = 'ArrowUp';
+const nextPageKeyArrow = 'ArrowRight';
+const prevPageKeyArrow = 'ArrowLeft';
 
 // Remove scroll animations
 document.documentElement.style = "scroll-behavior: auto";
@@ -149,27 +151,11 @@ function handleKeyPress(event) {
     }
 
     switch (event.code) {
-        case nextKeyVim:
-        case prevKeyVim:
         case nextKey:
-        case prevKey:{
-            let selectedEntry;
-            // Next button
-            if (event.code === nextKey || event.code === nextKeyVim) {
-                    selectedEntry = getNextEntry(currentEntry)
-            }
-            // Previous button
-            if (event.code === prevKey || event.code === prevKeyVim) {
-                    selectedEntry = getPrevEntry(currentEntry)
-            }
-            if (selectedEntry) {
-                if (expand) collapseEntry();
-                selectEntry(selectedEntry, true);
-                if (expand) expandEntry();
-            }
-            break;
-            toggleExpand();
-            expand = isExpanded() ? true : false;
+        case prevKey:
+        case nextKeyArrow:
+        case prevKeyArrow:{
+            previousKey();
             }break;
         case upvoteKey:
             upVote();
@@ -177,50 +163,64 @@ function handleKeyPress(event) {
         case downvoteKey:
             downVote();
             break;
-        case replyKey:
-            // Allow Mac refresh with CMD+R
-            if (event.key !== 'Meta') {
-            reply(event);
-            }break;
         case expandKey:
             toggleExpand();
             expand = isExpanded() ? true : false;
             break;
+        case saveKey:
+            save();
+            break;
         case openCommentsKey:
-            if (event.shiftKey) {
-                window.open(
-                    currentEntry.querySelector("a.btn[title$='Comments']").href,
-                );
+            comments();
+            break;
+        case replycommKey:
+            if (window.location.pathname.includes("/post/")) {
+                // Allow Mac refresh with CMD+R
+                if (event.key !== 'Meta') {
+                reply(event);
+                }
             } else {
-                currentEntry.querySelector("a.btn[title$='Comments']").click();
+                community();
             }
             break;
-        case openLinkKey:{
-            const linkElement = currentEntry.querySelector(".col.flex-grow-0.px-0>div>a")
-            if (linkElement) {
-                if (event.shiftKey) {
-                    window.open(linkElement.href);
+        case openLinkandcollapseKey:
+            if (window.location.pathname.includes("/post/")) {
+                const moreReplies = currentEntry.querySelector("button.btn.btn-link.text-muted");
+                if (moreReplies) {
+                    moreReplies.click();
+                    previousKey(5);
                 } else {
-                    linkElement.click();
+                    currentEntry.querySelector("button.btn.btn-sm.btn-link.text-muted.me-2").click();
                 }
-            }
-            }break;
-        case nextPageKeyVim:
-        case prevPageKeyVim:
+            } else {
+                const linkElement = currentEntry.querySelector(".col.flex-grow-1>p>a")
+                    if (linkElement) {
+                        if (event.shiftKey) {
+                            window.open(linkElement.href);
+                        } else {
+                            linkElement.click();
+                        }
+                    } else {
+                        comments();
+                    }
+                }
+            break;
         case nextPageKey:
-        case prevPageKey:{
+        case prevPageKey:
+        case nextPageKeyArrow:
+        case prevPageKeyArrow:{
             const pageButtons = Array.from(document.querySelectorAll(".paginator>button"));
 
             if (pageButtons && (document.getElementsByClassName('paginator').length > 0)) {
-                const buttonText = event.code === nextPageKey ? "Next" : "Prev";
+                const buttonText = (event.code === nextPageKey || event.code === nextPageKeyArrow) ? "Next" : "Prev";
                 pageButtons.find(btn => btn.innerHTML === buttonText).click();
             }
             // Jump next block of comments
-            if (event.code === nextPageKey || event.code === nextPageKeyVim) {
+            if (event.code === nextPageKey || event.code === nextPageKeyArrow) {
                     commentBlock = getNextEntrySameLevel(currentEntry)
             }
             // Jump previous block of comments
-            if (event.code === prevPageKey || event.code === prevPageKeyVim) {
+            if (event.code === prevPageKey || event.code === prevPageKeyArrow) {
                     commentBlock = getPrevEntrySameLevel(currentEntry)
             }
 
@@ -316,6 +316,27 @@ function isExpanded() {
     return false;
 }
 
+function previousKey(n) {
+    let selectedEntry;
+        // Next button
+        if (event.code === nextKey || event.code === nextKeyArrow) {
+            selectedEntry = getNextEntry(currentEntry)
+        }
+        // Previous button
+        if (event.code === prevKey || event.code == prevKeyArrow) {
+            selectedEntry = getPrevEntry(currentEntry)
+        }
+        // keep the selection near "more replies"
+        if (n == 5) {
+            selectedEntry = getPrevEntry(currentEntry)
+        }
+        if (selectedEntry) {
+            if (expand) collapseEntry();
+                selectEntry(selectedEntry, true);
+            if (expand) expandEntry();
+            }
+}
+
 function upVote() {
     const upvoteButton = currentEntry.querySelector("button[aria-label='Upvote']");
 
@@ -341,12 +362,47 @@ function reply(event) {
     }
 }
 
+function community() {
+    if (event.shiftKey) {
+        window.open(
+            currentEntry.querySelector("a.community-link").href,
+                );
+        } else {
+            currentEntry.querySelector("a.community-link").click();
+        }
+}
+
+function comments() {
+    if (event.shiftKey) {
+        window.open(
+            currentEntry.querySelector("a.btn[title$='Comments']").href,
+        );
+    } else {
+        currentEntry.querySelector("a.btn[title$='Comments']").click();
+    }
+}
+
+function save() {
+    const saveButton = currentEntry.querySelector("button[aria-label='save']");
+    const unsaveButton = currentEntry.querySelector("button[aria-label='unsave']");
+    const moreButton = currentEntry.querySelector("button[aria-label='more']");
+    if (saveButton) {
+        saveButton.click();
+    } else if (unsaveButton) {
+        unsaveButton.click();
+    } else {
+        moreButton.click();
+        if (saveButton) {
+            saveButton.click();
+        } else if (unsaveButton) {
+            unsaveButton.click();
+        }
+    }
+}
 
 function toggleExpand() {
     const expandButton = currentEntry.querySelector("button[aria-label='Expand here']");
     const textExpandButton = currentEntry.querySelector(".post-title>button");
-    const commentExpandButton = currentEntry.querySelector(".ms-2>div>button");
-    const moreExpandButton = currentEntry.querySelector(".ms-1>button");
 
     if (expandButton) {
         expandButton.click();
@@ -377,15 +433,6 @@ function toggleExpand() {
                 );
             }
         });
-    }
-
-    if (commentExpandButton) {
-        commentExpandButton.click();
-    }
-
-    if (moreExpandButton) {
-        moreExpandButton.click();
-        selectEntry(getPrevEntry(currentEntry), true);
     }
 }
 
