@@ -1,8 +1,6 @@
 # Lemmy-keyboard-navigation
-A userscript to navigate Lemmy with keyboard arrows based on `boobslider100@lem.ee`'s script (added keyboard arrow navigation, upvote/downvote, changed styling slightly to resemble RES more and few more tweaks)
+A RES-like userscript to navigate Lemmy with the keyboard. Supports both HJKL and arrow navigation.
 
-#### ⭐ UPDATE ⭐
-As of version 1.8, **HJKL navigation** is now also supported, [thanks to @aglidden](https://github.com/vmavromatis/Lemmy-keyboard-navigation/pull/3) 🎉
 
 ## Installation & Usage:
 - Make sure you have [Tampermonkey](https://www.tampermonkey.net/) or [Violentmonkey](https://violentmonkey.github.io/) or [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/) installed 
@@ -11,29 +9,45 @@ As of version 1.8, **HJKL navigation** is now also supported, [thanks to @aglidd
 
 
 
-|                         Key Bindings                                 |
+## Keybinds
+
+|                         Link Pages                                |
 |----------------------------------------------------------------------|
-| <kbd>**↓**</kbd> Next post / Comment                                 |
-| <kbd>**↑**</kbd> = Previous post / Comment                           |
-| <kbd>**→**</kbd> = Next page / same level Comment                    |
-| <kbd>**←**</kbd> = Previous page / same level Comment                |
+| <kbd>J or ↓</kbd> = Next post                                |
+| <kbd>K or ↑</kbd> = Previous post                          |
+| <kbd>L or →</kbd> = Next page                  |
+| <kbd>H or ←</kbd> = Previous page                |
+| <kbd>A</kbd> = Upvote                                                |
+| <kbd>S</kbd> = Save Post                                               |
+| <kbd>Z</kbd> = Downvote                                              |
+| <kbd>X</kbd> = Expand/Collapse Post                                       |
+| <kbd>C</kbd> = View Comments (<kbd>⇧ Shift+C</kbd> to open in new tab)  |
+| <kbd>R</kbd> = Go to community (<kbd>⇧ Shift+R</kbd> to open in new tab)                                                 |
+| <kbd>⏎ Enter</kbd> = Visit Link (<kbd>⇧ Shift+⏎ Enter</kbd> to open in new tab)                                     |
+
+![253778748-2f3671cc-c8e8-48d5-a69f-be3fc98a0fa9](https://github.com/vmavromatis/Lemmy-keyboard-navigation/assets/8668731/fc8ccf2a-f204-4897-82ef-0458509c1f83)
+
+
+
+|                         Comments                                 |
+|----------------------------------------------------------------------|
+| <kbd>J or ↓</kbd> = Next Comment                                 |
+| <kbd>K or ↑</kbd> = Previous Comment                           |
+| <kbd>L or →</kbd> = Next same-level Comment                    |
+| <kbd>H or ←</kbd> = Previous same-level Comment                |
 | <kbd>A</kbd> = Upvote                                                |
 | <kbd>Z</kbd> = Downvote                                              |
-| <kbd>X</kbd> = Expand/Collapse                                       |
-| <kbd>C</kbd> = View Comments (<kbd>⇧ Shift+C</kbd> to open new tab)  |
+| <kbd>S</kbd> = Show more options / Save comment                                                |
 | <kbd>R</kbd> = Reply                                                 |
-| <kbd>⏎ Enter</kbd> = View Link                                       |
+| <kbd>⏎ Enter or X</kbd> = Toggle collapse / Show more replies                                    |
 
-### Post View
-![keyboard-layout1](https://github.com/vmavromatis/Lemmy-keyboard-navigation/assets/8668731/ae1e30a0-e0e5-456d-96bc-5dd67df0a35f)
-
-### Comment View
-![keyboard-layout2](https://github.com/vmavromatis/Lemmy-keyboard-navigation/assets/8668731/3b5ea82b-21c5-44bb-a3de-432b9f1d4f50)
+![253778862-2786b5a8-f8c2-434c-8fd4-e3d5b1fe0e83](https://github.com/vmavromatis/Lemmy-keyboard-navigation/assets/8668731/9f7191df-f9c0-4ef3-8528-79af781cd434)
 
 
 ## Licence: 
-GPL 3.0
-
+- GPL 3.0
+- Initially based on boobslider100's [script](https://lemmy.world/post/10035360)
+- Rebased entirely from @InfinibyteF4 to support extra features like Save Comment/Post (S) , View Community (R) and bugfixes
 
 ## Donate: 
 Coffee link ☕
