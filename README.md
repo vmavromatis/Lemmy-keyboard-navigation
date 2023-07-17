@@ -1,6 +1,8 @@
 # Lemmy-keyboard-navigation
 A userscript to navigate Lemmy with keyboard arrows based on `boobslider100@lem.ee`'s script (added keyboard arrow navigation, upvote/downvote, changed styling slightly to resemble RES more and few more tweaks)
 
+#### UPDATE: As of 1.8, **hjkl** is now also supported, [thanks to @aglidden]([url](https://github.com/vmavromatis/Lemmy-keyboard-navigation/pull/3)) 🎉
+
 ## Installation & Usage:
 - Make sure you have [Tampermonkey](https://www.tampermonkey.net/) or [Violentmonkey](https://violentmonkey.github.io/) or [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/) installed 
 - [Click here](https://greasyfork.org/en/scripts/470498-lemmy-keyboard-navigation) to install script from Greasyfork (there is a webhook that auto-syncs with this repo)
