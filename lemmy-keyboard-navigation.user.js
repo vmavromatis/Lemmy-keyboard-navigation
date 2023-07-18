@@ -24,30 +24,39 @@
     );
   }
 
+// Vim key toggle
+// Default: false
+// Set to true for Vim navigation
+const vimKeyNavigation = false;
+
 // Set selected entry colors
 const backgroundColor = '#373737';
 const textColor = 'white';
 
 // Set navigation keys with keycodes here: https://www.toptal.com/developers/keycode
-const nextKey = 'ArrowDown';
-const prevKey = 'ArrowUp';
-const nextKeyVim = 'KeyJ';
-const prevKeyVim = 'KeyK';
+var nextKey = 'ArrowDown';
+var prevKey = 'ArrowUp';
+var nextPageKey = 'ArrowRight';
+var prevPageKey = 'ArrowLeft';
+
+if (vimKeyNavigation) {
+    nextKey = 'KeyJ';
+    prevKey = 'KeyK';
+    nextPageKey = 'KeyL';
+    prevPageKey = 'KeyH';
+}
+
 const expandKey = 'KeyX';
 const openCommentsKey = 'KeyC';
 const openLinkKey = 'Enter';
 const parentComment = 'KeyP';
-const nextPageKey = 'ArrowRight';
-const prevPageKey = 'ArrowLeft';
-const nextPageKeyVim = 'KeyL';
-const prevPageKeyVim = 'KeyH';
 const upvoteKey = 'KeyA';
 const downvoteKey = 'KeyZ';
 const replyKey = 'KeyR';
 
-// Stop arrows from moving the page
+// Stop arrows from moving the page if not using Vim navigation
 window.addEventListener("keydown", function(e) {
-    if(["ArrowUp","ArrowDown"].indexOf(e.code) > -1) {
+    if(["ArrowUp","ArrowDown"].indexOf(e.code) > -1 && !vimKeyNavigation) {
         e.preventDefault();
     }
 }, false);
@@ -150,14 +159,12 @@ function handleKeyPress(event) {
     }
 
     switch (event.code) {
-        case nextKeyVim:
-        case prevKeyVim:
         case nextKey:
         case prevKey:{
             let selectedEntry;
             // Next button
-            if (event.code === nextKey || event.code === nextKeyVim) {
-                    if (event.shiftKey){
+            if (event.code === nextKey) {
+                    if (event.shiftKey && vimKeyNavigation){
                       selectedEntry = getNextEntrySameLevel(currentEntry)
 
                     }
@@ -166,8 +173,8 @@ function handleKeyPress(event) {
                     }
             }
             // Previous button
-            if (event.code === prevKey || event.code === prevKeyVim) {
-                    if (event.shiftKey){
+            if (event.code === prevKey) {
+                    if (event.shiftKey && vimKeyNavigation){
                       selectedEntry = getPrevEntrySameLevel(currentEntry)
 
                     }
@@ -219,7 +226,6 @@ function handleKeyPress(event) {
             }
             }break;
         case parentComment:{
-            //alert(currentEntry.parentElement.parentElement.parentElement.nodeName)
             let targetBlock;
             if (currentEntry.classList.contains("ms-1")) {
                 targetBlock = getPrevEntry(currentEntry);
@@ -233,8 +239,6 @@ function handleKeyPress(event) {
                         if (expand) expandEntry();
             }}
             break;
-        case nextPageKeyVim:
-        case prevPageKeyVim:
         case nextPageKey:
         case prevPageKey:{
             const pageButtons = Array.from(document.querySelectorAll(".paginator>button"));
@@ -244,11 +248,11 @@ function handleKeyPress(event) {
                 pageButtons.find(btn => btn.innerHTML === buttonText).click();
             }
             // Jump next block of comments
-            if (event.code === nextPageKey || event.code === nextPageKeyVim) {
+            if (event.code === nextPageKey) {
                     commentBlock = getNextEntrySameLevel(currentEntry)
             }
             // Jump previous block of comments
-            if (event.code === prevPageKey || event.code === prevPageKeyVim) {
+            if (event.code === prevPageKey) {
                     commentBlock = getPrevEntrySameLevel(currentEntry)
             }
 
