@@ -36,6 +36,7 @@ const prevKeyVim = 'KeyK';
 const expandKey = 'KeyX';
 const openCommentsKey = 'KeyC';
 const openLinkKey = 'Enter';
+const parentComment = 'KeyP';
 const nextPageKey = 'ArrowRight';
 const prevPageKey = 'ArrowLeft';
 const nextPageKeyVim = 'KeyL';
@@ -156,11 +157,23 @@ function handleKeyPress(event) {
             let selectedEntry;
             // Next button
             if (event.code === nextKey || event.code === nextKeyVim) {
-                    selectedEntry = getNextEntry(currentEntry)
+                    if (event.shiftKey){
+                      selectedEntry = getNextEntrySameLevel(currentEntry)
+
+                    }
+                    else{
+                      selectedEntry = getNextEntry(currentEntry)
+                    }
             }
             // Previous button
             if (event.code === prevKey || event.code === prevKeyVim) {
-                    selectedEntry = getPrevEntry(currentEntry)
+                    if (event.shiftKey){
+                      selectedEntry = getPrevEntrySameLevel(currentEntry)
+
+                    }
+                    else{
+                      selectedEntry = getPrevEntry(currentEntry)
+                    }
             }
             if (selectedEntry) {
                 if (expand) collapseEntry();
@@ -205,6 +218,21 @@ function handleKeyPress(event) {
                 }
             }
             }break;
+        case parentComment:{
+            //alert(currentEntry.parentElement.parentElement.parentElement.nodeName)
+            let targetBlock;
+            if (currentEntry.classList.contains("ms-1")) {
+                targetBlock = getPrevEntry(currentEntry);
+            }
+            else if (currentEntry.parentElement.parentElement.parentElement.nodeName == "LI") {
+                targetBlock = currentEntry.parentElement.parentElement.parentElement.getElementsByTagName("article")[0];
+            }
+            if (targetBlock) {
+                        if (expand) collapseEntry();
+                        selectEntry(targetBlock, true);
+                        if (expand) expandEntry();
+            }}
+            break;
         case nextPageKeyVim:
         case prevPageKeyVim:
         case nextPageKey:
