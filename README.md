@@ -3,6 +3,7 @@ A userscript to navigate Lemmy with keyboard arrows based on `boobslider100@lem.
 
 #### ⭐ UPDATE ⭐
 As of version 1.8, **HJKL navigation** is now also supported, [thanks to @aglidden](https://github.com/vmavromatis/Lemmy-keyboard-navigation/pull/3) 🎉
+Το activate it, just apply `vimKeyNavigation = true;` in your script!
 
 ## Installation & Usage:
 - Make sure you have [Tampermonkey](https://www.tampermonkey.net/) or [Violentmonkey](https://violentmonkey.github.io/) or [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/) installed 
