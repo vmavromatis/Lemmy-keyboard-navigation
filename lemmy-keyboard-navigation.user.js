@@ -209,10 +209,10 @@ function handleKeyPress(event) {
         case openCommentsKey:
             if (event.shiftKey) {
                 window.open(
-                    currentEntry.querySelector("a.btn[title$='Comments']").href,
+                    currentEntry.querySelector("a.btn[title*='Comment']").href,
                 );
             } else {
-                currentEntry.querySelector("a.btn[title$='Comments']").click();
+                currentEntry.querySelector("a.btn[title*='Comment']").click();
             }
             break;
         case openLinkandcollapseKey:
