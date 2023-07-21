@@ -27,10 +27,10 @@
 // Vim key toggle
 // Default: false
 // Set to true for Vim navigation
-const vimKeyNavigation = false;
+const vimKeyNavigation = true;
 
 // Set selected entry colors
-const backgroundColor = '#373737';
+const backgroundColor = '#004742';
 const textColor = 'white';
 
 // Set navigation keys with keycodes here: https://www.toptal.com/developers/keycode
@@ -48,7 +48,7 @@ if (vimKeyNavigation) {
 
 const expandKey = 'KeyX';
 const openCommentsKey = 'KeyC';
-const openLinkKey = 'Enter';
+const openLinkandcollapseKey = 'Enter';
 const parentComment = 'KeyP';
 const upvoteKey = 'KeyA';
 const downvoteKey = 'KeyZ';
@@ -215,16 +215,22 @@ function handleKeyPress(event) {
                 currentEntry.querySelector("a.btn[title$='Comments']").click();
             }
             break;
-        case openLinkKey:{
-            const linkElement = currentEntry.querySelector(".col.flex-grow-0.px-0>div>a")
-            if (linkElement) {
-                if (event.shiftKey) {
-                    window.open(linkElement.href);
-                } else {
-                    linkElement.click();
+        case openLinkandcollapseKey:
+            if (window.location.pathname.includes("/post/")) {
+                toggleExpand();
+            } else {
+                const linkElement = currentEntry.querySelector(".col.flex-grow-1>p>a")
+                    if (linkElement) {
+                        if (event.shiftKey) {
+                            window.open(linkElement.href);
+                        } else {
+                            linkElement.click();
+                        }
+                    } else {
+                        comments();
+                    }
                 }
-            }
-            }break;
+            break;
         case parentComment:{
             let targetBlock;
             if (currentEntry.classList.contains("ms-1")) {
