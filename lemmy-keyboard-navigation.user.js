@@ -21,7 +21,7 @@ if (document.querySelectorAll('.lemmy-site').length >= 1){
 // Vim key toggle
 // Default: false
 // Set to true for Vim navigation
-const vimKeyNavigation = false;
+const vimKeyNavigation = true;
 
 // Set selected entry colors
 const backgroundColor = '#373737';
