@@ -12,24 +12,16 @@
 // @homepageURL   https://github.com/vmavromatis/Lemmy-keyboard-navigation
 // @namespace     https://github.com/vmavromatis/Lemmy-keyboard-navigation
 // @description   Easily navigate Lemmy with keyboard arrows
+// @run-at        document-end
 // ==/UserScript==
 
 //isLemmySite
-(function () {
-  "use strict";
-  if (!isLemmySite()) {
-    return;
-  }
-  function isLemmySite() {
-    return (
-      document.querySelector('meta[name="Description"]').content === "Lemmy"
-    );
-  }
+if (document.querySelectorAll('.lemmy-site').length >= 1){
 
 // Vim key toggle
 // Default: false
 // Set to true for Vim navigation
-const vimKeyNavigation = true;
+const vimKeyNavigation = false;
 
 // Set selected entry colors
 const backgroundColor = '#373737';
@@ -490,4 +482,4 @@ function scrollIntoViewWithOffset(e, offset) {
 
 }
 
-})();
+}
