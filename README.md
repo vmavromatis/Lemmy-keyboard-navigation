@@ -1,13 +1,14 @@
 # Lemmy-keyboard-navigation
 A RES-like userscript to navigate Lemmy with the keyboard. Supports both HJKL and arrow navigation.
 
-#### ⭐ UPDATE ⭐
-As of version 1.8, **HJKL navigation** is now also supported, [thanks to @aglidden](https://github.com/vmavromatis/Lemmy-keyboard-navigation/pull/3) 🎉
-Το activate it, just apply `vimKeyNavigation = true;` in your script!
-
 ## Installation & Usage:
+### As a Chrome Extension
+Get from [here](https://chrome.google.com/webstore/detail/lemmy-keyboard-navigator/lamoeoaekeeklbcekclbceaeafjkdhbi) (currently supports only arrow navigation)
+
+### As a Userscript
 - Make sure you have [Tampermonkey](https://www.tampermonkey.net/) or [Violentmonkey](https://violentmonkey.github.io/) or [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/) installed 
 - [Click here](https://greasyfork.org/en/scripts/470498-lemmy-keyboard-navigation) to install script from Greasyfork (there is a webhook that auto-syncs with this repo)
+- Default navigation is HJKL (aka Vim-style). Change `vimKeyNavigation` into false to use Keyboard Arrows instead 😎
 - Voila! You may now navigate https://lemmy.world/ (or any other lemmy instance of your choice) with your keyboard
 
 
@@ -47,9 +48,10 @@ As of version 1.8, **HJKL navigation** is now also supported, [thanks to @aglidd
 ![253778862-2786b5a8-f8c2-434c-8fd4-e3d5b1fe0e83](https://github.com/vmavromatis/Lemmy-keyboard-navigation/assets/8668731/9f7191df-f9c0-4ef3-8528-79af781cd434)
 
 
-## Licence: 
+## Licence & Credits: 
 - GPL 3.0
 - Initially based on boobslider100's [script](https://lemmy.world/post/10035360)
+- Major contributions and HJKL support by @aglidden
 - Rebased entirely from @InfinibyteF4 to support extra features like Save Comment/Post (S) , View Community (R) and bugfixes
 
 ## Donate: 
