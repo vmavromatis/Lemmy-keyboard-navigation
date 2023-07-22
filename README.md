@@ -3,7 +3,7 @@ A RES-like userscript to navigate Lemmy with the keyboard. Supports both HJKL an
 
 ## Installation & Usage:
 ### As a Chrome Extension
-Get from [here](https://chrome.google.com/webstore/detail/lemmy-keyboard-navigator/lamoeoaekeeklbcekclbceaeafjkdhbi) (currently supports only arrow navigation)
+Get from [here](https://chrome.google.com/webstore/detail/lemmy-keyboard-navigator/lamoeoaekeeklbcekclbceaeafjkdhbi) (1.8 version, as 1.9 pending approval from Google)
 
 ### As a Userscript
 - Make sure you have [Tampermonkey](https://www.tampermonkey.net/) or [Violentmonkey](https://violentmonkey.github.io/) or [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/) installed 
