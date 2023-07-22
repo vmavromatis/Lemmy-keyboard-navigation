@@ -2,12 +2,14 @@
 // @name          lemmy-keyboard-navigation
 // @match         https://*/*
 // @grant         none
-// @version       1.8
+// @version       1.9
 // @author        vmavromatis
 // @author        howdy@thesimplecorner.org
+// @author        InfinibyteF4
+// @author        aglidden
 // @license       GPL3
 // @icon          https://raw.githubusercontent.com/vmavromatis/Lemmy-keyboard-navigation/main/icon.png?inline=true
-// @homepageURL	  https://github.com/vmavromatis/Lemmy-keyboard-navigation
+// @homepageURL   https://github.com/vmavromatis/Lemmy-keyboard-navigation
 // @namespace     https://github.com/vmavromatis/Lemmy-keyboard-navigation
 // @description   Easily navigate Lemmy with keyboard arrows
 // ==/UserScript==
@@ -16,7 +18,7 @@
 (function () {
   "use strict";
   if (!isLemmySite()) {
-    return false;
+    return;
   }
   function isLemmySite() {
     return (
@@ -30,9 +32,8 @@
 const vimKeyNavigation = false;
 
 // Set selected entry colors
-const backgroundColor = '#373737';
+const backgroundColor = '#004742';
 const textColor = 'white';
-
 // Set navigation keys with keycodes here: https://www.toptal.com/developers/keycode
 var nextKey = 'ArrowDown';
 var prevKey = 'ArrowUp';
@@ -48,11 +49,12 @@ if (vimKeyNavigation) {
 
 const expandKey = 'KeyX';
 const openCommentsKey = 'KeyC';
-const openLinkKey = 'Enter';
+const openLinkandcollapseKey = 'Enter';
 const parentComment = 'KeyP';
 const upvoteKey = 'KeyA';
 const downvoteKey = 'KeyZ';
-const replyKey = 'KeyR';
+const replycommKey = 'KeyR';
+const saveKey = 'KeyS';
 
 // Stop arrows from moving the page if not using Vim navigation
 window.addEventListener("keydown", function(e) {
@@ -160,71 +162,51 @@ function handleKeyPress(event) {
 
     switch (event.code) {
         case nextKey:
-        case prevKey:{
-            let selectedEntry;
-            // Next button
-            if (event.code === nextKey) {
-                    if (event.shiftKey && vimKeyNavigation){
-                      selectedEntry = getNextEntrySameLevel(currentEntry)
-
-                    }
-                    else{
-                      selectedEntry = getNextEntry(currentEntry)
-                    }
-            }
-            // Previous button
-            if (event.code === prevKey) {
-                    if (event.shiftKey && vimKeyNavigation){
-                      selectedEntry = getPrevEntrySameLevel(currentEntry)
-
-                    }
-                    else{
-                      selectedEntry = getPrevEntry(currentEntry)
-                    }
-            }
-            if (selectedEntry) {
-                if (expand) collapseEntry();
-                selectEntry(selectedEntry, true);
-                if (expand) expandEntry();
-            }
+        case prevKey:
+            previousKey(event);
             break;
-            toggleExpand();
-            expand = isExpanded() ? true : false;
-            }break;
         case upvoteKey:
             upVote();
             break;
         case downvoteKey:
             downVote();
             break;
-        case replyKey:
-            // Allow Mac refresh with CMD+R
-            if (event.key !== 'Meta') {
-            reply(event);
-            }break;
         case expandKey:
             toggleExpand();
             expand = isExpanded() ? true : false;
             break;
+        case saveKey:
+            save();
+            break;
         case openCommentsKey:
-            if (event.shiftKey) {
-                window.open(
-                    currentEntry.querySelector("a.btn[title*='Comment']").href,
-                );
+            comments(event);
+            break;
+        case replycommKey:
+            if (window.location.pathname.includes("/post/")) {
+                // Allow Mac refresh with CMD+R
+                if (event.key !== 'Meta') {
+                reply(event);
+                }
             } else {
-                currentEntry.querySelector("a.btn[title*='Comment']").click();
+                community(event);
             }
             break;
-        case openLinkKey:{
-            const linkElement = currentEntry.querySelector(".col.flex-grow-0.px-0>div>a")
-            if (linkElement) {
-                if (event.shiftKey) {
-                    window.open(linkElement.href);
-                } else {
-                    linkElement.click();
+        case openLinkandcollapseKey:
+            if (window.location.pathname.includes("/post/")) {
+                toggleExpand();
+            } else {
+                const linkElement = currentEntry.querySelector(".col.flex-grow-1>p>a")
+                    if (linkElement) {
+                        if (event.shiftKey) {
+                            window.open(linkElement.href);
+                        } else {
+                            linkElement.click();
+                        }
+                    } else {
+                        comments(event);
+                    }
                 }
-            }
-            }break;
+            break;
         case parentComment:{
             let targetBlock;
             if (currentEntry.classList.contains("ms-1")) {
@@ -234,9 +216,9 @@ function handleKeyPress(event) {
                 targetBlock = currentEntry.parentElement.parentElement.parentElement.getElementsByTagName("article")[0];
             }
             if (targetBlock) {
-                        if (expand) collapseEntry();
-                        selectEntry(targetBlock, true);
-                        if (expand) expandEntry();
+                if (expand) collapseEntry();
+                selectEntry(targetBlock, true);
+                if (expand) expandEntry();
             }}
             break;
         case nextPageKey:
@@ -348,6 +330,35 @@ function isExpanded() {
     return false;
 }
 
+function previousKey(event) {
+    let selectedEntry;
+    // Next button
+    if (event.code === nextKey) {
+            if (event.shiftKey && vimKeyNavigation){
+              selectedEntry = getNextEntrySameLevel(currentEntry)
+
+            }
+            else{
+              selectedEntry = getNextEntry(currentEntry)
+            }
+    }
+    // Previous button
+    if (event.code === prevKey) {
+            if (event.shiftKey && vimKeyNavigation){
+              selectedEntry = getPrevEntrySameLevel(currentEntry)
+
+            }
+            else{
+              selectedEntry = getPrevEntry(currentEntry)
+            }
+    }
+    if (selectedEntry) {
+        if (expand) collapseEntry();
+        selectEntry(selectedEntry, true);
+        if (expand) expandEntry();
+    }
+}
+
 function upVote() {
     const upvoteButton = currentEntry.querySelector("button[aria-label='Upvote']");
 
@@ -373,6 +384,43 @@ function reply(event) {
     }
 }
 
+function community(event) {
+    if (event.shiftKey) {
+        window.open(
+            currentEntry.querySelector("a.community-link").href,
+                );
+        } else {
+            currentEntry.querySelector("a.community-link").click();
+        }
+}
+
+function comments(event) {
+    if (event.shiftKey) {
+        window.open(
+            currentEntry.querySelector("a.btn[title*='Comment']").href,
+        );
+    } else {
+        currentEntry.querySelector("a.btn[title*='Comment']").click();
+    }
+}
+
+function save() {
+    const saveButton = currentEntry.querySelector("button[aria-label='save']");
+    const unsaveButton = currentEntry.querySelector("button[aria-label='unsave']");
+    const moreButton = currentEntry.querySelector("button[aria-label='more']");
+    if (saveButton) {
+        saveButton.click();
+    } else if (unsaveButton) {
+        unsaveButton.click();
+    } else {
+        moreButton.click();
+        if (saveButton) {
+            saveButton.click();
+        } else if (unsaveButton) {
+            unsaveButton.click();
+        }
+    }
+}
 
 function toggleExpand() {
     const expandButton = currentEntry.querySelector("button[aria-label='Expand here']");
