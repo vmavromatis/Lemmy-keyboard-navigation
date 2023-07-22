@@ -49,7 +49,7 @@ if (vimKeyNavigation) {
 
 const expandKey = 'KeyX';
 const openCommentsKey = 'KeyC';
-const openLinkKey = 'Enter';
+const openLinkandcollapseKey = 'Enter';
 const parentComment = 'KeyP';
 const upvoteKey = 'KeyA';
 const downvoteKey = 'KeyZ';
@@ -178,35 +178,35 @@ function handleKeyPress(event) {
         case saveKey:
             save();
             break;
-            case openCommentsKey:
-                comments(event);
-                break;
-            case replycommKey:
-                if (window.location.pathname.includes("/post/")) {
-                    // Allow Mac refresh with CMD+R
-                    if (event.key !== 'Meta') {
-                    reply(event);
-                    }
-                } else {
-                    community(event);
+        case openCommentsKey:
+            comments(event);
+            break;
+        case replycommKey:
+            if (window.location.pathname.includes("/post/")) {
+                // Allow Mac refresh with CMD+R
+                if (event.key !== 'Meta') {
+                reply(event);
                 }
-                break;
-            case openLinkandcollapseKey:
-                if (window.location.pathname.includes("/post/")) {
-                    toggleExpand();
-                } else {
-                    const linkElement = currentEntry.querySelector(".col.flex-grow-1>p>a")
-                        if (linkElement) {
-                            if (event.shiftKey) {
-                                window.open(linkElement.href);
-                            } else {
-                                linkElement.click();
-                            }
+            } else {
+                community(event);
+            }
+            break;
+        case openLinkandcollapseKey:
+            if (window.location.pathname.includes("/post/")) {
+                toggleExpand();
+            } else {
+                const linkElement = currentEntry.querySelector(".col.flex-grow-1>p>a")
+                    if (linkElement) {
+                        if (event.shiftKey) {
+                            window.open(linkElement.href);
                         } else {
-                            comments(event);
+                            linkElement.click();
                         }
+                    } else {
+                        comments(event);
                     }
-                break;
+                }
+            break;
         case parentComment:{
             let targetBlock;
             if (currentEntry.classList.contains("ms-1")) {
