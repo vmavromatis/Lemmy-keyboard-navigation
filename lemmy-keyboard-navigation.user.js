@@ -219,7 +219,7 @@ function handleKeyPress(event) {
                 instanceanduser();
                 break;
             case contextKey:
-                getcontext();
+                getcontext(event);
                 break;
             case replycommKey:
                 if (window.location.pathname.includes("/post/")) {
@@ -232,7 +232,7 @@ function handleKeyPress(event) {
             }
             break;
             case userKey:
-                visituser();
+                visituser(event);
                 break;
             case openLinkandcollapseKey:
                 if (window.location.pathname.includes("/post/")) {
@@ -564,14 +564,13 @@ function community(event) {
         }
 }
 
-function visituser() {
-    var userbutton = currentEntry.getElementsByClassName("person-listing d-inline-flex align-items-baseline text-info")[0]
-    var userHREF = currentEntry.getElementsByClassName("person-listing d-inline-flex align-items-baseline text-info")[0].href
-
+function visituser(event) {
     if (event.shiftKey) {
-        window.open(userHREF)
+        window.open(
+            currentEntry.getElementsByClassName("person-listing d-inline-flex align-items-baseline text-info")[0].href,
+        );
     } else {
-        userbutton.click();
+        currentEntry.getElementsByClassName("person-listing d-inline-flex align-items-baseline text-info")[0].click();
     }
 }
 
@@ -585,15 +584,13 @@ function comments(event) {
     }
 }
 
-
-function getcontext() {
-    var contextbutton = currentEntry.querySelector('[title="Show context"]')
-    var contextHREF = currentEntry.querySelector('[title="Show context"]').href
-
+function getcontext(event) {
     if (event.shiftKey) {
-        window.open(contextHREF)
+        window.open(
+            currentEntry.getElementsByClassName("btn btn-link btn-animate text-muted btn-sm")[0].href,
+        );
     } else {
-        contextbutton.click();
+        contextbutton = currentEntry.getElementsByClassName("btn btn-link btn-animate text-muted btn-sm")[0].click();
     }
 }
 
