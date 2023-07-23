@@ -43,8 +43,8 @@ Get from [here](https://chrome.google.com/webstore/detail/lemmy-keyboard-navigat
 |----------------------------------------------------------------------|
 | <kbd>J</kbd> or <kbd>↓</kbd> = Next Comment                               |
 | <kbd>K</kbd> or <kbd>↑</kbd> = Previous Comment                       |
-| <kbd>L</kbd> or <kbd>→</kbd> = Next same-level Comment                |
-| <kbd>H</kbd> or <kbd>←</kbd> = Previous same-level Comment                |
+| <kbd>⇧ Shift</kbd> + <kbd>J</kbd> or <kbd>L</kbd> or <kbd>→</kbd> = Next same-level Comment                |
+| <kbd>⇧ Shift</kbd> + <kbd>K</kbd> or <kbd>H</kbd> or <kbd>←</kbd> = Previous same-level Comment                |
 | <kbd>P</kbd> = Parent Comment                                               |
 | <kbd>A</kbd> = Upvote                                                |
 | <kbd>Z</kbd> = Downvote                                              |
