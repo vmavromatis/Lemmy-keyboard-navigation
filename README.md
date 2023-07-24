@@ -17,35 +17,46 @@ Get from [here](https://chrome.google.com/webstore/detail/lemmy-keyboard-navigat
 
 |                         Link Pages                                |
 |----------------------------------------------------------------------|
-| <kbd>J or ↓</kbd> = Next post                                |
-| <kbd>K or ↑</kbd> = Previous post                          |
-| <kbd>L or →</kbd> = Next page                  |
-| <kbd>H or ←</kbd> = Previous page                |
+| <kbd>J</kbd> or <kbd>↓</kbd> = Next Post                                |
+| <kbd>K</kbd> or <kbd>↑</kbd> = Previous Post                        |
+| <kbd>L</kbd> or <kbd>→</kbd> = Next Page                |
+| <kbd>H</kbd> or <kbd>←</kbd> = Previous Page                |
 | <kbd>A</kbd> = Upvote                                                |
+| <kbd>Z</kbd> = Downvote   |
 | <kbd>S</kbd> = Save Post                                               |
-| <kbd>Z</kbd> = Downvote                                              |
+| <kbd>E</kbd> = Edit Post                                               |
 | <kbd>X</kbd> = Expand/Collapse Post                                       |
-| <kbd>C</kbd> = View Comments (<kbd>⇧ Shift+C</kbd> to open in new tab)  |
-| <kbd>R</kbd> = Go to community (<kbd>⇧ Shift+R</kbd> to open in new tab)                                                 |
-| <kbd>⏎ Enter</kbd> = Visit Link (<kbd>⇧ Shift+⏎ Enter</kbd> to open in new tab)                                     |
+| <kbd>-</kbd> = Shrink Expanded Image                                       |
+| <kbd>=</kbd> = Grow Expanded Image                                       |
+| <kbd>G</kbd> = Open Navigation Dialog                                       |
+| <kbd>C</kbd> = View Comments (<kbd>⇧ Shift</kbd> + <kbd>C</kbd> to open in new tab)  |
+| <kbd>R</kbd> = Go to community (<kbd>⇧ Shift</kbd> + <kbd>R</kbd> to open in new tab)                                                 |
+| <kbd>U</kbd> = Go to poster's profile (<kbd>⇧ Shift</kbd> + <kbd>U</kbd> to open in new tab)                                                 |
+| <kbd>⏎ Enter</kbd> = Visit Link (<kbd>⇧ Shift</kbd> + <kbd>⏎ Enter</kbd> to open in new tab)                                     |
 
-![253778748-2f3671cc-c8e8-48d5-a69f-be3fc98a0fa9](https://github.com/vmavromatis/Lemmy-keyboard-navigation/assets/8668731/fc8ccf2a-f204-4897-82ef-0458509c1f83)
+![linkpages](https://github.com/InfinibyteF4/Lemmy-keyboard-navigation/assets/75824710/239d3ecb-bec3-49d4-b987-bf69b7449607)
+
 
 
 
 |                         Comments                                 |
 |----------------------------------------------------------------------|
-| <kbd>J or ↓</kbd> = Next Comment                                 |
-| <kbd>K or ↑</kbd> = Previous Comment                           |
-| <kbd>L or →</kbd> = Next same-level Comment                    |
-| <kbd>H or ←</kbd> = Previous same-level Comment                |
+| <kbd>J</kbd> or <kbd>↓</kbd> = Next Comment                               |
+| <kbd>K</kbd> or <kbd>↑</kbd> = Previous Comment                       |
+| <kbd>⇧ Shift</kbd> + <kbd>J</kbd> or <kbd>L</kbd> or <kbd>→</kbd> = Next same-level Comment                |
+| <kbd>⇧ Shift</kbd> + <kbd>K</kbd> or <kbd>H</kbd> or <kbd>←</kbd> = Previous same-level Comment                |
+| <kbd>P</kbd> = Parent Comment                                               |
 | <kbd>A</kbd> = Upvote                                                |
 | <kbd>Z</kbd> = Downvote                                              |
 | <kbd>S</kbd> = Show more options / Save comment                                                |
+| <kbd>E</kbd> = Show more options / Edit comment                                                |
 | <kbd>R</kbd> = Reply                                                 |
-| <kbd>⏎ Enter or X</kbd> = Toggle collapse / Show more replies                                    |
+| <kbd>Q</kbd> = Show context                                                |
+| <kbd>G</kbd> = Open Navigation Dialog                                       |
+| <kbd>⏎ Enter</kbd> or <kbd>X</kbd> = Toggle collapse / Show more replies                                    |
+| <kbd>U</kbd> = Go to commenter's profile (<kbd>⇧ Shift</kbd> + <kbd>U</kbd> to open in new tab)                                                 |
 
-![253778862-2786b5a8-f8c2-434c-8fd4-e3d5b1fe0e83](https://github.com/vmavromatis/Lemmy-keyboard-navigation/assets/8668731/9f7191df-f9c0-4ef3-8528-79af781cd434)
+![comments](https://github.com/InfinibyteF4/Lemmy-keyboard-navigation/assets/75824710/f2db918f-43b1-4cd3-9a77-643f77c3d9ca)
 
 
 ## Licence & Credits: 
