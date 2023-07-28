@@ -63,6 +63,11 @@ const smallerimgKey = 'Minus';
 const biggerimgKey = 'Equal';
 const userKey = 'KeyU';
 const editKey = 'KeyE';
+const linkoneKey = 'Digit1';
+const linktwoKey = 'Digit2';
+const linkthreeKey = 'Digit3';
+const linkfourKey = 'Digit4';
+const linkfiveKey = 'Digit5';
 
 const modalCommentsKey = 'KeyC';
 const modalPostsKey = 'KeyP';
@@ -285,6 +290,21 @@ function handleKeyPress(event) {
           }
         }
         break;
+        case linkoneKey:
+          clickLink(1);
+        break;
+        case linktwoKey:
+          clickLink(2);
+        break;
+        case linkthreeKey:
+          clickLink(3);
+        break;
+        case linkfourKey:
+          clickLink(4);
+        break;
+        case linkfiveKey:
+          clickLink(5);
+        break;
         case nextPageKey:
         case prevPageKey: {
           const pageButtons = Array.from(document.querySelectorAll(".paginator>button"));
@@ -490,6 +510,33 @@ function sessioncurrentEntry(n) {
     console.log(`Set to entry ${sessionEntry}`)
   } else if (n === 4) {
     sessionStorage.setItem('currentselection', 0);
+  }
+}
+
+function clickLink(n) {
+  var links = currentEntry.getElementsByClassName("md-div")[0];
+  var alink = links.querySelectorAll('a');
+
+  if (n === 1) {
+    window.open(
+      alink[0].href,
+    );
+  } else if (n === 2) {
+    window.open(
+      alink[1].href,
+    );
+  } else if (n === 3) {
+    window.open(
+      alink[2].href,
+    );
+  } else if (n === 4) {
+    window.open(
+      alink[3].href,
+    );
+  } else if (n === 5) {
+    window.open(
+      alink[4].href,
+    );
   }
 }
 
