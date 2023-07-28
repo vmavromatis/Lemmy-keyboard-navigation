@@ -8,7 +8,7 @@ Get from [here](https://chrome.google.com/webstore/detail/lemmy-keyboard-navigat
 ### As a Userscript
 - Make sure you have [Tampermonkey](https://www.tampermonkey.net/) or [Violentmonkey](https://violentmonkey.github.io/) or [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/) installed 
 - [Click here](https://greasyfork.org/en/scripts/470498-lemmy-keyboard-navigation) to install script from Greasyfork (there is a webhook that auto-syncs with this repo)
-- Default navigation is HJKL (aka Vim-style). Change `vimKeyNavigation` into false to use Keyboard Arrows instead 😎
+- Default navigation is HJKL (aka Vim-style). Press 'G' (dashboard) then 'V' to toggle input to Keyboard Arrows instead 
 - Voila! You may now navigate https://lemmy.world/ (or any other lemmy instance of your choice) with your keyboard
 
 
