@@ -176,9 +176,13 @@ function init() {
       selectEntry(anchoredEntry, true);
     }
   }
-  // If no entries yet selected, default to first
+  // If no entries yet selected, default to last selected
   else if (!currentEntry || Array.from(entries).indexOf(currentEntry) < 0) {
-    selectEntry(entries[0]);
+    if (sessionStorage.getItem('currentselection') === null) {
+      selectEntry(entries[0]);
+    } else {
+      sessioncurrentEntry(3);
+    }
   }
 
   Array.from(entries).forEach(entry => {
@@ -307,6 +311,7 @@ function handleKeyPress(event) {
             }
           }
         }
+        sessioncurrentEntry(4);
       }
       break;
     case modalMode = 1:
@@ -320,16 +325,19 @@ function handleKeyPress(event) {
           break;
         case modalSubscribedKey:
           let subelement = document.querySelectorAll('[title="Shows the communities you\'ve subscribed to"]')[0];
+          sessioncurrentEntry(4);
           subelement.click();
           gotodialog(0);
           break;
         case modalLocalKey:
           let localelement = document.querySelectorAll('[title="Shows only local communities"]')[0];
+          sessioncurrentEntry(4);
           localelement.click();
           gotodialog(0);
           break;
         case modalAllKey:
           let allelement = document.querySelectorAll('[title="Shows all communities, including federated ones"]')[0];
+          sessioncurrentEntry(4);
           allelement.click();
           gotodialog(0);
           break;
@@ -367,11 +375,13 @@ function handleKeyPress(event) {
           break;
         case modalCommentsKey:
           let commentsbutton = document.getElementsByClassName("pointer btn btn-outline-secondary")[1];
+          sessioncurrentEntry(4);
           commentsbutton.click();
           gotodialog(0);
           break;
         case modalPostsKey:
           let postsbutton = document.getElementsByClassName("pointer btn btn-outline-secondary")[0];
+          sessioncurrentEntry(4);
           postsbutton.click();
           gotodialog(0);
           break;
@@ -395,6 +405,7 @@ function getNextEntry(e) {
     return e;
   }
 
+  sessioncurrentEntry(1);
   return entries[currentEntryIndex + 1];
 }
 
@@ -405,6 +416,7 @@ function getPrevEntry(e) {
     return e;
   }
 
+  sessioncurrentEntry(2);
   return entries[currentEntryIndex - 1];
 }
 
@@ -457,6 +469,27 @@ function selectEntry(e, scrollIntoView = false) {
 
   if (scrollIntoView) {
     scrollIntoViewWithOffset(e, 15);
+  }
+}
+
+function sessioncurrentEntry(n) {
+  const sessionEntry = sessionStorage.getItem('currentselection');
+  const currentEntryIndex = Array.from(entries).indexOf(currentEntry);
+
+
+  if (n === 1) {
+    if (document.getElementsByClassName("home")[0]) {
+    sessionStorage.setItem('currentselection', currentEntryIndex+1);
+    }
+  } else if (n === 2) {
+    if (document.getElementsByClassName("home")[0]) {
+      sessionStorage.setItem('currentselection', currentEntryIndex-1);
+    }
+  } else if (n === 3) {
+    selectEntry(entries[sessionEntry]);
+    console.log(`Set to entry ${sessionEntry}`)
+  } else if (n === 4) {
+    sessionStorage.setItem('currentselection', 0);
   }
 }
 
