@@ -2,7 +2,7 @@
 // @name          lemmy-keyboard-navigation
 // @match         https://*/*
 // @grant         none
-// @version       1.9
+// @version       2.0
 // @author        vmavromatis
 // @author        howdy@thesimplecorner.org
 // @author        InfinibyteF4
@@ -15,13 +15,15 @@
 // @run-at        document-end
 // ==/UserScript==
 
+
+
 //isLemmySite
 if (document.querySelectorAll('.lemmy-site').length >= 1){
 
 // Vim key toggle
 // Default: true
 // Set to false for arrow key navigation
-const vimKeyNavigation = true;
+var vimKeyNavigation = true;
 
 // Set selected entry colors
 const backgroundColor = '#373737';
@@ -54,6 +56,7 @@ const smallerimgKey = 'Minus';
 const biggerimgKey = 'Equal';
 const userKey = 'KeyU';
 const editKey = 'KeyE';
+const inputSwitchKey = 'KeyV';
 
 const modalCommentsKey = 'KeyC';
 const modalPostsKey = 'KeyP';
@@ -91,7 +94,7 @@ const css = [
 let myDialog = document.createElement("dialog");
 document.body.appendChild(myDialog);
 let para = document.createElement("p");
-para.innerText = '--- Frontpage Sort ---\nP = posts\nC = comments\n1 = subscribed\n2 = local\n3 = all\n\n--- Everywhere Else ---\nS = saved\nF = frontpage\nU = profile\nI = inbox\n';
+para.innerText = '--- Frontpage Sort ---\nP = posts\nC = comments\n1 = subscribed\n2 = local\n3 = all\n\n--- Everywhere Else ---\nS = saved\nF = frontpage\nU = profile\nI = inbox\nV = Toggle input style';
 myDialog.appendChild(para);
 let button = document.createElement("button");
 button.classList.add('CLOSEBUTTON1');
@@ -148,6 +151,7 @@ const observer = new MutationObserver(() => {
 observer.observe(targetNode, config);
 
 function init() {
+
   // If jumping to comments
   if (window.location.search.includes("scrollToComments=true") &&
     entries.length > 1 &&
@@ -181,7 +185,7 @@ function init() {
 }
 
 function handleKeyPress(event) {
-  if (["TEXTAREA", "INPUT"].indexOf(event.target.tagName) > -1) {
+  if (["TEXTAREA", "INPUT"].indexOf(event.target.tagName) > -1 || event.metaKey) {
     return;
   }
 
@@ -226,10 +230,7 @@ function handleKeyPress(event) {
           break;
         case replycommKey:
           if (window.location.pathname.includes("/post/")) {
-            // Allow Mac refresh with CMD+R
-            if (event.key !== 'Meta') {
               reply(event);
-            }
           } else {
             community(event);
           }
@@ -308,6 +309,22 @@ function handleKeyPress(event) {
         case popupKey:
           gotodialog(0);
           break;
+        case inputSwitchKey:
+          vimKeyNavigation = !vimKeyNavigation;
+          //Repeat definitions 
+          if (vimKeyNavigation) {
+            nextKey = 'KeyJ';
+            prevKey = 'KeyK';
+            nextPageKey = 'KeyL';
+            prevPageKey = 'KeyH';
+          }else{
+            nextKey = 'ArrowDown';
+            prevKey = 'ArrowUp';
+            nextPageKey = 'ArrowRight';
+            prevPageKey = 'ArrowLeft';
+          }
+          gotodialog(0);
+          break;          
         case modalSubscribedKey:
           let subelement = document.querySelectorAll('[title="Shows the communities you\'ve subscribed to"]')[0];
           subelement.click();
