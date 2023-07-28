@@ -15,15 +15,22 @@
 // @run-at        document-end
 // ==/UserScript==
 
-
-
 //isLemmySite
 if (document.querySelectorAll('.lemmy-site').length >= 1){
 
-// Vim key toggle
-// Default: true
-// Set to false for arrow key navigation
-var vimKeyNavigation = true;
+//set vimKeyNavigation based on localStorage
+var vimKeyNavigation = '';
+
+if (localStorage.getItem('vimKeyNavigation') === null) {
+  localStorage.setItem('vimKeyNavigation', true);
+}
+
+if (localStorage.getItem('vimKeyNavigation') === 'false') {
+  vimKeyNavigation = false;
+} else if (localStorage.getItem('vimKeyNavigation') === 'true') {
+  vimKeyNavigation = true;
+}
+console.log(`vimKeyNavigation: ${vimKeyNavigation}`);
 
 // Set selected entry colors
 const backgroundColor = '#373737';
@@ -56,7 +63,6 @@ const smallerimgKey = 'Minus';
 const biggerimgKey = 'Equal';
 const userKey = 'KeyU';
 const editKey = 'KeyE';
-const inputSwitchKey = 'KeyV';
 
 const modalCommentsKey = 'KeyC';
 const modalPostsKey = 'KeyP';
@@ -67,10 +73,11 @@ const modalSavedKey = 'KeyS';
 const modalFrontpageKey = 'KeyF';
 const modalProfileKey = 'KeyU';
 const modalInboxKey = 'KeyI';
+const modalToggleNavigation = 'KeyV'
 
 const escapeKey = 'Escape';
 let modalMode = 0;
-console.log('modalMode: ' + modalMode);
+console.log(`modalMode: ${modalMode}`);
 
 // Stop arrows from moving the page if not using Vim navigation
 window.addEventListener("keydown", function(e) {
@@ -94,7 +101,7 @@ const css = [
 let myDialog = document.createElement("dialog");
 document.body.appendChild(myDialog);
 let para = document.createElement("p");
-para.innerText = '--- Frontpage Sort ---\nP = posts\nC = comments\n1 = subscribed\n2 = local\n3 = all\n\n--- Everywhere Else ---\nS = saved\nF = frontpage\nU = profile\nI = inbox\nV = Toggle input style';
+para.innerText = `--- Frontpage Sort ---\nP = posts\nC = comments\n1 = subscribed\n2 = local\n3 = all\n\n--- Everywhere Else ---\nS = saved\nF = frontpage\nU = profile\nI = inbox\nV = toggle HJKL (currently ${vimKeyNavigation})`;
 myDialog.appendChild(para);
 let button = document.createElement("button");
 button.classList.add('CLOSEBUTTON1');
@@ -151,7 +158,6 @@ const observer = new MutationObserver(() => {
 observer.observe(targetNode, config);
 
 function init() {
-
   // If jumping to comments
   if (window.location.search.includes("scrollToComments=true") &&
     entries.length > 1 &&
@@ -229,10 +235,13 @@ function handleKeyPress(event) {
           getcontext(event);
           break;
         case replycommKey:
-          if (window.location.pathname.includes("/post/")) {
+          // allow refresh with Ctrl + R
+          if (!event.ctrlKey) {
+            if (window.location.pathname.includes("/post/")) {
               reply(event);
-          } else {
-            community(event);
+            } else {
+              community(event);
+            }
           }
           break;
         case userKey:
@@ -304,27 +313,11 @@ function handleKeyPress(event) {
       switch (event.code) {
         case escapeKey:
           modalMode = 0;
-          console.log('modalMode: ' + modalMode);
+          console.log(`modalMode: ${modalMode}`);
           break;
         case popupKey:
           gotodialog(0);
           break;
-        case inputSwitchKey:
-          vimKeyNavigation = !vimKeyNavigation;
-          //Repeat definitions 
-          if (vimKeyNavigation) {
-            nextKey = 'KeyJ';
-            prevKey = 'KeyK';
-            nextPageKey = 'KeyL';
-            prevPageKey = 'KeyH';
-          }else{
-            nextKey = 'ArrowDown';
-            prevKey = 'ArrowUp';
-            nextPageKey = 'ArrowRight';
-            prevPageKey = 'ArrowLeft';
-          }
-          gotodialog(0);
-          break;          
         case modalSubscribedKey:
           let subelement = document.querySelectorAll('[title="Shows the communities you\'ve subscribed to"]')[0];
           subelement.click();
@@ -381,6 +374,15 @@ function handleKeyPress(event) {
           let postsbutton = document.getElementsByClassName("pointer btn btn-outline-secondary")[0];
           postsbutton.click();
           gotodialog(0);
+          break;
+        case modalToggleNavigation:
+          if (vimKeyNavigation === true) {
+            localStorage.setItem('vimKeyNavigation', 'false')
+            window.location.reload();
+          } else {
+            localStorage.setItem('vimKeyNavigation', 'true')
+            window.location.reload();
+          }
           break;
       }
   }
@@ -523,18 +525,18 @@ function gotodialog(n) {
   closeButton.addEventListener("click", () => {
     myDialog.close();
     modalMode = 0;
-    console.log('modalMode: ' + modalMode);
+    console.log(`modalMode: ${modalMode}`);
   });
   if (n === 1) {
     myDialog.showModal();
     modalMode = 1;
-    console.log('modalMode: ' + modalMode);
+    console.log(`modalMode: ${modalMode}`);
   }
 
   if (n === 0) {
     myDialog.close();
     modalMode = 0;
-    console.log('modalMode: ' + modalMode);
+    console.log(`modalMode: ${modalMode}`);
   }
 }
 
@@ -626,7 +628,6 @@ function getcontext(event) {
 }
 
 let maxsize = 0;
-console.log('maxsize ' + maxsize);
 
 function imgresize(n) {
   let expandedimg = currentEntry.getElementsByClassName("overflow-hidden pictrs-image img-fluid img-expanded slight-radius")[0];
@@ -641,7 +642,7 @@ function imgresize(n) {
     expandedimg.style.height = expandedheight + 'px';
     expandedimg.style.width = expandedwidth + 'px';
     maxsize = 0;
-    console.log('maxsize ' + maxsize);
+    console.log(`maxsize: ${maxsize}`);
   }
 
   if (n === 1) {
@@ -656,7 +657,7 @@ function imgresize(n) {
     }
     if (expandedimg.width !== Math.round(expandedwidth) || expandedimg.height !== Math.round(expandedheight)) {
       maxsize = 1;
-      console.log('maxsize ' + maxsize);
+      console.log(`maxsize: ${maxsize}`);
     }
   }
 }
