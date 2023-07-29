@@ -8,7 +8,7 @@ Get from [here](https://chrome.google.com/webstore/detail/lemmy-keyboard-navigat
 ### As a Userscript
 - Make sure you have [Tampermonkey](https://www.tampermonkey.net/) or [Violentmonkey](https://violentmonkey.github.io/) or [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/) installed 
 - [Click here](https://greasyfork.org/en/scripts/470498-lemmy-keyboard-navigation) to install script from Greasyfork (there is a webhook that auto-syncs with this repo)
-- Default navigation is HJKL (aka Vim-style). Press 'G' (dashboard) then 'V' to toggle input to Keyboard Arrows instead 
+- Default navigation is HJKL (aka Vim-style). Press 'G' (dashboard) then 'V' to toggle input method.
 - Voila! You may now navigate https://lemmy.world/ (or any other lemmy instance of your choice) with your keyboard
 
 
@@ -52,11 +52,13 @@ Get from [here](https://chrome.google.com/webstore/detail/lemmy-keyboard-navigat
 | <kbd>E</kbd> = Show more options / Edit comment                                                |
 | <kbd>R</kbd> = Reply                                                 |
 | <kbd>Q</kbd> = Show context                                                |
+| <kbd>1</kbd> ... <kbd>5</kbd> = Click links in comment                                                |
 | <kbd>G</kbd> = Open Navigation Dialog                                       |
 | <kbd>⏎ Enter</kbd> or <kbd>X</kbd> = Toggle collapse / Show more replies                                    |
 | <kbd>U</kbd> = Go to commenter's profile (<kbd>⇧ Shift</kbd> + <kbd>U</kbd> to open in new tab)                                                 |
 
-![comments](https://github.com/InfinibyteF4/Lemmy-keyboard-navigation/assets/75824710/f2db918f-43b1-4cd3-9a77-643f77c3d9ca)
+![comments](https://github.com/InfinibyteF4/Lemmy-keyboard-navigation/assets/75824710/6522da12-97cb-4f40-bf6c-82d18220df9b)
+
 
 
 ## Licence & Credits: 
