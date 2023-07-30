@@ -52,7 +52,7 @@ Get from [here](https://chrome.google.com/webstore/detail/lemmy-keyboard-navigat
 | <kbd>E</kbd> = Show more options / Edit comment                                                |
 | <kbd>R</kbd> = Reply                                                 |
 | <kbd>Q</kbd> = Show context                                                |
-| <kbd>1</kbd> ... <kbd>5</kbd> = Click links in comment                                                |
+| <kbd>1</kbd> ... <kbd>0</kbd> = Click links in comment                                                |
 | <kbd>G</kbd> = Open Navigation Dialog                                       |
 | <kbd>⏎ Enter</kbd> or <kbd>X</kbd> = Toggle collapse / Show more replies                                    |
 | <kbd>U</kbd> = Go to commenter's profile (<kbd>⇧ Shift</kbd> + <kbd>U</kbd> to open in new tab)                                                 |

@@ -68,6 +68,11 @@ const linkTwoKey = 'Digit2';
 const linkThreeKey = 'Digit3';
 const linkFourKey = 'Digit4';
 const linkFiveKey = 'Digit5';
+const linkSixKey = 'Digit6';
+const linkSevenKey = 'Digit7';
+const linkEightKey = 'Digit8';
+const linkNineKey = 'Digit9';
+const linkZeroKey = 'Digit0';
 
 const modalCommentsKey = 'KeyC';
 const modalPostsKey = 'KeyP';
@@ -315,6 +320,21 @@ function handleKeyPress(event) {
         case linkFiveKey:
           clickLink(5);
           break;
+        case linkSixKey:
+          clickLink(6);
+          break;
+        case linkSevenKey:
+          clickLink(7);
+          break;
+        case linkEightKey:
+          clickLink(8);
+          break;
+        case linkNineKey:
+          clickLink(9);
+          break;
+        case linkZeroKey:
+          clickLink(0);
+          break;
         case nextPageKey:
         case prevPageKey: {
           const pageButtons = Array.from(document.querySelectorAll(".paginator>button"));
@@ -493,9 +513,31 @@ function clickEntry(event) {
 function selectEntry(e, scrollIntoView = false) {
   if (currentEntry) {
     currentEntry.classList.remove(selectedClass);
+    let linkNumber = currentEntry.querySelectorAll(".linkNumber");
+    for (const link of linkNumber) {
+      link.remove();
+    }
   }
   currentEntry = e;
   currentEntry.classList.add(selectedClass);
+
+  let links = currentEntry.getElementsByClassName("md-div")[0];
+  let alink = links.querySelectorAll('a');
+  if (alink.length > 0) {
+    alink.forEach(function (value, i) {
+      let linkNumber = document.createElement("span");
+      linkNumber.classList.add("linkNumber");
+      linkNumber.style.fontSize = "9px";
+      linkNumber.style.lineHeight = 0;
+      linkNumber.style.verticalAlign = "super";
+      linkNumber.setAttribute("data-text", `[${i+1}]`);
+      linkNumber.innerText = `[${i+1}]`;
+      linkNumber.title = `Press ${i+1} to open link`;
+      if (i <= 9) {
+        value.appendChild(linkNumber);
+      }
+    });
+  }
 
   if (scrollIntoView) {
     scrollIntoViewWithOffset(e, 15);
@@ -525,7 +567,6 @@ function sessionCurrentEntry(n) {
 function clickLink(n) {
   let links = currentEntry.getElementsByClassName("md-div")[0];
   let alink = links.querySelectorAll('a');
-
   if (n === 1) {
     window.open(
       alink[0].href
@@ -545,6 +586,26 @@ function clickLink(n) {
   } else if (n === 5) {
     window.open(
       alink[4].href
+    );
+  } else if (n === 6) {
+    window.open(
+      alink[5].href
+    );
+  } else if (n === 7) {
+    window.open(
+      alink[6].href
+    );
+  } else if (n === 8) {
+    window.open(
+      alink[7].href
+    );
+  } else if (n === 9) {
+    window.open(
+      alink[8].href
+    );
+  } else if (n === 0) {
+    window.open(
+      alink[9].href
     );
   }
 }
