@@ -522,21 +522,23 @@ function selectEntry(e, scrollIntoView = false) {
   currentEntry.classList.add(selectedClass);
 
   let links = currentEntry.getElementsByClassName("md-div")[0];
-  let alink = links.querySelectorAll('a');
-  if (alink.length > 0) {
-    alink.forEach(function (value, i) {
-      let linkNumber = document.createElement("span");
-      linkNumber.classList.add("linkNumber");
-      linkNumber.style.fontSize = "9px";
-      linkNumber.style.lineHeight = 0;
-      linkNumber.style.verticalAlign = "super";
-      linkNumber.setAttribute("data-text", `[${i+1}]`);
-      linkNumber.innerText = `[${i+1}]`;
-      linkNumber.title = `Press ${i+1} to open link`;
-      if (i <= 9) {
-        value.appendChild(linkNumber);
-      }
-    });
+  if (links) {
+    let alink = links.querySelectorAll('a');
+    if (alink.length > 0) {
+      alink.forEach(function (value, i) {
+        let linkNumber = document.createElement("span");
+        linkNumber.classList.add("linkNumber");
+        linkNumber.style.fontSize = "9px";
+        linkNumber.style.lineHeight = 0;
+        linkNumber.style.verticalAlign = "super";
+        linkNumber.setAttribute("data-text", `[${i+1}]`);
+        linkNumber.innerText = `[${i+1}]`;
+        linkNumber.title = `Press ${i+1} to open link`;
+        if (i <= 9) {
+          value.appendChild(linkNumber);
+        }
+      });
+    }
   }
 
   if (scrollIntoView) {
