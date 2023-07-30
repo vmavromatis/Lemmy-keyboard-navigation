@@ -904,7 +904,8 @@ function scrollIntoViewWithOffset(e, offset) {
   ) {
     const y = e.getBoundingClientRect().top + window.pageYOffset - offset;
     window.scrollTo({
-      top: y
+      top: y,
+      behavior: "smooth"
     });
   }
 
