@@ -18,13 +18,70 @@
 //isLemmySite
 if (document.querySelectorAll('.lemmy-site').length >= 1){
 
-//set vimKeyNavigation based on localStorage
-var vimKeyNavigation = '';
+//////////////////////////////////////////
+//DEBUGGING (ignore me!)
+//localStorage.clear();
+//sessionStorage.clear();
+//////////////////////////////////////////
 
+
+//TODO add way of changing pageOffset, smoothScroll, scrollPosition in page
+  //until then
+  //pageOffset     defaults to 5% of window
+  //smoothScroll   defaults to false
+  //scrollPosition defaults to middle
+
+//////////////////////////////////////////
+//QUICK SETTINGS CHANGE (larger page offset, opposite of defaults)
+//localStorage.setItem('pageOffset', window.innerHeight * 0.20); //20%
+//localStorage.setItem('smoothScroll', true);
+//localStorage.setItem('scrollPosition', "top");
+//localStorage.setItem('vimKeyNavigation', false);
+//////////////////////////////////////////
+
+//set page offset size (default 5% of window)
+let pageOffset;
+if (localStorage.getItem('pageOffset') === null) {
+  localStorage.setItem('pageOffset', window.innerHeight * 0.05); //5% window height
+}
+if (localStorage.getItem('pageOffset')) {
+  pageOffset = localStorage.getItem('pageOffset');
+}
+console.log(`pageOffset: ${pageOffset}`);
+
+//enable or disable smooth scrolling `true` or `false` (default false)
+let smoothScroll;
+if (localStorage.getItem('smoothScroll') === null) {
+  localStorage.setItem('smoothScroll', false);
+}
+if (localStorage.getItem('smoothScroll') === 'false') {
+  smoothScroll = false;
+} else if (localStorage.getItem('smoothScroll') === 'true') {
+  smoothScroll = true;
+}
+console.log(`smoothScroll: ${smoothScroll}`);
+
+//set scrolling position "middle" or "top" (default middle)
+// "middle" means only scroll the page if selected post is near the bottom
+// "top" always scrolls the page to keep selected post near the top
+let scrollPosition;
+if (localStorage.getItem('scrollPosition') === null) {
+  localStorage.setItem('scrollPosition', "middle");
+}
+if (localStorage.getItem('scrollPosition') === "middle") {
+  scrollPosition = "middle";
+} else if (localStorage.getItem('scrollPosition') === "top") {
+  scrollPosition = "top";
+}
+console.log(`scrollPosition: ${scrollPosition}`);
+
+
+//set vimKeyNavigation based on localStorage (default true)
+//set vimKeyNavigation based on localStorage
+let vimKeyNavigation = '';
 if (localStorage.getItem('vimKeyNavigation') === null) {
   localStorage.setItem('vimKeyNavigation', true);
 }
-
 if (localStorage.getItem('vimKeyNavigation') === 'false') {
   vimKeyNavigation = false;
 } else if (localStorage.getItem('vimKeyNavigation') === 'true') {
@@ -51,23 +108,28 @@ if (vimKeyNavigation) {
 
 const expandKey = 'KeyX';
 const openCommentsKey = 'KeyC';
-const openLinkandcollapseKey = 'Enter';
-const parentComment = 'KeyP';
+const openLinkAndCollapseKey = 'Enter';
+const parentCommentKey = 'KeyP';
 const upvoteKey = 'KeyA';
 const downvoteKey = 'KeyZ';
-const replycommKey = 'KeyR';
+const replyCommKey = 'KeyR';
 const saveKey = 'KeyS';
 const popupKey = 'KeyG';
 const contextKey = 'KeyQ';
-const smallerimgKey = 'Minus';
-const biggerimgKey = 'Equal';
+const smallerImgKey = 'Minus';
+const biggerImgKey = 'Equal';
 const userKey = 'KeyU';
 const editKey = 'KeyE';
-const linkoneKey = 'Digit1';
-const linktwoKey = 'Digit2';
-const linkthreeKey = 'Digit3';
-const linkfourKey = 'Digit4';
-const linkfiveKey = 'Digit5';
+const linkOneKey = 'Digit1';
+const linkTwoKey = 'Digit2';
+const linkThreeKey = 'Digit3';
+const linkFourKey = 'Digit4';
+const linkFiveKey = 'Digit5';
+const linkSixKey = 'Digit6';
+const linkSevenKey = 'Digit7';
+const linkEightKey = 'Digit8';
+const linkNineKey = 'Digit9';
+const linkZeroKey = 'Digit0';
 
 const modalCommentsKey = 'KeyC';
 const modalPostsKey = 'KeyP';
@@ -78,7 +140,7 @@ const modalSavedKey = 'KeyS';
 const modalFrontpageKey = 'KeyF';
 const modalProfileKey = 'KeyU';
 const modalInboxKey = 'KeyI';
-const modalToggleNavigation = 'KeyV'
+const modalToggleNavigationKey = 'KeyV';
 
 const escapeKey = 'Escape';
 let modalMode = 0;
@@ -95,18 +157,30 @@ window.addEventListener("keydown", function(e) {
 document.documentElement.style = "scroll-behavior: auto";
 
 // Set CSS for selected entry
-const css = [
-  ".selected {",
-  "  background-color: " + backgroundColor + " !important;",
-  "  color: " + textColor + ";",
-  "}"
-].join("\n");
+const css = `
+  .selected {
+    background-color: ${backgroundColor} !important;
+    color: ${textColor};
+    }`;
 
 // dialog box
 let myDialog = document.createElement("dialog");
 document.body.appendChild(myDialog);
 let para = document.createElement("p");
-para.innerText = `--- Frontpage Sort ---\nP = posts\nC = comments\n1 = subscribed\n2 = local\n3 = all\n\n--- Everywhere Else ---\nS = saved\nF = frontpage\nU = profile\nI = inbox\nV = toggle HJKL (currently ${vimKeyNavigation})`;
+para.innerHTML = `
+  <h3><b>Frontpage Sort</b></h3>
+  <p>P = Posts</br>
+  C = Comments</br>
+  1 = Subscribed</br>
+  2 = Local</br>
+  3 = all</p>
+  <h3><b>Go To Page</b></h3>
+  <p>F = Frontpage</br>
+  S = Saved</br>
+  U = User Profile Page</br>
+  I = Inbox</br></p>
+  <h6>V = Toggle HJKL (currently ${vimKeyNavigation})</br></br></h6>
+  `;
 myDialog.appendChild(para);
 let button = document.createElement("button");
 button.classList.add('CLOSEBUTTON1');
@@ -116,8 +190,6 @@ myDialog.appendChild(button);
 // Global variables
 let currentEntry;
 let commentBlock;
-let addStyle;
-let PRO_addStyle;
 let entries = [];
 let previousUrl = "";
 let expand = false;
@@ -140,6 +212,7 @@ if (typeof GM_addStyle !== "undefined") {
     document.documentElement.appendChild(node);
   }
 }
+
 const selectedClass = "selected";
 
 const targetNode = document.documentElement;
@@ -186,7 +259,7 @@ function init() {
     if (sessionStorage.getItem('currentselection') === null) {
       selectEntry(entries[0]);
     } else {
-      sessioncurrentEntry(3);
+      sessionCurrentEntry("restore");
     }
   }
 
@@ -221,11 +294,11 @@ function handleKeyPress(event) {
           toggleExpand();
           expand = isExpanded() ? true : false;
           break;
-        case smallerimgKey:
-          imgresize(0);
+        case smallerImgKey:
+          imgResize("smaller");
           break;
-        case biggerimgKey:
-          imgresize(1);
+        case biggerImgKey:
+          imgResize("larger");
           break;
         case saveKey:
           save();
@@ -237,13 +310,12 @@ function handleKeyPress(event) {
           comments(event);
           break;
         case popupKey:
-          gotodialog(1);
-          instanceanduser();
+          goToDialog("open");
           break;
         case contextKey:
-          getcontext(event);
+          getContext(event);
           break;
-        case replycommKey:
+        case replyCommKey:
           // allow refresh with Ctrl + R
           if (!event.ctrlKey) {
             if (window.location.pathname.includes("/post/")) {
@@ -254,9 +326,9 @@ function handleKeyPress(event) {
           }
           break;
         case userKey:
-          visituser(event);
+          visitUser(event);
           break;
-        case openLinkandcollapseKey:
+        case openLinkAndCollapseKey:
           if (window.location.pathname.includes("/post/")) {
             toggleExpand();
           } else {
@@ -272,7 +344,7 @@ function handleKeyPress(event) {
             }
           }
           break;
-        case parentComment: {
+        case parentCommentKey: {
           let targetBlock;
           if (currentEntry.classList.contains("ms-1")) {
             targetBlock = getPrevEntry(currentEntry);
@@ -290,21 +362,36 @@ function handleKeyPress(event) {
           }
         }
         break;
-        case linkoneKey:
+        case linkOneKey:
           clickLink(1);
-        break;
-        case linktwoKey:
+          break;
+        case linkTwoKey:
           clickLink(2);
-        break;
-        case linkthreeKey:
+          break;
+        case linkThreeKey:
           clickLink(3);
-        break;
-        case linkfourKey:
+          break;
+        case linkFourKey:
           clickLink(4);
-        break;
-        case linkfiveKey:
+          break;
+        case linkFiveKey:
           clickLink(5);
-        break;
+          break;
+        case linkSixKey:
+          clickLink(6);
+          break;
+        case linkSevenKey:
+          clickLink(7);
+          break;
+        case linkEightKey:
+          clickLink(8);
+          break;
+        case linkNineKey:
+          clickLink(9);
+          break;
+        case linkZeroKey:
+          clickLink(0);
+          break;
         case nextPageKey:
         case prevPageKey: {
           const pageButtons = Array.from(document.querySelectorAll(".paginator>button"));
@@ -331,7 +418,6 @@ function handleKeyPress(event) {
             }
           }
         }
-        sessioncurrentEntry(4);
       }
       break;
     case modalMode = 1:
@@ -341,35 +427,32 @@ function handleKeyPress(event) {
           console.log(`modalMode: ${modalMode}`);
           break;
         case popupKey:
-          gotodialog(0);
+          goToDialog("close");
           break;
         case modalSubscribedKey:
           let subelement = document.querySelectorAll('[title="Shows the communities you\'ve subscribed to"]')[0];
-          sessioncurrentEntry(4);
           subelement.click();
-          gotodialog(0);
+          goToDialog("close");
           break;
         case modalLocalKey:
           let localelement = document.querySelectorAll('[title="Shows only local communities"]')[0];
-          sessioncurrentEntry(4);
           localelement.click();
-          gotodialog(0);
+          goToDialog("close");
           break;
         case modalAllKey:
           let allelement = document.querySelectorAll('[title="Shows all communities, including federated ones"]')[0];
-          sessioncurrentEntry(4);
           allelement.click();
-          gotodialog(0);
+          goToDialog("close");
           break;
         case modalSavedKey:
           if (window.location.pathname.includes("/u/")) {
             let savedelement = document.getElementsByClassName("btn btn-outline-secondary pointer")[3];
             if (savedelement) {
               savedelement.click();
-              gotodialog(0);
+              goToDialog("close");
             }
           } else {
-            instanceanduser(2);
+            instanceAndUser("saved");
           }
           break;
         case modalFrontpageKey:
@@ -379,40 +462,34 @@ function handleKeyPress(event) {
           let profileelement = document.querySelectorAll('[title="Profile"]')[0];
           if (profileelement) {
             profileelement.click();
-            gotodialog(0);
+            goToDialog("close");
           } else {
-            instanceanduser(1);
+            instanceAndUser("profile");
           }
           break;
         case modalInboxKey:
           let notifelement = document.getElementsByClassName("nav-link d-inline-flex align-items-center d-md-inline-block")[2];
           if (notifelement) {
             notifelement.click();
-            gotodialog(0);
+            goToDialog("close");
           } else {
-            console.log('Not logged in!');
+            window.location.replace(window.location.origin + "/login");
           }
           break;
         case modalCommentsKey:
           let commentsbutton = document.getElementsByClassName("pointer btn btn-outline-secondary")[1];
-          sessioncurrentEntry(4);
           commentsbutton.click();
-          gotodialog(0);
+          goToDialog("close");
           break;
         case modalPostsKey:
           let postsbutton = document.getElementsByClassName("pointer btn btn-outline-secondary")[0];
-          sessioncurrentEntry(4);
           postsbutton.click();
-          gotodialog(0);
+          goToDialog("close");
           break;
-        case modalToggleNavigation:
-          if (vimKeyNavigation === true) {
-            localStorage.setItem('vimKeyNavigation', 'false')
-            window.location.reload();
-          } else {
-            localStorage.setItem('vimKeyNavigation', 'true')
-            window.location.reload();
-          }
+        case modalToggleNavigationKey:
+          //set to opposite current
+          localStorage.setItem('vimKeyNavigation', !vimKeyNavigation);
+          window.location.reload();
           break;
       }
   }
@@ -424,8 +501,6 @@ function getNextEntry(e) {
   if (currentEntryIndex + 1 >= entries.length) {
     return e;
   }
-
-  sessioncurrentEntry(1);
   return entries[currentEntryIndex + 1];
 }
 
@@ -435,8 +510,6 @@ function getPrevEntry(e) {
   if (currentEntryIndex - 1 < 0) {
     return e;
   }
-
-  sessioncurrentEntry(2);
   return entries[currentEntryIndex - 1];
 }
 
@@ -483,59 +556,97 @@ function clickEntry(event) {
 function selectEntry(e, scrollIntoView = false) {
   if (currentEntry) {
     currentEntry.classList.remove(selectedClass);
+    let linkNumber = currentEntry.querySelectorAll(".linkNumber");
+    if (linkNumber) {
+      for (const link of linkNumber) {
+        link.remove();
+      }
+    }
   }
   currentEntry = e;
   currentEntry.classList.add(selectedClass);
+  sessionCurrentEntry("save");
+  let links = currentEntry.getElementsByClassName("md-div")[0];
+  if (links) {
+    let alink = links.querySelectorAll('a');
+    if (alink.length > 0) {
+      alink.forEach(function (value, i) {
+        let linkNumber = document.createElement("span");
+        linkNumber.classList.add("linkNumber");
+        linkNumber.style.fontSize = "9px";
+        linkNumber.style.lineHeight = 0;
+        linkNumber.style.verticalAlign = "super";
+        linkNumber.setAttribute("data-text", `[${i+1}]`);
+        linkNumber.innerText = `[${i+1}]`;
+        linkNumber.title = `Press ${i+1} to open link`;
+        if (i <= 9) {
+          value.appendChild(linkNumber);
+        }
+      });
+    }
+  }
 
   if (scrollIntoView) {
-    scrollIntoViewWithOffset(e, 15);
+    scrollIntoViewWithOffset(e, pageOffset);
   }
 }
 
-function sessioncurrentEntry(n) {
+function sessionCurrentEntry(n) {
   const sessionEntry = sessionStorage.getItem('currentselection');
   const currentEntryIndex = Array.from(entries).indexOf(currentEntry);
 
-
-  if (n === 1) {
-    if (document.getElementsByClassName("home")[0]) {
-    sessionStorage.setItem('currentselection', currentEntryIndex+1);
+  if (n === "save") {
+    if (document.querySelector(".home")) {
+      sessionStorage.setItem('currentselection', currentEntryIndex);
     }
-  } else if (n === 2) {
-    if (document.getElementsByClassName("home")[0]) {
-      sessionStorage.setItem('currentselection', currentEntryIndex-1);
-    }
-  } else if (n === 3) {
+  } else if (n === "restore") {
     selectEntry(entries[sessionEntry]);
-    console.log(`Set to entry ${sessionEntry}`)
-  } else if (n === 4) {
-    sessionStorage.setItem('currentselection', 0);
+    console.log(`Set to entry ${sessionEntry}`);
   }
 }
 
 function clickLink(n) {
-  var links = currentEntry.getElementsByClassName("md-div")[0];
-  var alink = links.querySelectorAll('a');
-
+  let links = currentEntry.getElementsByClassName("md-div")[0];
+  let alink = links.querySelectorAll('a');
   if (n === 1) {
     window.open(
-      alink[0].href,
+      alink[0].href
     );
   } else if (n === 2) {
     window.open(
-      alink[1].href,
+      alink[1].href
     );
   } else if (n === 3) {
     window.open(
-      alink[2].href,
+      alink[2].href
     );
   } else if (n === 4) {
     window.open(
-      alink[3].href,
+      alink[3].href
     );
   } else if (n === 5) {
     window.open(
-      alink[4].href,
+      alink[4].href
+    );
+  } else if (n === 6) {
+    window.open(
+      alink[5].href
+    );
+  } else if (n === 7) {
+    window.open(
+      alink[6].href
+    );
+  } else if (n === 8) {
+    window.open(
+      alink[7].href
+    );
+  } else if (n === 9) {
+    window.open(
+      alink[8].href
+    );
+  } else if (n === 0) {
+    window.open(
+      alink[9].href
     );
   }
 }
@@ -599,7 +710,7 @@ function downVote() {
   }
 }
 
-function gotodialog(n) {
+function goToDialog(n) {
 
   const closeButton = document.getElementsByClassName("CLOSEBUTTON1")[0];
   closeButton.addEventListener("click", () => {
@@ -607,54 +718,51 @@ function gotodialog(n) {
     modalMode = 0;
     console.log(`modalMode: ${modalMode}`);
   });
-  if (n === 1) {
+  if (n === "open") {
     myDialog.showModal();
     modalMode = 1;
     console.log(`modalMode: ${modalMode}`);
   }
 
-  if (n === 0) {
+  if (n === "close") {
     myDialog.close();
     modalMode = 0;
     console.log(`modalMode: ${modalMode}`);
   }
 }
 
-function instanceanduser(n) {
-  let currentinstance = window.location.origin;
-  let dropdownuser = document.getElementsByClassName("btn dropdown-toggle")[0];
-  let username = dropdownuser.textContent;
-
-  if (n === 0) {
-    window.location.replace(currentinstance);
+function instanceAndUser(n) {
+  let currentInstance = window.location.origin;
+  let dropdownUser = document.getElementsByClassName("btn dropdown-toggle")[0];
+  let username;
+  if (dropdownUser) {
+    username = dropdownUser.textContent;
   }
-  if (n === 1) {
+  if (n === "profile") {
     if (username) {
-      let userlink = currentinstance + "/u/" + username;
+      let userlink = currentInstance + "/u/" + username;
       window.location.replace(userlink);
     } else {
-      console.log('Not logged in!');
-      frontpage();
+      window.location.replace(currentInstance + "/login");
     }
   }
-  if (n === 2) {
+  if (n === "saved") {
     if (username) {
-      let savedlink = currentinstance + "/u/" + username + "?page=1&sort=New&view=Saved";
+      let savedlink = currentInstance + "/u/" + username + "?page=1&sort=New&view=Saved";
       window.location.replace(savedlink);
     } else {
-      console.log('Not logged in!');
-      frontpage();
+      window.location.replace(currentInstance + "/login");
     }
   }
 }
 
 function frontpage() {
-  let homeelement = document.getElementsByClassName("d-flex align-items-center navbar-brand me-md-3 active")[0];
-  if (homeelement) {
-    homeelement.click();
-    gotodialog(0);
+  let homeElement = document.getElementsByClassName("d-flex align-items-center navbar-brand me-md-3 active")[0];
+  if (homeElement) {
+    homeElement.click();
+    goToDialog("close");
   } else {
-    instanceanduser(0);
+    window.location.replace(window.location.origin);
   }
 }
 
@@ -670,17 +778,17 @@ function reply(event) {
 function community(event) {
   if (event.shiftKey) {
     window.open(
-      currentEntry.querySelector("a.community-link").href,
+      currentEntry.querySelector("a.community-link").href
     );
   } else {
     currentEntry.querySelector("a.community-link").click();
   }
 }
 
-function visituser(event) {
+function visitUser(event) {
   if (event.shiftKey) {
     window.open(
-      currentEntry.getElementsByClassName("person-listing d-inline-flex align-items-baseline text-info")[0].href,
+      currentEntry.getElementsByClassName("person-listing d-inline-flex align-items-baseline text-info")[0].href
     );
   } else {
     currentEntry.getElementsByClassName("person-listing d-inline-flex align-items-baseline text-info")[0].click();
@@ -690,54 +798,54 @@ function visituser(event) {
 function comments(event) {
   if (event.shiftKey) {
     window.open(
-      currentEntry.querySelector("a.btn[title*='Comment']").href,
+      currentEntry.querySelector("a.btn[title*='Comment']").href
     );
   } else {
     currentEntry.querySelector("a.btn[title*='Comment']").click();
   }
 }
 
-function getcontext(event) {
+function getContext(event) {
   if (event.shiftKey) {
     window.open(
-      currentEntry.getElementsByClassName("btn btn-link btn-animate text-muted btn-sm")[0].href,
+      currentEntry.getElementsByClassName("btn btn-link btn-animate text-muted btn-sm")[0].href
     );
   } else {
     currentEntry.getElementsByClassName("btn btn-link btn-animate text-muted btn-sm")[0].click();
   }
 }
 
-let maxsize = 0;
+let maxSize = 0;
 
-function imgresize(n) {
-  let expandedimg = currentEntry.getElementsByClassName("overflow-hidden pictrs-image img-fluid img-expanded slight-radius")[0];
-  let expandedheight = expandedimg.height;
-  let expandedwidth = expandedimg.width;
-  let expandedheightbefore = expandedheight;
-  let expandedwidthbefore = expandedwidth;
+function imgResize(n) {
+  let expandedImg = currentEntry.getElementsByClassName("overflow-hidden pictrs-image img-fluid img-expanded slight-radius")[0];
+  let expandedHeight = expandedImg.height;
+  let expandedWidth = expandedImg.width;
+  let expandedHeightbefore = expandedHeight;
+  let expandedWidthbefore = expandedWidth;
 
-  if (n === 0) {
-    expandedheight = expandedheight / 1.15;
-    expandedwidth = expandedwidth / 1.15;
-    expandedimg.style.height = expandedheight + 'px';
-    expandedimg.style.width = expandedwidth + 'px';
-    maxsize = 0;
-    console.log(`maxsize: ${maxsize}`);
+  if (n === "smaller") {
+    expandedHeight = expandedHeight / 1.15;
+    expandedWidth = expandedWidth / 1.15;
+    expandedImg.style.height = expandedHeight + 'px';
+    expandedImg.style.width = expandedWidth + 'px';
+    maxSize = 0;
+    console.log(`maxSize: ${maxSize}`);
   }
 
-  if (n === 1) {
-    expandedheight = expandedheight * 1.15;
-    expandedwidth = expandedwidth * 1.15;
-    expandedimg.style.width = expandedwidth + 'px';
-    expandedimg.style.height = expandedheight + 'px';
+  if (n === "larger") {
+    expandedHeight = expandedHeight * 1.15;
+    expandedWidth = expandedWidth * 1.15;
+    expandedImg.style.width = expandedWidth + 'px';
+    expandedImg.style.height = expandedHeight + 'px';
 
-    if (maxsize === 1) {
-      expandedimg.style.width = expandedwidthbefore + 'px';
-      expandedimg.style.height = expandedheightbefore + 'px';
+    if (maxSize === 1) {
+      expandedImg.style.width = expandedWidthbefore + 'px';
+      expandedImg.style.height = expandedHeightbefore + 'px';
     }
-    if (expandedimg.width !== Math.round(expandedwidth) || expandedimg.height !== Math.round(expandedheight)) {
-      maxsize = 1;
-      console.log(`maxsize: ${maxsize}`);
+    if (expandedImg.width !== Math.round(expandedWidth) || expandedImg.height !== Math.round(expandedHeight)) {
+      maxSize = 1;
+      console.log(`maxSize: ${maxSize}`);
     }
   }
 }
@@ -788,7 +896,7 @@ function toggleExpand() {
       imgContainer.querySelector("img").addEventListener("load", function() {
         scrollIntoViewWithOffset(
           imgContainer,
-          currentEntry.offsetHeight - imgContainer.offsetHeight + 10
+          currentEntry.offsetHeight - imgContainer.offsetHeight + pageOffset
         );
       }, true);
       currentEntry.getElementsByClassName("offset-sm-3 my-2 d-none d-sm-block")[0].className = "my-2 d-none d-sm-block";
@@ -803,7 +911,7 @@ function toggleExpand() {
       if (container) {
         scrollIntoViewWithOffset(
           container,
-          currentEntry.offsetHeight - container.offsetHeight + 10
+          currentEntry.offsetHeight - container.offsetHeight + pageOffset
         );
       }
     });
@@ -832,15 +940,29 @@ function collapseEntry() {
 }
 
 function scrollIntoViewWithOffset(e, offset) {
-  if (e.getBoundingClientRect().top < 0 ||
-    e.getBoundingClientRect().bottom > window.innerHeight
-  ) {
-    const y = e.getBoundingClientRect().top + window.pageYOffset - offset;
+  const y = e.getBoundingClientRect().top + window.scrollY - offset;
+  if (scrollPosition === "middle") {
+    if (e.getBoundingClientRect().top < 0 ||
+      e.getBoundingClientRect().bottom > window.innerHeight
+    ) {
+      scrollPage(y);
+    }
+  } else if (scrollPosition === "top") {
+    scrollPage(y);
+  }
+}
+
+function scrollPage(y) {
+  if (smoothScroll) {
+    window.scrollTo({
+      top: y,
+      behavior: "smooth"
+    });
+  } else {
     window.scrollTo({
       top: y
-    });
+  });
   }
-
 }
 
 }
