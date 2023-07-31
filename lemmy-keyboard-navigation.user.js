@@ -18,13 +18,70 @@
 //isLemmySite
 if (document.querySelectorAll('.lemmy-site').length >= 1){
 
+//////////////////////////////////////////
+//DEBUGGING (ignore me!)
+//localStorage.clear();
+//sessionStorage.clear();
+//////////////////////////////////////////
+
+
+//TODO add way of changing pageOffset, smoothScroll, scrollPosition in page
+  //until then
+  //pageOffset     defaults to 5% of window
+  //smoothScroll   defaults to false
+  //scrollPosition defaults to middle
+
+//////////////////////////////////////////
+//QUICK SETTINGS CHANGE (larger page offset, opposite of defaults)
+//localStorage.setItem('pageOffset', window.innerHeight * 0.20); //20%
+//localStorage.setItem('smoothScroll', true);
+//localStorage.setItem('scrollPosition', "top");
+//localStorage.setItem('vimKeyNavigation', false);
+//////////////////////////////////////////
+
+//set page offset size (default 5% of window)
+let pageOffset;
+if (localStorage.getItem('pageOffset') === null) {
+  localStorage.setItem('pageOffset', window.innerHeight * 0.05); //5% window height
+}
+if (localStorage.getItem('pageOffset')) {
+  pageOffset = localStorage.getItem('pageOffset');
+}
+console.log(`pageOffset: ${pageOffset}`);
+
+//enable or disable smooth scrolling `true` or `false` (default false)
+let smoothScroll;
+if (localStorage.getItem('smoothScroll') === null) {
+  localStorage.setItem('smoothScroll', false);
+}
+if (localStorage.getItem('smoothScroll') === 'false') {
+  smoothScroll = false;
+} else if (localStorage.getItem('smoothScroll') === 'true') {
+  smoothScroll = true;
+}
+console.log(`smoothScroll: ${smoothScroll}`);
+
+//set scrolling position "middle" or "top" (default middle)
+// "middle" means only scroll the page if selected post is near the bottom
+// "top" always scrolls the page to keep selected post near the top
+let scrollPosition;
+if (localStorage.getItem('scrollPosition') === null) {
+  localStorage.setItem('scrollPosition', "middle");
+}
+if (localStorage.getItem('scrollPosition') === "middle") {
+  scrollPosition = "middle";
+} else if (localStorage.getItem('scrollPosition') === "top") {
+  scrollPosition = "top";
+}
+console.log(`scrollPosition: ${scrollPosition}`);
+
+
+//set vimKeyNavigation based on localStorage (default true)
 //set vimKeyNavigation based on localStorage
 let vimKeyNavigation = '';
-
 if (localStorage.getItem('vimKeyNavigation') === null) {
   localStorage.setItem('vimKeyNavigation', true);
 }
-
 if (localStorage.getItem('vimKeyNavigation') === 'false') {
   vimKeyNavigation = false;
 } else if (localStorage.getItem('vimKeyNavigation') === 'true') {
@@ -361,7 +418,6 @@ function handleKeyPress(event) {
             }
           }
         }
-        sessionCurrentEntry("save");
       }
       break;
     case modalMode = 1:
@@ -375,19 +431,16 @@ function handleKeyPress(event) {
           break;
         case modalSubscribedKey:
           let subelement = document.querySelectorAll('[title="Shows the communities you\'ve subscribed to"]')[0];
-          sessionCurrentEntry("save");
           subelement.click();
           goToDialog("close");
           break;
         case modalLocalKey:
           let localelement = document.querySelectorAll('[title="Shows only local communities"]')[0];
-          sessionCurrentEntry("save");
           localelement.click();
           goToDialog("close");
           break;
         case modalAllKey:
           let allelement = document.querySelectorAll('[title="Shows all communities, including federated ones"]')[0];
-          sessionCurrentEntry("save");
           allelement.click();
           goToDialog("close");
           break;
@@ -425,24 +478,18 @@ function handleKeyPress(event) {
           break;
         case modalCommentsKey:
           let commentsbutton = document.getElementsByClassName("pointer btn btn-outline-secondary")[1];
-          sessionCurrentEntry("save");
           commentsbutton.click();
           goToDialog("close");
           break;
         case modalPostsKey:
           let postsbutton = document.getElementsByClassName("pointer btn btn-outline-secondary")[0];
-          sessionCurrentEntry("save");
           postsbutton.click();
           goToDialog("close");
           break;
         case modalToggleNavigationKey:
-          if (vimKeyNavigation === true) {
-            localStorage.setItem('vimKeyNavigation', 'false');
-            window.location.reload();
-          } else {
-            localStorage.setItem('vimKeyNavigation', 'true');
-            window.location.reload();
-          }
+          //set to opposite current
+          localStorage.setItem('vimKeyNavigation', !vimKeyNavigation);
+          window.location.reload();
           break;
       }
   }
@@ -454,8 +501,6 @@ function getNextEntry(e) {
   if (currentEntryIndex + 1 >= entries.length) {
     return e;
   }
-
-  sessionCurrentEntry("next");
   return entries[currentEntryIndex + 1];
 }
 
@@ -465,8 +510,6 @@ function getPrevEntry(e) {
   if (currentEntryIndex - 1 < 0) {
     return e;
   }
-
-  sessionCurrentEntry("previous");
   return entries[currentEntryIndex - 1];
 }
 
@@ -514,13 +557,15 @@ function selectEntry(e, scrollIntoView = false) {
   if (currentEntry) {
     currentEntry.classList.remove(selectedClass);
     let linkNumber = currentEntry.querySelectorAll(".linkNumber");
-    for (const link of linkNumber) {
-      link.remove();
+    if (linkNumber) {
+      for (const link of linkNumber) {
+        link.remove();
+      }
     }
   }
   currentEntry = e;
   currentEntry.classList.add(selectedClass);
-
+  sessionCurrentEntry("save");
   let links = currentEntry.getElementsByClassName("md-div")[0];
   if (links) {
     let alink = links.querySelectorAll('a');
@@ -542,7 +587,7 @@ function selectEntry(e, scrollIntoView = false) {
   }
 
   if (scrollIntoView) {
-    scrollIntoViewWithOffset(e, 15);
+    scrollIntoViewWithOffset(e, pageOffset);
   }
 }
 
@@ -550,19 +595,13 @@ function sessionCurrentEntry(n) {
   const sessionEntry = sessionStorage.getItem('currentselection');
   const currentEntryIndex = Array.from(entries).indexOf(currentEntry);
 
-  if (n === "next") {
-    if (document.getElementsByClassName("home")[0]) {
-      sessionStorage.setItem('currentselection', currentEntryIndex + 1);
-    }
-  } else if (n === "previous") {
-    if (document.getElementsByClassName("home")[0]) {
-      sessionStorage.setItem('currentselection', currentEntryIndex - 1);
+  if (n === "save") {
+    if (document.querySelector(".home")) {
+      sessionStorage.setItem('currentselection', currentEntryIndex);
     }
   } else if (n === "restore") {
     selectEntry(entries[sessionEntry]);
     console.log(`Set to entry ${sessionEntry}`);
-  } else if (n === "save") {
-    sessionStorage.setItem('currentselection', 0);
   }
 }
 
@@ -857,7 +896,7 @@ function toggleExpand() {
       imgContainer.querySelector("img").addEventListener("load", function() {
         scrollIntoViewWithOffset(
           imgContainer,
-          currentEntry.offsetHeight - imgContainer.offsetHeight + 10
+          currentEntry.offsetHeight - imgContainer.offsetHeight + pageOffset
         );
       }, true);
       currentEntry.getElementsByClassName("offset-sm-3 my-2 d-none d-sm-block")[0].className = "my-2 d-none d-sm-block";
@@ -872,7 +911,7 @@ function toggleExpand() {
       if (container) {
         scrollIntoViewWithOffset(
           container,
-          currentEntry.offsetHeight - container.offsetHeight + 10
+          currentEntry.offsetHeight - container.offsetHeight + pageOffset
         );
       }
     });
@@ -901,16 +940,29 @@ function collapseEntry() {
 }
 
 function scrollIntoViewWithOffset(e, offset) {
-  if (e.getBoundingClientRect().top < 0 ||
-    e.getBoundingClientRect().bottom > window.innerHeight
-  ) {
-    const y = e.getBoundingClientRect().top + window.pageYOffset - offset;
+  const y = e.getBoundingClientRect().top + window.scrollY - offset;
+  if (scrollPosition === "middle") {
+    if (e.getBoundingClientRect().top < 0 ||
+      e.getBoundingClientRect().bottom > window.innerHeight
+    ) {
+      scrollPage(y);
+    }
+  } else if (scrollPosition === "top") {
+    scrollPage(y);
+  }
+}
+
+function scrollPage(y) {
+  if (smoothScroll) {
     window.scrollTo({
       top: y,
       behavior: "smooth"
     });
+  } else {
+    window.scrollTo({
+      top: y
+  });
   }
-
 }
 
 }
