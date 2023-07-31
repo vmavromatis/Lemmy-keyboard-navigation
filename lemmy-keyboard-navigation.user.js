@@ -894,10 +894,7 @@ function toggleExpand() {
     if (imgContainer) {
       // Check container positions once image is loaded
       imgContainer.querySelector("img").addEventListener("load", function() {
-        scrollIntoViewWithOffset(
-          imgContainer,
-          currentEntry.offsetHeight - imgContainer.offsetHeight + pageOffset
-        );
+        scrollIntoViewWithOffset(imgContainer, pageOffset);
       }, true);
       currentEntry.getElementsByClassName("offset-sm-3 my-2 d-none d-sm-block")[0].className = "my-2 d-none d-sm-block";
     }
@@ -909,10 +906,7 @@ function toggleExpand() {
     const textContainers = [currentEntry.querySelector("#postContent"), currentEntry.querySelector(".card-body")];
     textContainers.forEach(container => {
       if (container) {
-        scrollIntoViewWithOffset(
-          container,
-          currentEntry.offsetHeight - container.offsetHeight + pageOffset
-        );
+        scrollIntoViewWithOffset(container, pageOffset);
       }
     });
   }
