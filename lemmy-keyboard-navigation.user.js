@@ -15,6 +15,8 @@
 // @run-at        document-end
 // ==/UserScript==
 
+/*global window,console,localStorage,sessionStorage,document,GM_addStyle,PRO_addStyle,addStyle,MutationObserver,location*/
+
 //isLemmySite
 if (document.querySelectorAll('.lemmy-site').length >= 1){
 
@@ -23,7 +25,7 @@ if (document.querySelectorAll('.lemmy-site').length >= 1){
 //sessionStorage.clear();
 
 //settings page (this is from lemmyTools)
-const optionsKey = "lemmy-keyboard-navigation-Options"
+const optionsKey = "lemmy-keyboard-navigation-Options";
 function getSettingsFromLocalStorage() {
   try {
     return JSON.parse(localStorage.getItem(optionsKey) || "{}");
@@ -487,7 +489,7 @@ let styleString = `
   padding: 0.5%;
   margin-top:35px;
 }
-`
+`;
 document.head.appendChild(document.createElement("style")).innerHTML = styleString;
 document.body.appendChild(odiv); //options
 
