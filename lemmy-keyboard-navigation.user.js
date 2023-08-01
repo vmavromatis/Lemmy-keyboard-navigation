@@ -18,79 +18,180 @@
 //isLemmySite
 if (document.querySelectorAll('.lemmy-site').length >= 1){
 
-//////////////////////////////////////////
-//DEBUGGING (ignore me!)
+// DEBUGGING (ignore me!)
 //localStorage.clear();
 //sessionStorage.clear();
-//////////////////////////////////////////
+
+//settings page (this is from lemmyTools)
+const optionsKey = "lemmy-keyboard-navigation-Options"
+function getSettingsFromLocalStorage() {
+  try {
+    return JSON.parse(localStorage.getItem(optionsKey) || "{}");
+  } catch (_) {
+    return {};
+  }
+}
+
+function checkedIfTrue(val) {
+  return val ? "checked" : "";
+}
+
+function options(open) {
+  const odiv = document.getElementById("lkOptions");
+  let userOptions = {};
+  if (open === "open") {
+    odiv.style.display = "block";
+  } else if (open === "set") {
+    //First run set defaults or pull from localstorage.
+    userOptions = Object.assign(
+      {},
+      {
+        pageOffset: 0.05,
+        vimKeyNavigation: true,
+        smoothScroll: false,
+        scrollPosition: "middle",
+        backgroundHex: "#373737",
+        kb_expand: "KeyX",
+        kb_comments: "KeyC",
+        kb_openLink: "Enter",
+        kb_parent: "KeyP",
+        kb_upvote: "KeyA",
+        kb_downvote: "KeyZ",
+        kb_replyComm: "KeyR",
+        kb_save: "KeyS",
+        kb_context: "KeyQ",
+        kb_smallerImg: "Minus",
+        kb_largerImg: "Equal",
+        kb_user: "KeyU",
+        kb_edit: "KeyE",
+        kb_top: "KeyT",
+        m_dialog: "KeyG",
+        m_posts: "KeyP",
+        m_comments: "KeyC",
+        m_subscribed: "Digit1",
+        m_local: "Digit2",
+        m_all: "Digit3",
+        m_frontpage: "KeyF",
+        m_saved: "KeyS",
+        m_userpage: "KeyU",
+        m_inbox: "KeyI",
+        m_options: "KeyO"
+      },
+      getSettingsFromLocalStorage()
+    );
+    localStorage.setItem(optionsKey, JSON.stringify(userOptions));
+  } else if (open === "save") {
+    //save button
+    odiv.style.display = "none";
+    //general
+    userOptions.vimKeyNavigation =
+      document.getElementById("option_vimKeyNavigation").checked;
+
+    userOptions.smoothScroll =
+      document.getElementById("option_smoothScroll").checked;
+
+    userOptions.pageOffset = parseFloat(
+      document.getElementById("option_pageOffset").value
+    );
+    userOptions.backgroundHex =
+      document.getElementById("option_backgroundHex").value;
+
+    userOptions.scrollPosition =
+      document.getElementById("option_scrollPosition").value;
+    //keybinds
+    userOptions.kb_expand =
+      document.getElementById("option_kb_expand").value;
+
+    userOptions.kb_comments =
+      document.getElementById("option_kb_comments").value;
+
+    userOptions.kb_openLink =
+      document.getElementById("option_kb_openLink").value;
+
+    userOptions.kb_parent =
+      document.getElementById("option_kb_parent").value;
+
+    userOptions.kb_upvote =
+      document.getElementById("option_kb_upvote").value;
+
+    userOptions.kb_downvote =
+      document.getElementById("option_kb_downvote").value;
+
+    userOptions.kb_replyComm =
+      document.getElementById("option_kb_replyComm").value;
+
+    userOptions.kb_save =
+      document.getElementById("option_kb_save").value;
+
+    userOptions.kb_context =
+      document.getElementById("option_kb_context").value;
+
+    userOptions.kb_smallerImg =
+      document.getElementById("option_kb_smallerImg").value;
+
+    userOptions.kb_largerImg =
+      document.getElementById("option_kb_largerImg").value;
+
+    userOptions.kb_user =
+      document.getElementById("option_kb_user").value;
+
+    userOptions.kb_edit =
+      document.getElementById("option_kb_edit").value;
+
+    userOptions.kb_top =
+      document.getElementById("option_kb_top").value;
+    //dialog keybinds
+    userOptions.m_dialog =
+      document.getElementById("option_m_dialog").value;
+
+    userOptions.m_posts =
+      document.getElementById("option_m_posts").value;
+
+    userOptions.m_comments =
+      document.getElementById("option_m_comments").value;
+
+    userOptions.m_subscribed =
+      document.getElementById("option_m_subscribed").value;
+
+    userOptions.m_local =
+      document.getElementById("option_m_local").value;
+
+    userOptions.m_all =
+      document.getElementById("option_m_all").value;
+
+    userOptions.m_frontpage =
+      document.getElementById("option_m_frontpage").value;
+
+    userOptions.m_saved =
+      document.getElementById("option_m_saved").value;
+
+    userOptions.m_userpage =
+      document.getElementById("option_m_userpage").value;
+      
+    userOptions.m_inbox =
+      document.getElementById("option_m_inbox").value;
+
+    userOptions.m_options =
+      document.getElementById("option_m_options").value;
 
 
-//TODO add way of changing pageOffset, smoothScroll, scrollPosition in page
-  //until then
-  //pageOffset     defaults to 5% of window
-  //smoothScroll   defaults to false
-  //scrollPosition defaults to middle
+    localStorage.setItem(optionsKey, JSON.stringify(userOptions));
+    window.location.reload();
+  }
 
-//////////////////////////////////////////
-//QUICK SETTINGS CHANGE (larger page offset, opposite of defaults)
-//localStorage.setItem('pageOffset', window.innerHeight * 0.20); //20%
-//localStorage.setItem('smoothScroll', true);
-//localStorage.setItem('scrollPosition', "top");
-//localStorage.setItem('vimKeyNavigation', false);
-//////////////////////////////////////////
+  userOptions = getSettingsFromLocalStorage();
+  return userOptions;
+}
 
-//set page offset size (default 5% of window)
-let pageOffset;
-if (localStorage.getItem('pageOffset') === null) {
-  localStorage.setItem('pageOffset', window.innerHeight * 0.05); //5% window height
-}
-if (localStorage.getItem('pageOffset')) {
-  pageOffset = localStorage.getItem('pageOffset');
-}
-console.log(`pageOffset: ${pageOffset}`);
-
-//enable or disable smooth scrolling `true` or `false` (default false)
-let smoothScroll;
-if (localStorage.getItem('smoothScroll') === null) {
-  localStorage.setItem('smoothScroll', false);
-}
-if (localStorage.getItem('smoothScroll') === 'false') {
-  smoothScroll = false;
-} else if (localStorage.getItem('smoothScroll') === 'true') {
-  smoothScroll = true;
-}
-console.log(`smoothScroll: ${smoothScroll}`);
-
-//set scrolling position "middle" or "top" (default middle)
-// "middle" means only scroll the page if selected post is near the bottom
-// "top" always scrolls the page to keep selected post near the top
-let scrollPosition;
-if (localStorage.getItem('scrollPosition') === null) {
-  localStorage.setItem('scrollPosition', "middle");
-}
-if (localStorage.getItem('scrollPosition') === "middle") {
-  scrollPosition = "middle";
-} else if (localStorage.getItem('scrollPosition') === "top") {
-  scrollPosition = "top";
-}
-console.log(`scrollPosition: ${scrollPosition}`);
-
-
-//set vimKeyNavigation based on localStorage (default true)
-//set vimKeyNavigation based on localStorage
-let vimKeyNavigation = '';
-if (localStorage.getItem('vimKeyNavigation') === null) {
-  localStorage.setItem('vimKeyNavigation', true);
-}
-if (localStorage.getItem('vimKeyNavigation') === 'false') {
-  vimKeyNavigation = false;
-} else if (localStorage.getItem('vimKeyNavigation') === 'true') {
-  vimKeyNavigation = true;
-}
-console.log(`vimKeyNavigation: ${vimKeyNavigation}`);
+let settings = options("set");
+let vimKeyNavigation = checkedIfTrue(settings.vimKeyNavigation);
+let smoothScroll = checkedIfTrue(settings.smoothScroll);
+let pageOffset = settings.pageOffset;
+let scrollPosition = settings.scrollPosition;
+let backgroundHex = settings.backgroundHex;
 
 // Set selected entry colors
-const backgroundColor = '#373737';
+const backgroundColor = `${backgroundHex}`;
 const textColor = 'white';
 
 // Set navigation keys with keycodes here: https://www.toptal.com/developers/keycode
@@ -106,20 +207,20 @@ if (vimKeyNavigation) {
   prevPageKey = 'KeyH';
 }
 
-const expandKey = 'KeyX';
-const openCommentsKey = 'KeyC';
-const openLinkAndCollapseKey = 'Enter';
-const parentCommentKey = 'KeyP';
-const upvoteKey = 'KeyA';
-const downvoteKey = 'KeyZ';
-const replyCommKey = 'KeyR';
-const saveKey = 'KeyS';
-const popupKey = 'KeyG';
-const contextKey = 'KeyQ';
-const smallerImgKey = 'Minus';
-const biggerImgKey = 'Equal';
-const userKey = 'KeyU';
-const editKey = 'KeyE';
+const expandKey = `${settings.kb_expand}`;
+const openCommentsKey = `${settings.kb_comments}`;
+const openLinkAndCollapseKey = `${settings.kb_openLink}`;
+const parentCommentKey = `${settings.kb_parent}`;
+const upvoteKey = `${settings.kb_upvote}`;
+const downvoteKey = `${settings.kb_downvote}`;
+const replyCommKey = `${settings.kb_replyComm}`;
+const saveKey = `${settings.kb_save}`;
+const contextKey = `${settings.kb_context}`;
+const smallerImgKey = `${settings.kb_smallerImg}`;
+const biggerImgKey = `${settings.kb_largerImg}`;
+const userKey = `${settings.kb_user}`;
+const editKey = `${settings.kb_edit}`;
+const topKey = `${settings.kb_top}`;
 const linkOneKey = 'Digit1';
 const linkTwoKey = 'Digit2';
 const linkThreeKey = 'Digit3';
@@ -131,16 +232,17 @@ const linkEightKey = 'Digit8';
 const linkNineKey = 'Digit9';
 const linkZeroKey = 'Digit0';
 
-const modalCommentsKey = 'KeyC';
-const modalPostsKey = 'KeyP';
-const modalSubscribedKey = 'Digit1';
-const modalLocalKey = 'Digit2';
-const modalAllKey = 'Digit3';
-const modalSavedKey = 'KeyS';
-const modalFrontpageKey = 'KeyF';
-const modalProfileKey = 'KeyU';
-const modalInboxKey = 'KeyI';
-const modalToggleNavigationKey = 'KeyV';
+const modalPopupKey = `${settings.m_dialog}`;
+const modalPostsKey = `${settings.m_posts}`;
+const modalCommentsKey = `${settings.m_comments}`;
+const modalSubscribedKey = `${settings.m_subscribed}`;
+const modalLocalKey = `${settings.m_local}`;
+const modalAllKey = `${settings.m_all}`;
+const modalFrontpageKey = `${settings.m_frontpage}`;
+const modalSavedKey = `${settings.m_saved}`;
+const modalProfileKey = `${settings.m_userpage}`;
+const modalInboxKey = `${settings.m_inbox}`;
+const modalOptionsKey = `${settings.m_options}`;
 
 const escapeKey = 'Escape';
 let modalMode = 0;
@@ -169,23 +271,233 @@ document.body.appendChild(myDialog);
 let para = document.createElement("p");
 para.innerHTML = `
   <h3><b>Frontpage Sort</b></h3>
-  <p>P = Posts</br>
-  C = Comments</br>
-  1 = Subscribed</br>
-  2 = Local</br>
-  3 = all</p>
+  <p>${modalPostsKey} = Posts</br>
+  ${modalCommentsKey} = Comments</br>
+  ${modalSubscribedKey} = Subscribed</br>
+  ${modalLocalKey} = Local</br>
+  ${modalAllKey} = all</p>
   <h3><b>Go To Page</b></h3>
-  <p>F = Frontpage</br>
-  S = Saved</br>
-  U = User Profile Page</br>
-  I = Inbox</br></p>
-  <h6>V = Toggle HJKL (currently ${vimKeyNavigation})</br></br></h6>
+  <p>${modalFrontpageKey} = Frontpage</br>
+  ${modalSavedKey} = Saved</br>
+  ${modalProfileKey} = User Profile Page</br>
+  ${modalInboxKey} = Inbox</br></p>
+  <h6>${modalOptionsKey} = Options Page</br></br></h6>
   `;
 myDialog.appendChild(para);
 let button = document.createElement("button");
 button.classList.add('CLOSEBUTTON1');
-button.innerHTML = 'Press ESC or G to Close';
+button.innerHTML = `Press ESC or ${modalPopupKey} to Close`;
 myDialog.appendChild(button);
+
+//draw settings page
+const odiv = document.createElement("div");
+odiv.setAttribute("id", "lkOptions");
+odiv.classList.add("lkoptions", "border-secondary", "card");
+odiv.innerHTML = `
+  <h4>Lemmy-keyboard-navigation Options</h4>
+</hr>
+<div class='table-responsive'>
+  <table class='table'>
+    <thead class='pointer'>
+        <td><b>Save and close settings</b></td>
+        <td><button id='LKsaveoptionsTop'>Save and Close</button></td>
+        </tr>
+      <tr>
+        <th><h3><b>General</b></h3></th><td><td/>
+    </thead>
+    </tr>
+    <tbody>
+      <tr>
+        <td><b>Use Vim key navigation</b><br/>Also known as HJKL navigation.<br/>Uncheck to use arrow keys instead.</td>
+        <td><input type='checkbox' id='option_vimKeyNavigation' ${vimKeyNavigation} /></td>
+      </tr>
+      <tr>
+        <td><b>Smooth scrolling</b><br/>Scroll smoothly to the current selection.</td>
+        <td><input type='checkbox' id='option_smoothScroll' ${smoothScroll} /></td>
+      </tr>
+      <tr>
+        <td><b>Page Offset</b><br/>Default: 0.05</td>
+        <td><textarea id='option_pageOffset'>${settings.pageOffset}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Scrolling position</b><br/>middle: only scroll the page if selection is near the bottom.<br/>top: always scroll to keep the selection near the top.</td>
+        <td><select id="option_scrollPosition">
+            <option value='${settings.scrollPosition}'>${settings.scrollPosition}</option>
+						<option value='middle'>middle</option>
+            <option value='top'>top</option>
+            </select></td>
+      </tr>
+      <tr>
+        <td><b>Selected Hex Code</b><br/>The background color of selected posts/comments.<br/>Default: #373737</td>
+        <td><textarea id='option_backgroundHex'>${settings.backgroundHex}</textarea></td>
+      </tr>
+      <tr>
+          <td><h3><b>Rebind Keys</b></h3>Set keybinds with keycodes here:<br/><a href='https://www.toptal.com/developers/keycode'>https://www.toptal.com/developers/keycode</a></td><td><td/>
+      </tr>
+      <tr>
+      <tr>
+        <td><b>Expand/Collapse</b><br/>Expand/collapse both post and comment content.<br/>Default: KeyX</td>
+        <td><textarea id='option_kb_expand'>${settings.kb_expand}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Open Comments</b><br/>Go to the comments of a post.<br/>Default: KeyC</td>
+        <td><textarea id='option_kb_comments'>${settings.kb_comments}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Open Links</b><br/>Open Links on a post. (can also be used to collapse comments!)<br/>Default: Enter</td>
+        <td><textarea id='option_kb_openLink'>${settings.kb_openLink}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Go to Parent Comment</b><br/>Goes one level up the comment chain.<br/>Default: KeyP</td>
+        <td><textarea id='option_kb_parent'>${settings.kb_parent}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Upvote</b><br/>:\)<br/>Default: KeyA</td>
+        <td><textarea id='option_kb_upvote'>${settings.kb_upvote}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Downvote</b><br/>:\(<br/>Default: KeyZ</td>
+        <td><textarea id='option_kb_downvote'>${settings.kb_downvote}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Reply/Go to community</b><br/>Posts: goes to the post's community<br/>Comments: replies to the selected comment<br/>Default: KeyR</td>
+        <td><textarea id='option_kb_replyComm'>${settings.kb_replyComm}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Save post/comment</b><br/>Saves the selected post/comment.<br/>Default: KeyS</td>
+        <td><textarea id='option_kb_save'>${settings.kb_save}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Get context of comment</b><br/>Goes to the context of the selected comment.<br/>Default: KeyQ</td>
+        <td><textarea id='option_kb_context'>${settings.kb_context}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Shrink expanded image</b><br/>Make an expanded image smaller.<br/>Default: Minus</td>
+        <td><textarea id='option_kb_smallerImg'>${settings.kb_smallerImg}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Grow expanded image</b><br/>Make an expanded image larger.<br/>Default: Equal</td>
+        <td><textarea id='option_kb_largerImg'>${settings.kb_largerImg}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Go to poster's profile</b><br/>Go to the profile of whoever posted the selected post/comment.<br/>Default: KeyU</td>
+        <td><textarea id='option_kb_user'>${settings.kb_user}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Edit the selected post/comment</b><br/>It only works on your own posts!<br/>Default: KeyE</td>
+        <td><textarea id='option_kb_edit'>${settings.kb_edit}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Scroll to top</b><br/>Scroll to the top of the page.<br/>Default: KeyT</td>
+        <td><textarea id='option_kb_top'>${settings.kb_top}</textarea></td>
+      </tr>
+      <tr>
+          <td><h3><b>Rebind Dialog Keys</b></h3></td><td><td/>
+      </tr>
+      <tr>
+        <td><b>Open/Close Dialog</b><br/>Default: KeyG</td>
+        <td><textarea id='option_m_dialog'>${settings.m_dialog}</textarea></td>
+      </tr>
+      <tr>
+      <tr>
+          <td><h4><b>Frontpage Sort</b></h4></td><td><td/>
+      </tr>
+        <td><b>Sort by Posts</b><br/>Default: KeyP</td>
+        <td><textarea id='option_m_posts'>${settings.m_posts}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Sort by Comments</b><br/>Default: KeyC</td>
+        <td><textarea id='option_m_comments'>${settings.m_comments}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Subscribed Feed</b><br/>Default: Digit1</td>
+        <td><textarea id='option_m_subscribed'>${settings.m_subscribed}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Local Feed</b><br/>Default: Digit2</td>
+        <td><textarea id='option_m_local'>${settings.m_local}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>All Feed</b><br/>Default: Digit3</td>
+        <td><textarea id='option_m_all'>${settings.m_all}</textarea></td>
+      </tr>
+      <tr>
+          <td><h4><b>Go to page</b></h4></td><td><td/>
+      </tr>
+      <tr>
+        <td><b>Go to Frontpage</b><br/>Default: KeyF</td>
+        <td><textarea id='option_m_frontpage'>${settings.m_frontpage}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Go to Saved posts/comments</b><br/>Default: KeyS</td>
+        <td><textarea id='option_m_saved'>${settings.m_saved}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Go to Current User's Profile</b><br/>Default: KeyU</td>
+        <td><textarea id='option_m_userpage'>${settings.m_userpage}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Go to Inbox</b><br/>Default: KeyI</td>
+        <td><textarea id='option_m_inbox'>${settings.m_inbox}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Open options page</b><br/>Default: KeyO</td>
+        <td><textarea id='option_m_options'>${settings.m_options}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Save and close settings</b></td>
+        <td><button id='LKsaveoptions'>Save and Close</button></td>
+      </tr>
+      <tr>
+        <td><b style='color:red;'>WARNING:<br/>The button bellow will reset all your settings to default.<br/>This cannot be undone.</b></td><td></td>
+      </tr>
+      <tr>
+        <td><button id='LKresetoptions'>Reset All Settings</button></td><td></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<hr />
+<p>lemmy-keyboard-navigation links:</p>
+<a
+  href='https://github.com/vmavromatis/Lemmy-keyboard-navigation'>Github</a><br/><a
+  href='https://greasyfork.org/en/scripts/470498-lemmy-keyboard-navigation'>GreasyFork</a><br/><a
+  href='https://chrome.google.com/webstore/detail/lemmy-keyboard-navigator/lamoeoaekeeklbcekclbceaeafjkdhbi'>Chrome Extension</a><br/></p>
+  <p>This settings page was taken from the <a href='https://github.com/howdy-tsc/LemmyTools'>LemmyTools</a> Userscript.</p>
+`;
+
+let styleString = `
+.lkoptions {
+  position: fixed;
+  min-width: auto;
+  min-height: auto;
+  width: auto;
+  height: 100%;
+  top: 0;
+  display: none;
+  left: 0;
+  overflow: scroll;
+  z-index: 1000;
+  padding: 0.5%;
+  margin-top:35px;
+}
+`
+document.head.appendChild(document.createElement("style")).innerHTML = styleString;
+document.body.appendChild(odiv); //options
+
+document.getElementById("LKsaveoptions").addEventListener("click", (e) => {
+  e.preventDefault();
+  options("save");
+});
+document.getElementById("LKsaveoptionsTop").addEventListener("click", (e) => {
+  e.preventDefault();
+  options("save");
+});
+document.getElementById("LKresetoptions").addEventListener("click", (e) => {
+  e.preventDefault();
+  localStorage.clear();
+  window.location.reload();
+});
 
 // Global variables
 let currentEntry;
@@ -309,7 +621,7 @@ function handleKeyPress(event) {
         case openCommentsKey:
           comments(event);
           break;
-        case popupKey:
+        case modalPopupKey:
           goToDialog("open");
           break;
         case contextKey:
@@ -362,6 +674,11 @@ function handleKeyPress(event) {
           }
         }
         break;
+        case topKey:
+          window.scrollTo(0, 0);
+          sessionStorage.setItem('currentselection', 0);
+          sessionCurrentEntry("restore");
+          break;
         case linkOneKey:
           clickLink(1);
           break;
@@ -418,6 +735,7 @@ function handleKeyPress(event) {
             }
           }
         }
+        sessionStorage.setItem('currentselection', 0); //reset the selection back to the first post when switching pages
       }
       break;
     case modalMode = 1:
@@ -426,21 +744,24 @@ function handleKeyPress(event) {
           modalMode = 0;
           console.log(`modalMode: ${modalMode}`);
           break;
-        case popupKey:
+        case modalPopupKey:
           goToDialog("close");
           break;
         case modalSubscribedKey:
           let subelement = document.querySelectorAll('[title="Shows the communities you\'ve subscribed to"]')[0];
+          sessionStorage.setItem('currentselection', 0); //reset the selection to the first post when switching filters
           subelement.click();
           goToDialog("close");
           break;
         case modalLocalKey:
           let localelement = document.querySelectorAll('[title="Shows only local communities"]')[0];
+          sessionStorage.setItem('currentselection', 0);
           localelement.click();
           goToDialog("close");
           break;
         case modalAllKey:
           let allelement = document.querySelectorAll('[title="Shows all communities, including federated ones"]')[0];
+          sessionStorage.setItem('currentselection', 0);
           allelement.click();
           goToDialog("close");
           break;
@@ -478,19 +799,20 @@ function handleKeyPress(event) {
           break;
         case modalCommentsKey:
           let commentsbutton = document.getElementsByClassName("pointer btn btn-outline-secondary")[1];
+          sessionStorage.setItem('currentselection', 0);
           commentsbutton.click();
           goToDialog("close");
           break;
         case modalPostsKey:
           let postsbutton = document.getElementsByClassName("pointer btn btn-outline-secondary")[0];
+          sessionStorage.setItem('currentselection', 0);
           postsbutton.click();
           goToDialog("close");
           break;
-        case modalToggleNavigationKey:
-          //set to opposite current
-          localStorage.setItem('vimKeyNavigation', !vimKeyNavigation);
-          window.location.reload();
-          break;
+        case modalOptionsKey:
+          options("open");
+          goToDialog("close");
+        break;
       }
   }
 }

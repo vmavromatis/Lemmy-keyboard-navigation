@@ -8,7 +8,7 @@ Get from [here](https://chrome.google.com/webstore/detail/lemmy-keyboard-navigat
 ### As a Userscript
 - Make sure you have [Tampermonkey](https://www.tampermonkey.net/) or [Violentmonkey](https://violentmonkey.github.io/) or [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/) installed 
 - [Click here](https://greasyfork.org/en/scripts/470498-lemmy-keyboard-navigation) to install script from Greasyfork (there is a webhook that auto-syncs with this repo)
-- Default navigation is HJKL (aka Vim-style). Press 'G' (dashboard) then 'V' to toggle input method.
+- Press 'G' (dashboard) then 'O' to configure your settings
 - Voila! You may now navigate https://lemmy.world/ (or any other lemmy instance of your choice) with your keyboard
 
 
@@ -21,6 +21,7 @@ Get from [here](https://chrome.google.com/webstore/detail/lemmy-keyboard-navigat
 | <kbd>K</kbd> or <kbd>↑</kbd> = Previous Post                        |
 | <kbd>L</kbd> or <kbd>→</kbd> = Next Page                |
 | <kbd>H</kbd> or <kbd>←</kbd> = Previous Page                |
+| <kbd>T</kbd> = Go to Top                                              |
 | <kbd>A</kbd> = Upvote                                                |
 | <kbd>Z</kbd> = Downvote   |
 | <kbd>S</kbd> = Save Post                                               |
@@ -34,8 +35,7 @@ Get from [here](https://chrome.google.com/webstore/detail/lemmy-keyboard-navigat
 | <kbd>U</kbd> = Go to poster's profile (<kbd>⇧ Shift</kbd> + <kbd>U</kbd> to open in new tab)                                                 |
 | <kbd>⏎ Enter</kbd> = Visit Link (<kbd>⇧ Shift</kbd> + <kbd>⏎ Enter</kbd> to open in new tab)                                     |
 
-![linkpages](https://github.com/InfinibyteF4/Lemmy-keyboard-navigation/assets/75824710/239d3ecb-bec3-49d4-b987-bf69b7449607)
-
+![linkpages](https://github.com/InfinibyteF4/Lemmy-keyboard-navigation/assets/75824710/82cee5f2-3ae6-49e6-a3b3-0f4ce04a1400)
 
 
 
@@ -45,6 +45,7 @@ Get from [here](https://chrome.google.com/webstore/detail/lemmy-keyboard-navigat
 | <kbd>K</kbd> or <kbd>↑</kbd> = Previous Comment                       |
 | <kbd>⇧ Shift</kbd> + <kbd>J</kbd> or <kbd>L</kbd> or <kbd>→</kbd> = Next same-level Comment                |
 | <kbd>⇧ Shift</kbd> + <kbd>K</kbd> or <kbd>H</kbd> or <kbd>←</kbd> = Previous same-level Comment                |
+| <kbd>T</kbd> = Go to Top                                              |
 | <kbd>P</kbd> = Parent Comment                                               |
 | <kbd>A</kbd> = Upvote                                                |
 | <kbd>Z</kbd> = Downvote                                              |
@@ -57,7 +58,7 @@ Get from [here](https://chrome.google.com/webstore/detail/lemmy-keyboard-navigat
 | <kbd>⏎ Enter</kbd> or <kbd>X</kbd> = Toggle collapse / Show more replies                                    |
 | <kbd>U</kbd> = Go to commenter's profile (<kbd>⇧ Shift</kbd> + <kbd>U</kbd> to open in new tab)                                                 |
 
-![comments](https://github.com/InfinibyteF4/Lemmy-keyboard-navigation/assets/75824710/6522da12-97cb-4f40-bf6c-82d18220df9b)
+![comments](https://github.com/InfinibyteF4/Lemmy-keyboard-navigation/assets/75824710/4c448b29-13a2-4c11-b1b0-760f8c397245)
 
 
 
