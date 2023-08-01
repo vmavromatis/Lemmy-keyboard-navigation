@@ -3,10 +3,7 @@
 // @match         https://*/*
 // @grant         none
 // @version       2.1
-// @author        vmavromatis
-// @author        howdy@thesimplecorner.org
-// @author        InfinibyteF4
-// @author        aglidden
+// @author        vmavromatis, aglidden, InfinibyteF4, howdy
 // @license       GPL3
 // @icon          https://raw.githubusercontent.com/vmavromatis/Lemmy-keyboard-navigation/main/icon.png?inline=true
 // @homepageURL   https://github.com/vmavromatis/Lemmy-keyboard-navigation
@@ -18,7 +15,13 @@
 /*global window,console,localStorage,sessionStorage,document,GM_addStyle,PRO_addStyle,addStyle,MutationObserver,location*/
 
 //isLemmySite
-if (document.querySelectorAll('.lemmy-site').length >= 1) {
+if ((document.querySelectorAll('.lemmy-site').length >= 1) || (document.getElementById("lemmy-rewrite-urls-icon-template") !== null))
+{
+
+//isOldLemmy
+if (document.getElementById("lemmy-rewrite-urls-icon-template") !== null){
+    let isOldLemmy = true;
+   }
 
 // DEBUGGING (ignore me!)
 //localStorage.clear();
@@ -540,7 +543,7 @@ const config = {
 };
 
 const observer = new MutationObserver(() => {
-  entries = document.querySelectorAll(".post-listing, .comment-node");
+  entries = document.querySelectorAll(".post-listing, .comment-node, .post, .comment");
 
   if (entries.length > 0) {
     if (location.href !== previousUrl) {
