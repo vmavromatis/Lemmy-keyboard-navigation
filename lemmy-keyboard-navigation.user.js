@@ -15,15 +15,18 @@
 // @run-at        document-end
 // ==/UserScript==
 
+/*global window,console,localStorage,sessionStorage,document,GM_addStyle,PRO_addStyle,addStyle,MutationObserver,location*/
+
 //isLemmySite
-if (document.querySelectorAll('.lemmy-site').length >= 1){
+if (document.querySelectorAll('.lemmy-site').length >= 1) {
 
 // DEBUGGING (ignore me!)
 //localStorage.clear();
 //sessionStorage.clear();
 
 //settings page (this is from lemmyTools)
-const optionsKey = "lemmy-keyboard-navigation-Options"
+const optionsKey = "lemmy-keyboard-navigation-Options";
+
 function getSettingsFromLocalStorage() {
   try {
     return JSON.parse(localStorage.getItem(optionsKey) || "{}");
@@ -43,10 +46,8 @@ function options(open) {
     odiv.style.display = "block";
   } else if (open === "set") {
     //First run set defaults or pull from localstorage.
-    userOptions = Object.assign(
-      {},
-      {
-        pageOffset: 0.05,
+    userOptions = Object.assign({}, {
+        pageOffset: 5,
         vimKeyNavigation: true,
         smoothScroll: false,
         scrollPosition: "middle",
@@ -90,9 +91,15 @@ function options(open) {
     userOptions.smoothScroll =
       document.getElementById("option_smoothScroll").checked;
 
-    userOptions.pageOffset = parseFloat(
+    let offset = parseFloat(
       document.getElementById("option_pageOffset").value
     );
+    if (isNaN(offset) || offset < 0 || offset > 100) {
+      userOptions.pageOffset = 0;
+    } else {
+      userOptions.pageOffset = offset;
+    }
+
     userOptions.backgroundHex =
       document.getElementById("option_backgroundHex").value;
 
@@ -167,13 +174,12 @@ function options(open) {
 
     userOptions.m_userpage =
       document.getElementById("option_m_userpage").value;
-      
+
     userOptions.m_inbox =
       document.getElementById("option_m_inbox").value;
 
     userOptions.m_options =
       document.getElementById("option_m_options").value;
-
 
     localStorage.setItem(optionsKey, JSON.stringify(userOptions));
     window.location.reload();
@@ -316,14 +322,14 @@ odiv.innerHTML = `
         <td><input type='checkbox' id='option_smoothScroll' ${smoothScroll} /></td>
       </tr>
       <tr>
-        <td><b>Page Offset</b><br/>Default: 0.05</td>
-        <td><textarea id='option_pageOffset'>${settings.pageOffset}</textarea></td>
+        <td><b>Page Offset</b><br/>Percent of page to offset selected entry when scrolling.<br/>0-20% recommended<br/>Default: 5</td>
+        <td><textarea id='option_pageOffset'>${settings.pageOffset}</textarea>%</td>
       </tr>
       <tr>
         <td><b>Scrolling position</b><br/>middle: only scroll the page if selection is near the bottom.<br/>top: always scroll to keep the selection near the top.</td>
         <td><select id="option_scrollPosition">
             <option value='${settings.scrollPosition}'>${settings.scrollPosition}</option>
-						<option value='middle'>middle</option>
+            <option value='middle'>middle</option>
             <option value='top'>top</option>
             </select></td>
       </tr>
@@ -481,7 +487,7 @@ let styleString = `
   padding: 0.5%;
   margin-top:35px;
 }
-`
+`;
 document.head.appendChild(document.createElement("style")).innerHTML = styleString;
 document.body.appendChild(odiv); //options
 
@@ -812,7 +818,7 @@ function handleKeyPress(event) {
         case modalOptionsKey:
           options("open");
           goToDialog("close");
-        break;
+          break;
       }
   }
 }
@@ -892,7 +898,7 @@ function selectEntry(e, scrollIntoView = false) {
   if (links) {
     let alink = links.querySelectorAll('a');
     if (alink.length > 0) {
-      alink.forEach(function (value, i) {
+      alink.forEach(function(value, i) {
         let linkNumber = document.createElement("span");
         linkNumber.classList.add("linkNumber");
         linkNumber.style.fontSize = "9px";
@@ -1277,7 +1283,7 @@ function scrollPage(y) {
   } else {
     window.scrollTo({
       top: y
-  });
+    });
   }
 }
 
