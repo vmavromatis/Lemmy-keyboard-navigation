@@ -46,7 +46,7 @@ function options(open) {
     userOptions = Object.assign(
       {},
       {
-        pageOffset: 0.05,
+        pageOffset: 5,
         vimKeyNavigation: true,
         smoothScroll: false,
         scrollPosition: "middle",
@@ -90,9 +90,15 @@ function options(open) {
     userOptions.smoothScroll =
       document.getElementById("option_smoothScroll").checked;
 
-    userOptions.pageOffset = parseFloat(
+    let offset = parseFloat(
       document.getElementById("option_pageOffset").value
     );
+    if (isNaN(offset) || offset < 0 || offset > 100) {
+      userOptions.pageOffset = 0;
+    } else {
+      userOptions.pageOffset = offset;
+    }
+    
     userOptions.backgroundHex =
       document.getElementById("option_backgroundHex").value;
 
@@ -316,14 +322,14 @@ odiv.innerHTML = `
         <td><input type='checkbox' id='option_smoothScroll' ${smoothScroll} /></td>
       </tr>
       <tr>
-        <td><b>Page Offset</b><br/>Default: 0.05</td>
-        <td><textarea id='option_pageOffset'>${settings.pageOffset}</textarea></td>
+        <td><b>Page Offset</b><br/>Percent of page to offset selected entry when scrolling.<br/>0-20% recommended<br/>Default: 5</td>
+        <td><textarea id='option_pageOffset'>${settings.pageOffset}</textarea>%</td>
       </tr>
       <tr>
         <td><b>Scrolling position</b><br/>middle: only scroll the page if selection is near the bottom.<br/>top: always scroll to keep the selection near the top.</td>
         <td><select id="option_scrollPosition">
             <option value='${settings.scrollPosition}'>${settings.scrollPosition}</option>
-						<option value='middle'>middle</option>
+            <option value='middle'>middle</option>
             <option value='top'>top</option>
             </select></td>
       </tr>
