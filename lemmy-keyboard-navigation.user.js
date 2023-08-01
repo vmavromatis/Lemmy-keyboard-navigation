@@ -192,7 +192,7 @@ function options(open) {
 let settings = options("set");
 let vimKeyNavigation = checkedIfTrue(settings.vimKeyNavigation);
 let smoothScroll = checkedIfTrue(settings.smoothScroll);
-let pageOffset = settings.pageOffset;
+let pageOffset = window.innerHeight * settings.pageOffset / 100;
 let scrollPosition = settings.scrollPosition;
 let backgroundHex = settings.backgroundHex;
 
