@@ -328,7 +328,7 @@ odiv.innerHTML = `
             </select></td>
       </tr>
       <tr>
-        <td><b>Selected Hex Code</b><br/>Default: #373737</td>
+        <td><b>Selected Hex Code</b><br/>The background color of selected posts/comments.<br/>Default: #373737</td>
         <td><textarea id='option_backgroundHex'>${settings.backgroundHex}</textarea></td>
       </tr>
       <tr>
@@ -380,7 +380,7 @@ odiv.innerHTML = `
         <td><textarea id='option_kb_largerImg'>${settings.kb_largerImg}</textarea></td>
       </tr>
       <tr>
-        <td><b>Go to OP's profile</b><br/>Go to the profile of whoever posted the selected post/comment.<br/>Default: KeyU</td>
+        <td><b>Go to poster's profile</b><br/>Go to the profile of whoever posted the selected post/comment.<br/>Default: KeyU</td>
         <td><textarea id='option_kb_user'>${settings.kb_user}</textarea></td>
       </tr>
       <tr>
@@ -392,7 +392,7 @@ odiv.innerHTML = `
         <td><textarea id='option_kb_top'>${settings.kb_top}</textarea></td>
       </tr>
       <tr>
-          <td><h3><b>Rebind Dialog Keys</b></h3>Set keybinds with keycodes here:<br/><a href='https://www.toptal.com/developers/keycode'>https://www.toptal.com/developers/keycode</a></td><td><td/>
+          <td><h3><b>Rebind Dialog Keys</b></h3></td><td><td/>
       </tr>
       <tr>
         <td><b>Open/Close Dialog</b><br/>Default: KeyG</td>
@@ -463,7 +463,7 @@ odiv.innerHTML = `
   href='https://github.com/vmavromatis/Lemmy-keyboard-navigation'>Github</a><br/><a
   href='https://greasyfork.org/en/scripts/470498-lemmy-keyboard-navigation'>GreasyFork</a><br/><a
   href='https://chrome.google.com/webstore/detail/lemmy-keyboard-navigator/lamoeoaekeeklbcekclbceaeafjkdhbi'>Chrome Extension</a><br/></p>
-  <p>This settings page was taken from the <a href='https://github.com/howdy-tsc/LemmyTools'>LemmyTools</a> Usercript.</p>
+  <p>This settings page was taken from the <a href='https://github.com/howdy-tsc/LemmyTools'>LemmyTools</a> Userscript.</p>
 `;
 
 let styleString = `
