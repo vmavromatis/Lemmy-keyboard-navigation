@@ -18,7 +18,7 @@
 /*global window,console,localStorage,sessionStorage,document,GM_addStyle,PRO_addStyle,addStyle,MutationObserver,location*/
 
 //isLemmySite
-if (document.querySelectorAll('.lemmy-site').length >= 1){
+if (document.querySelectorAll('.lemmy-site').length >= 1) {
 
 // DEBUGGING (ignore me!)
 //localStorage.clear();
@@ -26,6 +26,7 @@ if (document.querySelectorAll('.lemmy-site').length >= 1){
 
 //settings page (this is from lemmyTools)
 const optionsKey = "lemmy-keyboard-navigation-Options";
+
 function getSettingsFromLocalStorage() {
   try {
     return JSON.parse(localStorage.getItem(optionsKey) || "{}");
@@ -45,9 +46,7 @@ function options(open) {
     odiv.style.display = "block";
   } else if (open === "set") {
     //First run set defaults or pull from localstorage.
-    userOptions = Object.assign(
-      {},
-      {
+    userOptions = Object.assign({}, {
         pageOffset: 5,
         vimKeyNavigation: true,
         smoothScroll: false,
@@ -100,7 +99,7 @@ function options(open) {
     } else {
       userOptions.pageOffset = offset;
     }
-    
+
     userOptions.backgroundHex =
       document.getElementById("option_backgroundHex").value;
 
@@ -175,13 +174,12 @@ function options(open) {
 
     userOptions.m_userpage =
       document.getElementById("option_m_userpage").value;
-      
+
     userOptions.m_inbox =
       document.getElementById("option_m_inbox").value;
 
     userOptions.m_options =
       document.getElementById("option_m_options").value;
-
 
     localStorage.setItem(optionsKey, JSON.stringify(userOptions));
     window.location.reload();
@@ -820,7 +818,7 @@ function handleKeyPress(event) {
         case modalOptionsKey:
           options("open");
           goToDialog("close");
-        break;
+          break;
       }
   }
 }
@@ -900,7 +898,7 @@ function selectEntry(e, scrollIntoView = false) {
   if (links) {
     let alink = links.querySelectorAll('a');
     if (alink.length > 0) {
-      alink.forEach(function (value, i) {
+      alink.forEach(function(value, i) {
         let linkNumber = document.createElement("span");
         linkNumber.classList.add("linkNumber");
         linkNumber.style.fontSize = "9px";
@@ -1285,7 +1283,7 @@ function scrollPage(y) {
   } else {
     window.scrollTo({
       top: y
-  });
+    });
   }
 }
 
