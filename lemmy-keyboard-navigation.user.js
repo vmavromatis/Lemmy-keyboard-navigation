@@ -271,6 +271,7 @@ document.documentElement.style = "scroll-behavior: auto";
 const css = `
   .selected {
     background-color: ${backgroundColor} !important;
+    font-weight: normal !important;
     color: ${textColor};
     }`;
 
