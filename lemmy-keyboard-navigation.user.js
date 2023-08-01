@@ -15,11 +15,11 @@
 /*global window,console,localStorage,sessionStorage,document,GM_addStyle,PRO_addStyle,addStyle,MutationObserver,location*/
 
 //isLemmySite
-if ((document.querySelectorAll('.lemmy-site').length >= 1) || (document.getElementById("lemmy-rewrite-urls-icon-template") !== null))
+if ((document.querySelectorAll('.lemmy-site').length >= 1) || (document.getElementById("lemmy-rewrite-urls-icon-template") !== false))
 {
 
 //isOldLemmy
-if (document.getElementById("lemmy-rewrite-urls-icon-template") !== null){
+if (document.getElementById("lemmy-rewrite-urls-icon-template") !== false){
     let isOldLemmy = true;
    }
 
