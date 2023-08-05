@@ -67,11 +67,11 @@ function options(open) {
         kb_edit: "KeyE",
         kb_top: "KeyT",
         m_dialog: "KeyG",
-        m_posts: "KeyP",
-        m_comments: "KeyC",
-        m_subscribed: "Digit1",
-        m_local: "Digit2",
-        m_all: "Digit3",
+        m_first: "Digit1",
+        m_second: "Digit2",
+        m_third: "Digit3",
+        m_fourth: "Digit4",
+        m_fifth: "Digit5",
         m_frontpage: "KeyF",
         m_saved: "KeyS",
         m_userpage: "KeyU",
@@ -100,11 +100,11 @@ function options(open) {
       userOptions.pageOffset = offset;
     }
 
-    userOptions.backgroundHex =
-      document.getElementById("option_backgroundHex").value;
-
     userOptions.scrollPosition =
       document.getElementById("option_scrollPosition").value;
+
+    userOptions.backgroundHex =
+      document.getElementById("option_backgroundHex").value;
     //keybinds
     userOptions.kb_expand =
       document.getElementById("option_kb_expand").value;
@@ -151,20 +151,20 @@ function options(open) {
     userOptions.m_dialog =
       document.getElementById("option_m_dialog").value;
 
-    userOptions.m_posts =
-      document.getElementById("option_m_posts").value;
+    userOptions.m_first =
+      document.getElementById("option_m_first").value;
 
-    userOptions.m_comments =
-      document.getElementById("option_m_comments").value;
+    userOptions.m_second =
+      document.getElementById("option_m_second").value;
 
-    userOptions.m_subscribed =
-      document.getElementById("option_m_subscribed").value;
+    userOptions.m_third =
+      document.getElementById("option_m_third").value;
 
-    userOptions.m_local =
-      document.getElementById("option_m_local").value;
+    userOptions.m_fourth =
+      document.getElementById("option_m_fourth").value;
 
-    userOptions.m_all =
-      document.getElementById("option_m_all").value;
+    userOptions.m_fifth =
+      document.getElementById("option_m_fifth").value;
 
     userOptions.m_frontpage =
       document.getElementById("option_m_frontpage").value;
@@ -239,16 +239,17 @@ const linkNineKey = 'Digit9';
 const linkZeroKey = 'Digit0';
 
 const modalPopupKey = `${settings.m_dialog}`;
-const modalPostsKey = `${settings.m_posts}`;
-const modalCommentsKey = `${settings.m_comments}`;
-const modalSubscribedKey = `${settings.m_subscribed}`;
-const modalLocalKey = `${settings.m_local}`;
-const modalAllKey = `${settings.m_all}`;
+const modalSortOneKey = `${settings.m_first}`;
+const modalSortTwoKey = `${settings.m_second}`;
+const modalSortThreeKey = `${settings.m_third}`;
+const modalSortFourKey = `${settings.m_fourth}`;
+const modalSortFiveKey = `${settings.m_fifth}`;
 const modalFrontpageKey = `${settings.m_frontpage}`;
 const modalSavedKey = `${settings.m_saved}`;
 const modalProfileKey = `${settings.m_userpage}`;
 const modalInboxKey = `${settings.m_inbox}`;
 const modalOptionsKey = `${settings.m_options}`;
+
 
 const escapeKey = 'Escape';
 let modalMode = 0;
@@ -276,12 +277,12 @@ let myDialog = document.createElement("dialog");
 document.body.appendChild(myDialog);
 let para = document.createElement("p");
 para.innerHTML = `
-  <h3><b>Frontpage Sort</b></h3>
-  <p>${modalPostsKey} = Posts</br>
-  ${modalCommentsKey} = Comments</br>
-  ${modalSubscribedKey} = Subscribed</br>
-  ${modalLocalKey} = Local</br>
-  ${modalAllKey} = all</p>
+  <h3><b>Sort by</b></h3>
+  <p>${modalSortOneKey} = N/A</br>
+    ${modalSortTwoKey} = N/A</br>
+    ${modalSortThreeKey} = N/A</br>
+    ${modalSortFourKey} = N/A</br>
+    ${modalSortFiveKey} = N/A</p>
   <h3><b>Go To Page</b></h3>
   <p>${modalFrontpageKey} = Frontpage</br>
   ${modalSavedKey} = Saved</br>
@@ -350,7 +351,7 @@ odiv.innerHTML = `
         <td><textarea id='option_kb_comments'>${settings.kb_comments}</textarea></td>
       </tr>
       <tr>
-        <td><b>Open Links</b><br/>Open Links on a post. (can also be used to collapse comments!)<br/>Default: Enter</td>
+        <td><b>Open Links</b><br/>Open Links on a post.<br/>(can also be used to collapse comments!)<br/>Default: Enter</td>
         <td><textarea id='option_kb_openLink'>${settings.kb_openLink}</textarea></td>
       </tr>
       <tr>
@@ -406,26 +407,26 @@ odiv.innerHTML = `
       </tr>
       <tr>
       <tr>
-          <td><h4><b>Frontpage Sort</b></h4></td><td><td/>
+          <td><h4><b>Sort buttons</b></h4>For example: If you were to press G then 3 on the front page,<br/>it would sort by subscribed, but doing the same in a<br/>comment section would sort by new. The dialog<br/>text will change with what sort buttons are avaliable!</td><td><td/>
       </tr>
-        <td><b>Sort by Posts</b><br/>Default: KeyP</td>
-        <td><textarea id='option_m_posts'>${settings.m_posts}</textarea></td>
-      </tr>
-      <tr>
-        <td><b>Sort by Comments</b><br/>Default: KeyC</td>
-        <td><textarea id='option_m_comments'>${settings.m_comments}</textarea></td>
+        <td><b>First Sort Button</b><br/>Default: Digit1</td>
+        <td><textarea id='option_m_first'>${settings.m_first}</textarea></td>
       </tr>
       <tr>
-        <td><b>Subscribed Feed</b><br/>Default: Digit1</td>
-        <td><textarea id='option_m_subscribed'>${settings.m_subscribed}</textarea></td>
+        <td><b>Second Sort Button</b><br/>Default: Digit2</td>
+        <td><textarea id='option_m_second'>${settings.m_second}</textarea></td>
       </tr>
       <tr>
-        <td><b>Local Feed</b><br/>Default: Digit2</td>
-        <td><textarea id='option_m_local'>${settings.m_local}</textarea></td>
+        <td><b>Third Sort Button</b><br/>Default: Digit3</td>
+        <td><textarea id='option_m_third'>${settings.m_third}</textarea></td>
       </tr>
       <tr>
-        <td><b>All Feed</b><br/>Default: Digit3</td>
-        <td><textarea id='option_m_all'>${settings.m_all}</textarea></td>
+        <td><b>Fourth Sort Button</b><br/>Default: Digit4</td>
+        <td><textarea id='option_m_fourth'>${settings.m_fourth}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Fifth Sort Button</b><br/>Default: Digit5</td>
+        <td><textarea id='option_m_fifth'>${settings.m_fifth}</textarea></td>
       </tr>
       <tr>
           <td><h4><b>Go to page</b></h4></td><td><td/>
@@ -455,7 +456,7 @@ odiv.innerHTML = `
         <td><button id='LKsaveoptions'>Save and Close</button></td>
       </tr>
       <tr>
-        <td><b style='color:red;'>WARNING:<br/>The button bellow will reset all your settings to default.<br/>This cannot be undone.</b></td><td></td>
+        <td><b style='color:red;'>WARNING:<br/>The button below will reset all your settings to default.<br/>This cannot be undone.</b></td><td></td>
       </tr>
       <tr>
         <td><button id='LKresetoptions'>Reset All Settings</button></td><td></td>
@@ -628,6 +629,7 @@ function handleKeyPress(event) {
           comments(event);
           break;
         case modalPopupKey:
+          dialogUpdate();
           goToDialog("open");
           break;
         case contextKey:
@@ -753,24 +755,6 @@ function handleKeyPress(event) {
         case modalPopupKey:
           goToDialog("close");
           break;
-        case modalSubscribedKey:
-          let subelement = document.querySelectorAll('[title="Shows the communities you\'ve subscribed to"]')[0];
-          sessionStorage.setItem('currentselection', 0); //reset the selection to the first post when switching filters
-          subelement.click();
-          goToDialog("close");
-          break;
-        case modalLocalKey:
-          let localelement = document.querySelectorAll('[title="Shows only local communities"]')[0];
-          sessionStorage.setItem('currentselection', 0);
-          localelement.click();
-          goToDialog("close");
-          break;
-        case modalAllKey:
-          let allelement = document.querySelectorAll('[title="Shows all communities, including federated ones"]')[0];
-          sessionStorage.setItem('currentselection', 0);
-          allelement.click();
-          goToDialog("close");
-          break;
         case modalSavedKey:
           if (window.location.pathname.includes("/u/")) {
             let savedelement = document.getElementsByClassName("btn btn-outline-secondary pointer")[3];
@@ -786,7 +770,7 @@ function handleKeyPress(event) {
           frontpage();
           break;
         case modalProfileKey:
-          let profileelement = document.querySelectorAll('[title="Profile"]')[0];
+          let profileelement = document.getElementsByClassName("dropdown-item px-2")[0];
           if (profileelement) {
             profileelement.click();
             goToDialog("close");
@@ -803,16 +787,34 @@ function handleKeyPress(event) {
             window.location.replace(window.location.origin + "/login");
           }
           break;
-        case modalCommentsKey:
-          let commentsbutton = document.getElementsByClassName("pointer btn btn-outline-secondary")[1];
-          sessionStorage.setItem('currentselection', 0);
-          commentsbutton.click();
+        case modalSortOneKey:
+          let firstbutton = document.getElementsByClassName("btn btn-outline-secondary")[0];
+          sessionStorage.setItem('currentselection', 0); //reset the selection to the first post when switching filters
+          firstbutton.click();
           goToDialog("close");
           break;
-        case modalPostsKey:
-          let postsbutton = document.getElementsByClassName("pointer btn btn-outline-secondary")[0];
+        case modalSortTwoKey:
+          let secondbutton = document.getElementsByClassName("btn btn-outline-secondary")[1];
           sessionStorage.setItem('currentselection', 0);
-          postsbutton.click();
+          secondbutton.click();
+          goToDialog("close");
+          break;
+        case modalSortThreeKey:
+          let thirdbutton = document.getElementsByClassName("btn btn-outline-secondary")[2];
+          sessionStorage.setItem('currentselection', 0);
+          thirdbutton.click();
+          goToDialog("close");
+          break;
+        case modalSortFourKey:
+          let fourthbutton = document.getElementsByClassName("btn btn-outline-secondary")[3];
+          sessionStorage.setItem('currentselection', 0);
+          fourthbutton.click();
+          goToDialog("close");
+          break;
+        case modalSortFiveKey:
+          let fifthbutton = document.getElementsByClassName("btn btn-outline-secondary")[4];
+          sessionStorage.setItem('currentselection', 0);
+          fifthbutton.click();
           goToDialog("close");
           break;
         case modalOptionsKey:
@@ -859,6 +861,48 @@ function getPrevEntrySameLevel(e) {
   }
 
   return prevSibling.getElementsByTagName("article")[0];
+}
+
+function dialogUpdate() {
+  para.remove();
+  para = document.createElement("p");
+  para.innerHTML = `
+    <h3><b>Sort by</b></h3>
+    <p>${modalSortOneKey} = ${dialogLocation(1)}</br>
+    ${modalSortTwoKey} = ${dialogLocation(2)}</br>
+    ${modalSortThreeKey} = ${dialogLocation(3)}</br>
+    ${modalSortFourKey} = ${dialogLocation(4)}</br>
+    ${modalSortFiveKey} = ${dialogLocation(5)}</p>
+    <h3><b>Go To Page</b></h3>
+    <p>${modalFrontpageKey} = Frontpage</br>
+    ${modalSavedKey} = Saved</br>
+    ${modalProfileKey} = User Profile Page</br>
+    ${modalInboxKey} = Inbox</br></p>
+    <h6>${modalOptionsKey} = Options Page</br></br></h6>
+    `;
+  myDialog.appendChild(para);
+  myDialog.appendChild(button);
+}
+
+function dialogLocation(n) {
+  var sort = document.getElementsByClassName("btn btn-outline-secondary");
+
+  if (n === 1 && 1 <= sort.length) {
+    return sort[0].innerText;
+  }
+  if (n === 2 && 2 <= sort.length) {
+    return sort[1].innerText;
+  }
+  if (n === 3 && 3 <= sort.length) {
+    return sort[2].innerText;
+  }
+  if (n === 4 && 4 <= sort.length) {
+    return sort[3].innerText;
+  }
+  if (n === 5 && 5 <= sort.length) {
+    return sort[4].innerText;
+  }
+  return "N/A";
 }
 
 function clickEntry(event) {
@@ -1023,7 +1067,7 @@ function previousKey(event) {
 }
 
 function upVote() {
-  const upvoteButton = currentEntry.querySelector("button[aria-label='Upvote']");
+  identifyButtons();
 
   if (upvoteButton) {
     upvoteButton.click();
@@ -1031,7 +1075,7 @@ function upVote() {
 }
 
 function downVote() {
-  const downvoteButton = currentEntry.querySelector("button[aria-label='Downvote']");
+  identifyButtons();
 
   if (downvoteButton) {
     downvoteButton.click();
@@ -1061,11 +1105,8 @@ function goToDialog(n) {
 
 function instanceAndUser(n) {
   let currentInstance = window.location.origin;
-  let dropdownUser = document.getElementsByClassName("btn dropdown-toggle")[0];
-  let username;
-  if (dropdownUser) {
-    username = dropdownUser.textContent;
-  }
+  let username = document.getElementsByClassName("btn dropdown-toggle")[0].textContent;
+
   if (n === "profile") {
     if (username) {
       let userlink = currentInstance + "/u/" + username;
@@ -1084,6 +1125,109 @@ function instanceAndUser(n) {
   }
 }
 
+var selectionType;
+function checkSelection() {
+  let postSelection = document.getElementsByClassName("post-listing mt-2 selected")[0];
+  let username = '@' + document.getElementsByClassName("btn dropdown-toggle")[0].textContent;
+  let posterusername = currentEntry.getElementsByClassName("person-listing d-inline-flex align-items-baseline text-info")[0].innerText;
+
+  if (postSelection) {
+    selectionType = "post";
+    contextCheck = currentEntry.getElementsByClassName("btn btn-link btn-animate")[11]; // check for direct link button (rainbow star)
+    if (contextCheck) {
+      selectionType = `${selectionType}-fedi`;
+    }
+
+    if (window.location.pathname.includes("/post/")) {
+      contextCheck = currentEntry.getElementsByClassName("btn btn-link btn-animate")[13]; // check for direct link button
+      if (contextCheck) {
+        selectionType = "post-page-fedi"
+      } else {
+        selectionType = "post-page"
+      }
+    }
+  } else {
+    selectionType = "comment";
+    let contextButton = currentEntry.getElementsByClassName("btn btn-link btn-animate text-muted btn-sm")[0].href;
+    let contextButton2 = currentEntry.getElementsByClassName("btn btn-link btn-animate")[2].href;
+
+    if (contextButton === contextButton2) {
+      selectionType = `${selectionType}-context`;
+    }
+
+    if (window.location.pathname.includes("/inbox")) {
+      selectionType = "comment-inbox";
+    }
+  }
+  if (username === posterusername) {
+    selectionType = `my-${selectionType}`;
+  }
+  console.log(`current selection: ${selectionType}`);
+}
+
+var upvoteButton;
+var downvoteButton;
+var replyButton;
+var moreButton;
+var saveButton;
+var editButton;
+var commentButton;
+function identifyButtons() {
+  checkSelection();
+  let getButton = currentEntry.getElementsByClassName("btn btn-link btn-animate");
+  if (selectionType === "post") { // posts on link pages
+    upvoteButton = getButton[0];
+    downvoteButton = getButton[1];
+    saveButton = getButton[2];
+    commentButton = currentEntry.getElementsByClassName("btn btn-link btn-sm text-muted ps-0")[1];
+    if (selectionType === "my-post") { // add edit button if the post is yours
+      editButton = currentEntry.getElementsByClassName("btn btn-link btn-sm d-flex align-items-center rounded-0 dropdown-item")[2];
+    }
+  } else if (selectionType === "post-fedi" || selectionType === "post-page-fedi") { // federated posts on link pages and on the page
+    upvoteButton = getButton[1];
+    downvoteButton = getButton[2];
+    saveButton = getButton[3];
+    commentButton = currentEntry.getElementsByClassName("btn btn-link btn-sm text-muted ps-0")[1];
+  } else if (selectionType === "post-page" || selectionType === "my-post-page") { // on the page of the post
+    upvoteButton = getButton[0];
+    downvoteButton = getButton[1];
+    saveButton = getButton[2];
+    commentButton = currentEntry.getElementsByClassName("btn btn-link btn-sm text-muted ps-0")[1];
+    if (selectionType === "my-post-page") { // add edit button if the post is yours
+      editButton = currentEntry.getElementsByClassName("btn btn-link btn-sm d-flex align-items-center rounded-0 dropdown-item")[2];
+    }
+  // X - X numbers is the getButton array size depending on if moreButton was clicked or not
+  } else if (selectionType === "comment" || selectionType === "my-comment") { // 6 - 10 comments
+    upvoteButton = getButton[2];
+    downvoteButton = getButton[3];
+    replyButton = getButton[4];
+    moreButton = getButton[5];
+    if (selectionType === "my-comment") { // 6 - 9 add edit button if the comment is yours
+      saveButton = getButton[5];
+      editButton = getButton[7];
+    } else {
+      saveButton = getButton[8];
+    }
+  } else if (selectionType === "comment-context" || selectionType === "my-comment-context") { // 8 - 12 comments with context buttons
+    upvoteButton = getButton[4];
+    downvoteButton = getButton[5];
+    replyButton = getButton[6];
+    moreButton = getButton[7];
+    if (selectionType === "my-comment-context") { // 8 - 11 add edit button if the comment is yours
+      saveButton = getButton[7];
+      editButton = getButton[9];
+    } else {
+      saveButton = getButton[10];
+    }
+  } else if (selectionType === "comment-inbox") { // 9 - 11 comments in your inbox
+    upvoteButton = getButton[5];
+    downvoteButton = getButton[6];
+    replyButton = getButton[7];
+    moreButton = getButton[8];
+    saveButton = getButton[11];
+  }
+}
+
 function frontpage() {
   let homeElement = document.getElementsByClassName("d-flex align-items-center navbar-brand me-md-3 active")[0];
   if (homeElement) {
@@ -1095,7 +1239,7 @@ function frontpage() {
 }
 
 function reply(event) {
-  const replyButton = currentEntry.querySelector("button[data-tippy-content='reply']");
+  identifyButtons();
 
   if (replyButton) {
     event.preventDefault();
@@ -1124,12 +1268,14 @@ function visitUser(event) {
 }
 
 function comments(event) {
+  identifyButtons();
+
   if (event.shiftKey) {
     window.open(
-      currentEntry.querySelector("a.btn[title*='Comment']").href
+      commentButton.href
     );
   } else {
-    currentEntry.querySelector("a.btn[title*='Comment']").click();
+    commentButton.click();
   }
 }
 
@@ -1179,26 +1325,17 @@ function imgResize(n) {
 }
 
 function save() {
-  const saveButton = currentEntry.querySelector("button[aria-label='save']");
-  const unsaveButton = currentEntry.querySelector("button[aria-label='unsave']");
-  const moreButton = currentEntry.querySelector("button[aria-label='more']");
+  identifyButtons();
+
   if (saveButton) {
     saveButton.click();
-  } else if (unsaveButton) {
-    unsaveButton.click();
   } else {
     moreButton.click();
-    if (saveButton) {
-      saveButton.click();
-    } else if (unsaveButton) {
-      unsaveButton.click();
-    }
   }
 }
 
 function edit() {
-  let editButton = currentEntry.querySelector("button[aria-label='Edit']");
-  let moreButton = currentEntry.querySelector("button[aria-label='more']");
+  identifyButtons();
 
   if (editButton) {
     editButton.click();
@@ -1208,7 +1345,7 @@ function edit() {
 }
 
 function toggleExpand() {
-  const expandButton = currentEntry.querySelector("button[aria-label='Expand here']");
+  const expandButton = currentEntry.getElementsByClassName("thumbnail rounded overflow-hidden d-inline-block bg-transparent")[0];
   const textExpandButton = currentEntry.querySelector(".post-title>button");
   const commentExpandButton = currentEntry.querySelector(".ms-2>div>button");
   const moreExpandButton = currentEntry.querySelector(".ms-1>button");
