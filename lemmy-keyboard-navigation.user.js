@@ -51,6 +51,7 @@ function options(open) {
         vimKeyNavigation: true,
         smoothScroll: false,
         scrollPosition: "middle",
+        expandOption: "both",
         backgroundHex: "#373737",
         kb_expand: "KeyX",
         kb_comments: "KeyC",
@@ -102,6 +103,9 @@ function options(open) {
 
     userOptions.scrollPosition =
       document.getElementById("option_scrollPosition").value;
+
+    userOptions.expandOption = 
+    document.getElementById("option_expandOption").value;
 
     userOptions.backgroundHex =
       document.getElementById("option_backgroundHex").value;
@@ -195,6 +199,7 @@ let smoothScroll = checkedIfTrue(settings.smoothScroll);
 let pageOffset = window.innerHeight * settings.pageOffset / 100;
 let scrollPosition = settings.scrollPosition;
 let backgroundHex = settings.backgroundHex;
+let expandOption = settings.expandOption;
 
 // Set selected entry colors
 const backgroundColor = `${backgroundHex}`;
@@ -332,6 +337,15 @@ odiv.innerHTML = `
             <option value='${settings.scrollPosition}'>${settings.scrollPosition}</option>
             <option value='middle'>middle</option>
             <option value='top'>top</option>
+            </select></td>
+      </tr>
+      <tr>
+        <td><b>Expand All Posts</b><br/>Pressing Shift + X will expand all posts.<br/>both: expand both text boxes and images.<br/>images: only expand images.<br/>text: only expand text boxes</td>
+        <td><select id="option_expandOption">
+            <option value='${settings.expandOption}'>${settings.expandOption}</option>
+            <option value='both'>both</option>
+            <option value='text'>text</option>
+            <option value='images'>images</option>
             </select></td>
       </tr>
       <tr>
@@ -610,8 +624,12 @@ function handleKeyPress(event) {
           downVote();
           break;
         case expandKey:
-          toggleExpand();
-          expand = isExpanded() ? true : false;
+          if (event.shiftKey) {
+            expandAll();
+          } else {
+            toggleExpand();
+            expand = isExpanded() ? true : false;
+          }
           break;
         case smallerImgKey:
           imgResize("smaller");
@@ -683,9 +701,7 @@ function handleKeyPress(event) {
         }
         break;
         case topKey:
-          window.scrollTo(0, 0);
-          sessionStorage.setItem('currentselection', 0);
-          sessionCurrentEntry("restore");
+          goToTop();
           break;
         case linkOneKey:
           clickLink(1);
@@ -1219,7 +1235,7 @@ function identifyButtons() {
     } else {
       saveButton = getButton[10];
     }
-  } else if (selectionType === "comment-inbox") { // 9 - 11 comments in your inbox
+  } else if (selectionType === "comment-inbox") { // 9 - 13 comments in your inbox
     upvoteButton = getButton[5];
     downvoteButton = getButton[6];
     replyButton = getButton[7];
@@ -1396,6 +1412,35 @@ function collapseEntry() {
   if (isExpanded()) {
     toggleExpand();
   }
+}
+
+function expandAll() {
+  let imageExpand = document.getElementsByClassName("thumbnail rounded overflow-hidden d-inline-block bg-transparent");
+  let textExpand = document.getElementsByClassName("btn btn-sm btn-link link-dark link-opacity-75 link-opacity-100-hover align-baseline");
+
+  goToTop();
+  console.log(`Expanding`);
+  if (expandOption === "text" || expandOption === "both") {
+    for (let i = 1; i < textExpand.length; i += 2) {
+      try {
+        textExpand[i].click();
+      } catch {}
+    }
+  }
+  if (expandOption === "images" || expandOption === "both") {
+    for (let i = 0; i < imageExpand.length; i++) {
+      try {
+        imageExpand[i].click();
+      } catch {}
+    }
+  }
+  goToTop();
+}
+
+function goToTop () {
+  window.scrollTo(0, 0);
+  sessionStorage.setItem('currentselection', 0);
+  sessionCurrentEntry("restore");
 }
 
 function scrollIntoViewWithOffset(e, offset) {
