@@ -26,7 +26,7 @@ Get from [here](https://chrome.google.com/webstore/detail/lemmy-keyboard-navigat
 | <kbd>Z</kbd> = Downvote   |
 | <kbd>S</kbd> = Save Post                                               |
 | <kbd>E</kbd> = Edit Post                                               |
-| <kbd>X</kbd> = Expand/Collapse Post                                       |
+| <kbd>X</kbd> = Expand/Collapse Post (<kbd>⇧ Shift</kbd> + <kbd>X</kbd> to expand all posts)                                      |
 | <kbd>-</kbd> = Shrink Expanded Image                                       |
 | <kbd>=</kbd> = Grow Expanded Image                                       |
 | <kbd>G</kbd> = Open Navigation Dialog                                       |
