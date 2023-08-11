@@ -741,7 +741,7 @@ function handleKeyPress(event) {
             if (event.code === nextPageKey) {
               document.querySelectorAll(".paginator>.btn.btn-secondary")[1].click(); //next
             } else {
-              document.querySelectorAll(".paginator>.btn.btn-secondary")[1].click(); //prev
+              document.querySelectorAll(".paginator>.btn.btn-secondary")[0].click(); //prev
             }
           }
           // Jump next block of comments
