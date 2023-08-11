@@ -738,8 +738,11 @@ function handleKeyPress(event) {
           const pageButtons = Array.from(document.querySelectorAll(".paginator>button"));
 
           if (pageButtons && (document.getElementsByClassName('paginator').length > 0)) {
-            const buttonText = event.code === nextPageKey ? "Next" : "Prev";
-            pageButtons.find(btn => btn.innerHTML === buttonText).click();
+            if (event.code === nextPageKey) {
+              document.querySelectorAll(".paginator>.btn.btn-secondary")[1].click(); //next
+            } else {
+              document.querySelectorAll(".paginator>.btn.btn-secondary")[1].click(); //prev
+            }
           }
           // Jump next block of comments
           if (event.code === nextPageKey) {
