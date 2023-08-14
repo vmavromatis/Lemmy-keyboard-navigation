@@ -104,7 +104,7 @@ function options(open) {
     userOptions.scrollPosition =
       document.getElementById("option_scrollPosition").value;
 
-    userOptions.expandOption = 
+    userOptions.expandOption =
     document.getElementById("option_expandOption").value;
 
     userOptions.backgroundHex =
@@ -518,6 +518,9 @@ document.getElementById("LKresetoptions").addEventListener("click", (e) => {
   e.preventDefault();
   localStorage.clear();
   window.location.reload();
+});
+document.getElementById("navTitle").addEventListener("click", () => {
+  sessionStorage.setItem('currentselection', 0);
 });
 
 // Global variables
@@ -955,7 +958,12 @@ function selectEntry(e, scrollIntoView = false) {
     }
   }
   currentEntry = e;
-  currentEntry.classList.add(selectedClass);
+  try {
+    currentEntry.classList.add(selectedClass);
+  } catch { // if currentEntry is undefined
+    currentEntry = document.querySelectorAll(".post-listing, .comment-node")[0];
+    currentEntry.classList.add(selectedClass);
+  }
   sessionCurrentEntry("save");
   let links = currentEntry.getElementsByClassName("md-div")[0];
   if (links) {
@@ -1147,8 +1155,14 @@ function instanceAndUser(n) {
 var selectionType;
 function checkSelection() {
   let postSelection = document.getElementsByClassName("post-listing mt-2 selected")[0];
-  let username = '@' + document.getElementsByClassName("btn dropdown-toggle")[0].textContent;
+  let username;
+  try {
+    username = '@' + document.getElementsByClassName("btn dropdown-toggle")[0].textContent;
+  } catch {
+    username = ''; // logged out
+  }
   let posterusername = currentEntry.getElementsByClassName("person-listing d-inline-flex align-items-baseline text-info")[0].innerText;
+  let contextCheck;
 
   if (postSelection) {
     selectionType = "post";
@@ -1158,11 +1172,11 @@ function checkSelection() {
     }
 
     if (window.location.pathname.includes("/post/")) {
-      contextCheck = currentEntry.getElementsByClassName("btn btn-link btn-animate")[13]; // check for direct link button
-      if (contextCheck) {
-        selectionType = "post-page-fedi"
-      } else {
+      contextCheck = currentEntry.getElementsByClassName("btn btn-link btn-animate")[8].href; // check for direct link button
+      if (contextCheck === `${window.location.origin}/create_post`) {
         selectionType = "post-page"
+      } else {
+        selectionType = "post-page-fedi"
       }
     }
   } else {
