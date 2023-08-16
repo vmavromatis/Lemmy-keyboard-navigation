@@ -1380,6 +1380,7 @@ function edit() {
 function toggleExpand() {
   const expandButton = currentEntry.getElementsByClassName("thumbnail rounded overflow-hidden d-inline-block bg-transparent")[0];
   const textExpandButton = currentEntry.querySelector(".post-title>button");
+  const videoexpandButton = currentEntry.getElementsByClassName("thumbnail rounded bg-light d-flex justify-content-center")[0];
   const commentExpandButton = currentEntry.querySelector(".ms-2>div>button");
   const moreExpandButton = currentEntry.querySelector(".ms-1>button");
 
@@ -1407,6 +1408,19 @@ function toggleExpand() {
         scrollIntoViewWithOffset(container, pageOffset);
       }
     });
+  }
+
+  if (videoexpandButton) {
+    if (videoexpandButton.textContent === "play") { // check if it's a video and not a link or something // this works between languages :>
+      videoexpandButton.click();
+
+      // Scroll into view if video/text preview cut off
+      const vidContainer = currentEntry.querySelector("div.embed-responsive");
+
+      if (vidContainer) {
+          scrollIntoViewWithOffset(vidContainer, pageOffset);
+      }
+    }
   }
 
   if (commentExpandButton) {
