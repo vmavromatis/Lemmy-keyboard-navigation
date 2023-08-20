@@ -1,31 +1,40 @@
 // ==UserScript==
-// @name          lemmy-keyboard-navigation
+// @name          mlmym-keyboard-navigation
 // @match         https://*/*
 // @grant         none
-// @version       2.2
+// @version       1
 // @author        vmavromatis
 // @author        howdy@thesimplecorner.org
 // @author        InfinibyteF4
 // @author        aglidden
 // @license       GPL3
 // @icon          https://raw.githubusercontent.com/vmavromatis/Lemmy-keyboard-navigation/main/icon.png?inline=true
-// @homepageURL   https://github.com/vmavromatis/Lemmy-keyboard-navigation
-// @namespace     https://github.com/vmavromatis/Lemmy-keyboard-navigation
+// @homepageURL   https://github.com/vmavromatis/Lemmy-keyboard-navigation/tree/add-mlmym-support
+// @namespace     https://github.com/vmavromatis/Lemmy-keyboard-navigation/tree/add-mlmym-support
 // @description   Easily navigate Lemmy with your keyboard
 // @run-at        document-end
 // ==/UserScript==
 
 /*global window,console,localStorage,sessionStorage,document,GM_addStyle,PRO_addStyle,addStyle,MutationObserver,location*/
 
-//isLemmySite
-if (document.querySelectorAll('.lemmy-site').length >= 1) {
+// display warning if used on non Mlmym site
+if (!document.querySelectorAll('.spacer>a>.icon').length >= 1){
+  console.log('This userscript is intended to be used with mlmym.\nhttps://github.com/rystaf/mlmym');
+} else {
+// this userscript doesn't work with endless scrolling (yet!)
+console.log(`This userscript doesn't currently work with endless scrolling/auto load. These settings have been disabled.`)
+localStorage.setItem('endlessScrolling', false);
+localStorage.setItem('autoLoad', false);
 
-// DEBUGGING (ignore me!)
-//localStorage.clear();
-//sessionStorage.clear();
-
-//settings page (this is from lemmyTools)
-const optionsKey = "lemmy-keyboard-navigation-Options";
+// set background color based on if dark mode is on or not
+let background;
+if (document.getElementsByClassName("dark").length >= 1) {
+  background = '#303030';
+} else {
+  background = '#f0f3fc';
+}
+// settings page (this is from lemmyTools)
+const optionsKey = "mlmym-keyboard-navigation-Options";
 
 function getSettingsFromLocalStorage() {
   try {
@@ -40,23 +49,23 @@ function checkedIfTrue(val) {
 }
 
 function options(open) {
-  const odiv = document.getElementById("lkOptions");
+  const odiv = document.getElementById("lmOptions");
   let userOptions = {};
   if (open === "open") {
     odiv.style.display = "block";
   } else if (open === "set") {
     //First run set defaults or pull from localstorage.
     userOptions = Object.assign({}, {
+        mlmymFixButton: true,
         pageOffset: 5,
         vimKeyNavigation: true,
         smoothScroll: false,
         scrollPosition: "middle",
-        expandOption: "both",
-        backgroundHex: "#373737",
+        backgroundHex: `${background}`,
         kb_expand: "KeyX",
         kb_comments: "KeyC",
         kb_openLink: "Enter",
-        kb_parent: "KeyP",
+        // kb_parent: "KeyP",
         kb_upvote: "KeyA",
         kb_downvote: "KeyZ",
         kb_replyComm: "KeyR",
@@ -86,6 +95,9 @@ function options(open) {
     //save button
     odiv.style.display = "none";
     //general
+    userOptions.mlmymFixButton =
+    document.getElementById("option_mlmymFixButton").checked;
+
     userOptions.vimKeyNavigation =
       document.getElementById("option_vimKeyNavigation").checked;
 
@@ -104,9 +116,6 @@ function options(open) {
     userOptions.scrollPosition =
       document.getElementById("option_scrollPosition").value;
 
-    userOptions.expandOption =
-    document.getElementById("option_expandOption").value;
-
     userOptions.backgroundHex =
       document.getElementById("option_backgroundHex").value;
     //keybinds
@@ -119,8 +128,8 @@ function options(open) {
     userOptions.kb_openLink =
       document.getElementById("option_kb_openLink").value;
 
-    userOptions.kb_parent =
-      document.getElementById("option_kb_parent").value;
+    /*userOptions.kb_parent =
+      document.getElementById("option_kb_parent").value;*/
 
     userOptions.kb_upvote =
       document.getElementById("option_kb_upvote").value;
@@ -199,11 +208,10 @@ let smoothScroll = checkedIfTrue(settings.smoothScroll);
 let pageOffset = window.innerHeight * settings.pageOffset / 100;
 let scrollPosition = settings.scrollPosition;
 let backgroundHex = settings.backgroundHex;
-let expandOption = settings.expandOption;
+let mlmymFixButton = checkedIfTrue(settings.mlmymFixButton);
 
 // Set selected entry colors
 const backgroundColor = `${backgroundHex}`;
-const textColor = 'white';
 
 // Set navigation keys with keycodes here: https://www.toptal.com/developers/keycode
 let nextKey = 'ArrowDown';
@@ -221,7 +229,7 @@ if (vimKeyNavigation) {
 const expandKey = `${settings.kb_expand}`;
 const openCommentsKey = `${settings.kb_comments}`;
 const openLinkAndCollapseKey = `${settings.kb_openLink}`;
-const parentCommentKey = `${settings.kb_parent}`;
+// const parentCommentKey = ``;
 const upvoteKey = `${settings.kb_upvote}`;
 const downvoteKey = `${settings.kb_downvote}`;
 const replyCommKey = `${settings.kb_replyComm}`;
@@ -274,7 +282,7 @@ document.documentElement.style = "scroll-behavior: auto";
 const css = `
   .selected {
     background-color: ${backgroundColor} !important;
-    color: ${textColor};
+    font-weight: normal !important;
     }`;
 
 // dialog box
@@ -283,11 +291,11 @@ document.body.appendChild(myDialog);
 let para = document.createElement("p");
 para.innerHTML = `
   <h3><b>Sort by</b></h3>
-  <p>${modalSortOneKey} = N/A</br>
-    ${modalSortTwoKey} = N/A</br>
-    ${modalSortThreeKey} = N/A</br>
-    ${modalSortFourKey} = N/A</br>
-    ${modalSortFiveKey} = N/A</p>
+  <p>${modalSortOneKey} = Hot</br>
+    ${modalSortTwoKey} = Active</br>
+    ${modalSortThreeKey} = Top (day)</br>
+    ${modalSortFourKey} = New</br>
+    ${modalSortFiveKey} = Old</p>
   <h3><b>Go To Page</b></h3>
   <p>${modalFrontpageKey} = Frontpage</br>
   ${modalSavedKey} = Saved</br>
@@ -303,22 +311,26 @@ myDialog.appendChild(button);
 
 //draw settings page
 const odiv = document.createElement("div");
-odiv.setAttribute("id", "lkOptions");
-odiv.classList.add("lkoptions", "border-secondary", "card");
+odiv.setAttribute("id", "lmOptions");
+odiv.classList.add("lmoptions", "border-secondary", "card");
 odiv.innerHTML = `
-  <h4>Lemmy-keyboard-navigation Options</h4>
+  <h4>mlmym-keyboard-navigation Options</h4>
 </hr>
 <div class='table-responsive'>
   <table class='table'>
     <thead class='pointer'>
         <td><b>Save and close settings</b></td>
-        <td><button id='LKsaveoptionsTop'>Save and Close</button></td>
+        <td><button id='LMsaveoptionsTop'>Save and Close</button></td>
         </tr>
       <tr>
         <th><h3><b>General</b></h3></th><td><td/>
     </thead>
     </tr>
     <tbody>
+      <tr>
+        <td><b>Enable mlmym fix selections button</b><br/>Click this button if you can't select a post or comment.<br/>Uncheck to hide this button.</td>
+        <td><input type='checkbox' id='option_mlmymFixButton' ${mlmymFixButton} /></td>
+      </tr>
       <tr>
         <td><b>Use Vim key navigation</b><br/>Also known as HJKL navigation.<br/>Uncheck to use arrow keys instead.</td>
         <td><input type='checkbox' id='option_vimKeyNavigation' ${vimKeyNavigation} /></td>
@@ -340,16 +352,7 @@ odiv.innerHTML = `
             </select></td>
       </tr>
       <tr>
-        <td><b>Expand All Posts</b><br/>Pressing Shift + X will expand all posts.<br/>both: expand both text boxes and images.<br/>images: only expand images.<br/>text: only expand text boxes</td>
-        <td><select id="option_expandOption">
-            <option value='${settings.expandOption}'>${settings.expandOption}</option>
-            <option value='both'>both</option>
-            <option value='text'>text</option>
-            <option value='images'>images</option>
-            </select></td>
-      </tr>
-      <tr>
-        <td><b>Selected Hex Code</b><br/>The background color of selected posts/comments.<br/>Default: #373737</td>
+        <td><b>Selected Hex Code</b><br/>The background color of selected posts/comments.<br/>Dark mode default: #303030<br/>Light mode default: #f0f3fc</td>
         <td><textarea id='option_backgroundHex'>${settings.backgroundHex}</textarea></td>
       </tr>
       <tr>
@@ -368,10 +371,12 @@ odiv.innerHTML = `
         <td><b>Open Links</b><br/>Open Links on a post.<br/>(can also be used to collapse comments!)<br/>Default: Enter</td>
         <td><textarea id='option_kb_openLink'>${settings.kb_openLink}</textarea></td>
       </tr>
+      <!--
       <tr>
         <td><b>Go to Parent Comment</b><br/>Goes one level up the comment chain.<br/>Default: KeyP</td>
         <td><textarea id='option_kb_parent'>${settings.kb_parent}</textarea></td>
       </tr>
+      -->
       <tr>
         <td><b>Upvote</b><br/>:\)<br/>Default: KeyA</td>
         <td><textarea id='option_kb_upvote'>${settings.kb_upvote}</textarea></td>
@@ -421,25 +426,25 @@ odiv.innerHTML = `
       </tr>
       <tr>
       <tr>
-          <td><h4><b>Sort buttons</b></h4>For example: If you were to press G then 3 on the front page,<br/>it would sort by subscribed, but doing the same in a<br/>comment section would sort by new. The dialog<br/>text will change with what sort buttons are avaliable!</td><td><td/>
+      <td><h4><b>Sort buttons</b></h4><td/>
       </tr>
-        <td><b>First Sort Button</b><br/>Default: Digit1</td>
+        <td><b>Sort by Hot</b><br/>Default: Digit1</td>
         <td><textarea id='option_m_first'>${settings.m_first}</textarea></td>
       </tr>
       <tr>
-        <td><b>Second Sort Button</b><br/>Default: Digit2</td>
+        <td><b>Sort by Active</b><br/>Default: Digit2</td>
         <td><textarea id='option_m_second'>${settings.m_second}</textarea></td>
       </tr>
       <tr>
-        <td><b>Third Sort Button</b><br/>Default: Digit3</td>
+        <td><b>Sort by Top (day)</b><br/>Default: Digit3</td>
         <td><textarea id='option_m_third'>${settings.m_third}</textarea></td>
       </tr>
       <tr>
-        <td><b>Fourth Sort Button</b><br/>Default: Digit4</td>
+        <td><b>Sort by New</b><br/>Default: Digit4</td>
         <td><textarea id='option_m_fourth'>${settings.m_fourth}</textarea></td>
       </tr>
       <tr>
-        <td><b>Fifth Sort Button</b><br/>Default: Digit5</td>
+        <td><b>Sort by Old</b><br/>Default: Digit5</td>
         <td><textarea id='option_m_fifth'>${settings.m_fifth}</textarea></td>
       </tr>
       <tr>
@@ -467,28 +472,36 @@ odiv.innerHTML = `
       </tr>
       <tr>
         <td><b>Save and close settings</b></td>
-        <td><button id='LKsaveoptions'>Save and Close</button></td>
+        <td><button id='LMsaveoptions'>Save and Close</button></td>
       </tr>
       <tr>
         <td><b style='color:red;'>WARNING:<br/>The button below will reset all your settings to default.<br/>This cannot be undone.</b></td><td></td>
       </tr>
       <tr>
-        <td><button id='LKresetoptions'>Reset All Settings</button></td><td></td>
+        <td><button id='LMresetoptions'>Reset All Settings</button></td><td></td>
       </tr>
     </tbody>
   </table>
 </div>
 <hr />
-<p>lemmy-keyboard-navigation links:</p>
+<p>mlmym-keyboard-navigation links:</p>
 <a
-  href='https://github.com/vmavromatis/Lemmy-keyboard-navigation'>Github</a><br/><a
-  href='https://greasyfork.org/en/scripts/470498-lemmy-keyboard-navigation'>GreasyFork</a><br/><a
-  href='https://chrome.google.com/webstore/detail/lemmy-keyboard-navigator/lamoeoaekeeklbcekclbceaeafjkdhbi'>Chrome Extension</a><br/></p>
+  href='https://github.com/vmavromatis/Lemmy-keyboard-navigation/tree/add-mlmym-support'>Github</a><br/>
   <p>This settings page was taken from the <a href='https://github.com/howdy-tsc/LemmyTools'>LemmyTools</a> Userscript.</p>
 `;
 
+let LMbutton;
+if (mlmymFixButton) {
+LMbutton = document.createElement("div");
+LMbutton.setAttribute("id", "lmFix");
+LMbutton.classList.add("lmfix", "border-secondary", "card");
+LMbutton.innerHTML = `
+  <p><button id='LMbuttonfix'>mlmym fix</br>selections</button></p>
+`;
+}
+
 let styleString = `
-.lkoptions {
+.lmoptions {
   position: fixed;
   min-width: auto;
   min-height: auto;
@@ -501,28 +514,45 @@ let styleString = `
   z-index: 1000;
   padding: 0.5%;
   margin-top:35px;
+  background-color: ${background};
+}
+
+.lmfix {
+  position: fixed;
+  min-width: auto;
+  min-height: auto;
+  width: auto;
+  height: 8%;
+  top: 0;
+  right: 0;
+  overflow: scroll;
+  z-index: 1000;
+  padding: 0.5%;
+  margin-top:65px;
 }
 `;
 document.head.appendChild(document.createElement("style")).innerHTML = styleString;
 document.body.appendChild(odiv); //options
+try { document.body.appendChild(LMbutton); } catch {};
 
-document.getElementById("LKsaveoptions").addEventListener("click", (e) => {
+document.getElementById("LMsaveoptions").addEventListener("click", (e) => {
   e.preventDefault();
   options("save");
 });
-document.getElementById("LKsaveoptionsTop").addEventListener("click", (e) => {
+document.getElementById("LMsaveoptionsTop").addEventListener("click", (e) => {
   e.preventDefault();
   options("save");
 });
-document.getElementById("LKresetoptions").addEventListener("click", (e) => {
+document.getElementById("LMresetoptions").addEventListener("click", (e) => {
   e.preventDefault();
   localStorage.clear();
   window.location.reload();
 });
-document.getElementById("navTitle").addEventListener("click", () => {
-  sessionStorage.setItem('currentselection', 0);
-});
-
+try {
+  document.getElementById("LMbuttonfix").addEventListener("click", (e) => {
+    call();
+  });
+} catch {}
 // Global variables
 let currentEntry;
 let commentBlock;
@@ -551,15 +581,8 @@ if (typeof GM_addStyle !== "undefined") {
 
 const selectedClass = "selected";
 
-const targetNode = document.documentElement;
-const config = {
-  childList: true,
-  subtree: true
-};
-
-const observer = new MutationObserver(() => {
-  entries = document.querySelectorAll(".post-listing, .comment-node");
-
+function call() {
+  entries = document.querySelectorAll(".post, .comment");
   if (entries.length > 0) {
     if (location.href !== previousUrl) {
       previousUrl = location.href;
@@ -567,13 +590,12 @@ const observer = new MutationObserver(() => {
     }
     init();
   }
-});
-
-observer.observe(targetNode, config);
+}
+call();
 
 function init() {
   // If jumping to comments
-  if (window.location.search.includes("scrollToComments=true") &&
+  if (window.location.pathname.includes("/post/") &&
     entries.length > 1 &&
     (!currentEntry || Array.from(entries).indexOf(currentEntry) < 0)
   ) {
@@ -650,7 +672,6 @@ function handleKeyPress(event) {
           comments(event);
           break;
         case modalPopupKey:
-          dialogUpdate();
           goToDialog("open");
           break;
         case contextKey:
@@ -673,7 +694,7 @@ function handleKeyPress(event) {
           if (window.location.pathname.includes("/post/")) {
             toggleExpand();
           } else {
-            const linkElement = currentEntry.querySelector(".col.flex-grow-1>p>a");
+            const linkElement = document.getElementsByClassName("post")[9].querySelector(".title>.url")
             if (linkElement) {
               if (event.shiftKey) {
                 window.open(linkElement.href);
@@ -685,7 +706,7 @@ function handleKeyPress(event) {
             }
           }
           break;
-        case parentCommentKey: {
+        /*case parentCommentKey: {
           let targetBlock;
           if (currentEntry.classList.contains("ms-1")) {
             targetBlock = getPrevEntry(currentEntry);
@@ -702,7 +723,7 @@ function handleKeyPress(event) {
             }
           }
         }
-        break;
+        break;*/
         case topKey:
           goToTop();
           break;
@@ -740,11 +761,15 @@ function handleKeyPress(event) {
         case prevPageKey: {
           const pageButtons = Array.from(document.querySelectorAll(".paginator>button"));
 
-          if (pageButtons && (document.getElementsByClassName('paginator').length > 0)) {
+          if (pageButtons && (document.getElementsByClassName('pager').length > 0)) {
+            sessionStorage.setItem('currentselection', 0);
+            if (document.querySelectorAll(".pager")[0].children.length === 1) {
+              document.querySelectorAll(".pager")[0].children[0].click();
+            }
             if (event.code === nextPageKey) {
-              document.querySelectorAll(".paginator>.btn.btn-secondary")[1].click(); //next
+              document.querySelectorAll(".pager")[0].children[1].click(); //next
             } else {
-              document.querySelectorAll(".paginator>.btn.btn-secondary")[0].click(); //prev
+              document.querySelectorAll(".pager")[0].children[0].click(); //prev
             }
           }
           // Jump next block of comments
@@ -765,7 +790,6 @@ function handleKeyPress(event) {
             }
           }
         }
-        sessionStorage.setItem('currentselection', 0); //reset the selection back to the first post when switching pages
       }
       break;
     case modalMode = 1:
@@ -778,68 +802,33 @@ function handleKeyPress(event) {
           goToDialog("close");
           break;
         case modalSavedKey:
-          if (window.location.pathname.includes("/u/")) {
-            let savedelement = document.getElementsByClassName("btn btn-outline-secondary pointer")[3];
-            if (savedelement) {
-              savedelement.click();
-              goToDialog("close");
-            }
-          } else {
-            instanceAndUser("saved");
-          }
+          instanceAndUser("saved");
           break;
         case modalFrontpageKey:
-          frontpage();
+          window.location.replace(window.location.origin);
           break;
         case modalProfileKey:
-          let profileelement = document.getElementsByClassName("dropdown-item px-2")[0];
-          if (profileelement) {
-            profileelement.click();
-            goToDialog("close");
-          } else {
-            instanceAndUser("profile");
-          }
+          instanceAndUser("profile");
           break;
         case modalInboxKey:
-          let notifelement = document.getElementsByClassName("nav-link d-inline-flex align-items-center d-md-inline-block")[2];
-          if (notifelement) {
-            notifelement.click();
-            goToDialog("close");
-          } else {
-            window.location.replace(window.location.origin + "/login");
-          }
+          window.location.replace(window.location.origin + "/inbox");
           break;
         case modalSortOneKey:
-          let firstbutton = document.getElementsByClassName("btn btn-outline-secondary")[0];
-          sessionStorage.setItem('currentselection', 0); //reset the selection to the first post when switching filters
-          firstbutton.click();
-          goToDialog("close");
+          modalSort("Hot");
           break;
         case modalSortTwoKey:
-          let secondbutton = document.getElementsByClassName("btn btn-outline-secondary")[1];
-          sessionStorage.setItem('currentselection', 0);
-          secondbutton.click();
-          goToDialog("close");
+          modalSort("Active");
           break;
         case modalSortThreeKey:
-          let thirdbutton = document.getElementsByClassName("btn btn-outline-secondary")[2];
-          sessionStorage.setItem('currentselection', 0);
-          thirdbutton.click();
-          goToDialog("close");
+          modalSort("Top");
           break;
         case modalSortFourKey:
-          let fourthbutton = document.getElementsByClassName("btn btn-outline-secondary")[3];
-          sessionStorage.setItem('currentselection', 0);
-          fourthbutton.click();
-          goToDialog("close");
+          modalSort("New");
           break;
         case modalSortFiveKey:
-          let fifthbutton = document.getElementsByClassName("btn btn-outline-secondary")[4];
-          sessionStorage.setItem('currentselection', 0);
-          fifthbutton.click();
-          goToDialog("close");
+          modalSort("Old");
           break;
-        case modalOptionsKey:
+          case modalOptionsKey:
           options("open");
           goToDialog("close");
           break;
@@ -885,63 +874,12 @@ function getPrevEntrySameLevel(e) {
   return prevSibling.getElementsByTagName("article")[0];
 }
 
-function dialogUpdate() {
-  para.remove();
-  para = document.createElement("p");
-  para.innerHTML = `
-    <h3><b>Sort by</b></h3>
-    <p>${modalSortOneKey} = ${dialogLocation(1)}</br>
-    ${modalSortTwoKey} = ${dialogLocation(2)}</br>
-    ${modalSortThreeKey} = ${dialogLocation(3)}</br>
-    ${modalSortFourKey} = ${dialogLocation(4)}</br>
-    ${modalSortFiveKey} = ${dialogLocation(5)}</p>
-    <h3><b>Go To Page</b></h3>
-    <p>${modalFrontpageKey} = Frontpage</br>
-    ${modalSavedKey} = Saved</br>
-    ${modalProfileKey} = User Profile Page</br>
-    ${modalInboxKey} = Inbox</br></p>
-    <h6>${modalOptionsKey} = Options Page</br></br></h6>
-    `;
-  myDialog.appendChild(para);
-  myDialog.appendChild(button);
-}
-
-function dialogLocation(n) {
-  var sort = document.getElementsByClassName("btn btn-outline-secondary");
-
-  if (n === 1 && 1 <= sort.length) {
-    return sort[0].innerText;
-  }
-  if (n === 2 && 2 <= sort.length) {
-    return sort[1].innerText;
-  }
-  if (n === 3 && 3 <= sort.length) {
-    return sort[2].innerText;
-  }
-  if (n === 4 && 4 <= sort.length) {
-    return sort[3].innerText;
-  }
-  if (n === 5 && 5 <= sort.length) {
-    return sort[4].innerText;
-  }
-  return "N/A";
-}
-
 function clickEntry(event) {
   const e = event.currentTarget;
   const target = event.target;
 
-  // Deselect if already selected, also ignore if clicking on any link/button
-  if (e === currentEntry && e.classList.contains(selectedClass) &&
-    !(
-      target.tagName.toLowerCase() === "button" || target.tagName.toLowerCase() === "a" ||
-      target.parentElement.tagName.toLowerCase() === "button" ||
-      target.parentElement.tagName.toLowerCase() === "a" ||
-      target.parentElement.parentElement.tagName.toLowerCase() === "button" ||
-      target.parentElement.parentElement.tagName.toLowerCase() === "a"
-    )
-  ) {
-    e.classList.remove(selectedClass);
+  if (e === currentEntry && e.classList.contains(selectedClass)){
+    // e.classList.remove(selectedClass); ASDHFKJLGSDA IT WAS YOU !!!!!!
   } else {
     selectEntry(e);
   }
@@ -961,11 +899,11 @@ function selectEntry(e, scrollIntoView = false) {
   try {
     currentEntry.classList.add(selectedClass);
   } catch { // if currentEntry is undefined
-    currentEntry = document.querySelectorAll(".post-listing, .comment-node")[0];
+    currentEntry = document.querySelectorAll(".post, .comment")[0];
     currentEntry.classList.add(selectedClass);
   }
   sessionCurrentEntry("save");
-  let links = currentEntry.getElementsByClassName("md-div")[0];
+  let links = currentEntry.querySelector(".content>div>p");
   if (links) {
     let alink = links.querySelectorAll('a');
     if (alink.length > 0) {
@@ -995,7 +933,7 @@ function sessionCurrentEntry(n) {
   const currentEntryIndex = Array.from(entries).indexOf(currentEntry);
 
   if (n === "save") {
-    if (document.querySelector(".home")) {
+    if (document.getElementsByClassName("post").length > 1) {
       sessionStorage.setItem('currentselection', currentEntryIndex);
     }
   } else if (n === "restore") {
@@ -1005,7 +943,7 @@ function sessionCurrentEntry(n) {
 }
 
 function clickLink(n) {
-  let links = currentEntry.getElementsByClassName("md-div")[0];
+  let links = currentEntry.querySelector(".content>div>p");
   let alink = links.querySelectorAll('a');
   if (n === 1) {
     window.open(
@@ -1092,13 +1030,13 @@ function previousKey(event) {
     }
   }
 }
-
 function upVote() {
   identifyButtons();
 
   if (upvoteButton) {
     upvoteButton.click();
   }
+  call();
 }
 
 function downVote() {
@@ -1107,6 +1045,7 @@ function downVote() {
   if (downvoteButton) {
     downvoteButton.click();
   }
+  call();
 }
 
 function goToDialog(n) {
@@ -1132,7 +1071,7 @@ function goToDialog(n) {
 
 function instanceAndUser(n) {
   let currentInstance = window.location.origin;
-  let username = document.getElementsByClassName("btn dropdown-toggle")[0].textContent;
+  let username = document.querySelectorAll('body>nav>.right>a')[0].textContent;
 
   if (n === "profile") {
     if (username) {
@@ -1144,7 +1083,7 @@ function instanceAndUser(n) {
   }
   if (n === "saved") {
     if (username) {
-      let savedlink = currentInstance + "/u/" + username + "?page=1&sort=New&view=Saved";
+      let savedlink = currentInstance + "/u/" + username + "?view=Saved";
       window.location.replace(savedlink);
     } else {
       window.location.replace(currentInstance + "/login");
@@ -1154,43 +1093,22 @@ function instanceAndUser(n) {
 
 var selectionType;
 function checkSelection() {
-  let postSelection = document.getElementsByClassName("post-listing mt-2 selected")[0];
+  let postSelection = document.getElementsByClassName("post selected")[0];
   let username;
+  let posterusername;
+
   try {
-    username = '@' + document.getElementsByClassName("btn dropdown-toggle")[0].textContent;
+    username = document.querySelectorAll('body>nav>.right>a')[0].textContent;
   } catch {
     username = ''; // logged out
   }
-  let posterusername = currentEntry.getElementsByClassName("person-listing d-inline-flex align-items-baseline text-info")[0].innerText;
-  let contextCheck;
 
   if (postSelection) {
     selectionType = "post";
-    contextCheck = currentEntry.getElementsByClassName("btn btn-link btn-animate")[11]; // check for direct link button (rainbow star)
-    if (contextCheck) {
-      selectionType = `${selectionType}-fedi`;
-    }
-
-    if (window.location.pathname.includes("/post/")) {
-      contextCheck = currentEntry.getElementsByClassName("btn btn-link btn-animate")[8].href; // check for direct link button
-      if (contextCheck === `${window.location.origin}/create_post`) {
-        selectionType = "post-page"
-      } else {
-        selectionType = "post-page-fedi"
-      }
-    }
+    posterusername = currentEntry.querySelectorAll(".meta>a")[0].innerText;
   } else {
     selectionType = "comment";
-    let contextButton = currentEntry.getElementsByClassName("btn btn-link btn-animate text-muted btn-sm")[0].href;
-    let contextButton2 = currentEntry.getElementsByClassName("btn btn-link btn-animate")[2].href;
-
-    if (contextButton === contextButton2) {
-      selectionType = `${selectionType}-context`;
-    }
-
-    if (window.location.pathname.includes("/inbox")) {
-      selectionType = "comment-inbox";
-    }
+    posterusername = currentEntry.querySelectorAll(".meta>a")[1].innerText;
   }
   if (username === posterusername) {
     selectionType = `my-${selectionType}`;
@@ -1201,73 +1119,73 @@ function checkSelection() {
 var upvoteButton;
 var downvoteButton;
 var replyButton;
-var moreButton;
 var saveButton;
 var editButton;
+var contextButton;
 var commentButton;
 function identifyButtons() {
   checkSelection();
-  let getButton = currentEntry.getElementsByClassName("btn btn-link btn-animate");
-  if (selectionType === "post") { // posts on link pages
-    upvoteButton = getButton[0];
-    downvoteButton = getButton[1];
-    saveButton = getButton[2];
-    commentButton = currentEntry.getElementsByClassName("btn btn-link btn-sm text-muted ps-0")[1];
+  let getButton = currentEntry.getElementsByClassName("buttons")[0].children;
+  let voteButton = currentEntry.querySelector('.score>.link-btn');
+  upvoteButton = voteButton[0];
+  downvoteButton = voteButton[3];
+  // posts
+  if (selectionType === "post" || selectionType === "my-post") { // posts on link pages
+    commentButton = getButton[0];
     if (selectionType === "my-post") { // add edit button if the post is yours
-      editButton = currentEntry.getElementsByClassName("btn btn-link btn-sm d-flex align-items-center rounded-0 dropdown-item")[2];
-    }
-  } else if (selectionType === "post-fedi" || selectionType === "post-page-fedi") { // federated posts on link pages and on the page
-    upvoteButton = getButton[1];
-    downvoteButton = getButton[2];
-    saveButton = getButton[3];
-    commentButton = currentEntry.getElementsByClassName("btn btn-link btn-sm text-muted ps-0")[1];
-  } else if (selectionType === "post-page" || selectionType === "my-post-page") { // on the page of the post
-    upvoteButton = getButton[0];
-    downvoteButton = getButton[1];
-    saveButton = getButton[2];
-    commentButton = currentEntry.getElementsByClassName("btn btn-link btn-sm text-muted ps-0")[1];
-    if (selectionType === "my-post-page") { // add edit button if the post is yours
-      editButton = currentEntry.getElementsByClassName("btn btn-link btn-sm d-flex align-items-center rounded-0 dropdown-item")[2];
-    }
-  // X - X numbers is the getButton array size depending on if moreButton was clicked or not
-  } else if (selectionType === "comment" || selectionType === "my-comment") { // 6 - 10 comments
-    upvoteButton = getButton[2];
-    downvoteButton = getButton[3];
-    replyButton = getButton[4];
-    moreButton = getButton[5];
-    if (selectionType === "my-comment") { // 6 - 9 add edit button if the comment is yours
-      saveButton = getButton[5];
-      editButton = getButton[7];
+      editButton = getButton[2];
+      saveButton = getButton[4].children[2];
     } else {
-      saveButton = getButton[8];
+      saveButton = getButton[2].children[2];
     }
-  } else if (selectionType === "comment-context" || selectionType === "my-comment-context") { // 8 - 12 comments with context buttons
-    upvoteButton = getButton[4];
-    downvoteButton = getButton[5];
-    replyButton = getButton[6];
-    moreButton = getButton[7];
-    if (selectionType === "my-comment-context") { // 8 - 11 add edit button if the comment is yours
-      saveButton = getButton[7];
-      editButton = getButton[9];
+  } else if (selectionType === "comment" || selectionType === "my-comment") {
+    contextButton = getButton[0].children[0];
+    if (selectionType === "my-comment") {
+      saveButton = getButton[5].children[0].children[2];
+      editButton = getButton[3].children[0];
+      replyButton = getButton[6].children[0];
     } else {
-      saveButton = getButton[10];
+      saveButton = getButton[3].children[0].children[2];
+      replyButton = getButton[4].children[0];
     }
-  } else if (selectionType === "comment-inbox") { // 9 - 13 comments in your inbox
-    upvoteButton = getButton[5];
-    downvoteButton = getButton[6];
-    replyButton = getButton[7];
-    moreButton = getButton[8];
-    saveButton = getButton[11];
   }
 }
 
-function frontpage() {
-  let homeElement = document.getElementsByClassName("d-flex align-items-center navbar-brand me-md-3 active")[0];
-  if (homeElement) {
-    homeElement.click();
-    goToDialog("close");
-  } else {
-    window.location.replace(window.location.origin);
+function modalSort(sort) {
+  if (sort === "Hot") {
+    if (window.location.search.includes("?sort=")) {
+      window.location = window.location.toString().replace(/(?<=\?)(.*?)(?=\&|$)/g, 'sort=Hot');
+    } else {
+      window.location.replace(window.location + '?sort=Hot');
+    }
+  }
+  if (sort === "Active") {
+    if (window.location.search.includes("?sort=")) {
+      window.location = window.location.toString().replace(/(?<=\?)(.*?)(?=\&|$)/g, 'sort=Active');
+    } else {
+      window.location.replace(window.location + '?sort=Active');
+    }
+  }
+  if (sort === "Top") {
+    if (window.location.search.includes("?sort=")) {
+      window.location = window.location.toString().replace(/(?<=\?)(.*?)(?=\&|$)/g, 'sort=TopDay');
+    } else {
+      window.location.replace(window.location + '?sort=TopDay');
+    }
+  }
+  if (sort === "New") {
+    if (window.location.search.includes("?sort=")) {
+      window.location = window.location.toString().replace(/(?<=\?)(.*?)(?=\&|$)/g, 'sort=New');
+    } else {
+      window.location.replace(window.location + '?sort=New');
+    }
+  }
+  if (sort === "Old") {
+    if (window.location.search.includes("?sort=")) {
+      window.location = window.location.toString().replace(/(?<=\?)(.*?)(?=\&|$)/g, 'sort=New');
+    } else {
+      window.location.replace(window.location + '?sort=New');
+    }
   }
 }
 
@@ -1283,20 +1201,20 @@ function reply(event) {
 function community(event) {
   if (event.shiftKey) {
     window.open(
-      currentEntry.querySelector("a.community-link").href
+      currentEntry.querySelectorAll(".meta>a")[1].href
     );
   } else {
-    currentEntry.querySelector("a.community-link").click();
+    currentEntry.querySelectorAll(".meta>a")[1].click();
   }
 }
 
 function visitUser(event) {
   if (event.shiftKey) {
     window.open(
-      currentEntry.getElementsByClassName("person-listing d-inline-flex align-items-baseline text-info")[0].href
+      currentEntry.querySelectorAll(".meta>a")[0].href
     );
   } else {
-    currentEntry.getElementsByClassName("person-listing d-inline-flex align-items-baseline text-info")[0].click();
+    currentEntry.querySelectorAll(".meta>a")[0].click();
   }
 }
 
@@ -1313,31 +1231,27 @@ function comments(event) {
 }
 
 function getContext(event) {
+  identifyButtons();
+
   if (event.shiftKey) {
     window.open(
-      currentEntry.getElementsByClassName("btn btn-link btn-animate text-muted btn-sm")[0].href
+      contextButton.href
     );
   } else {
-    currentEntry.getElementsByClassName("btn btn-link btn-animate text-muted btn-sm")[0].click();
+    contextButton.click();
   }
 }
 
-let maxSize = 0;
-
 function imgResize(n) {
-  let expandedImg = currentEntry.getElementsByClassName("overflow-hidden pictrs-image img-fluid img-expanded slight-radius")[0];
+  let expandedImg = currentEntry.getElementsByClassName("image")[0].children[0];
   let expandedHeight = expandedImg.height;
   let expandedWidth = expandedImg.width;
-  let expandedHeightbefore = expandedHeight;
-  let expandedWidthbefore = expandedWidth;
 
   if (n === "smaller") {
     expandedHeight = expandedHeight / 1.15;
     expandedWidth = expandedWidth / 1.15;
     expandedImg.style.height = expandedHeight + 'px';
     expandedImg.style.width = expandedWidth + 'px';
-    maxSize = 0;
-    console.log(`maxSize: ${maxSize}`);
   }
 
   if (n === "larger") {
@@ -1345,15 +1259,6 @@ function imgResize(n) {
     expandedWidth = expandedWidth * 1.15;
     expandedImg.style.width = expandedWidth + 'px';
     expandedImg.style.height = expandedHeight + 'px';
-
-    if (maxSize === 1) {
-      expandedImg.style.width = expandedWidthbefore + 'px';
-      expandedImg.style.height = expandedHeightbefore + 'px';
-    }
-    if (expandedImg.width !== Math.round(expandedWidth) || expandedImg.height !== Math.round(expandedHeight)) {
-      maxSize = 1;
-      console.log(`maxSize: ${maxSize}`);
-    }
   }
 }
 
@@ -1362,9 +1267,8 @@ function save() {
 
   if (saveButton) {
     saveButton.click();
-  } else {
-    moreButton.click();
   }
+  call();
 }
 
 function edit() {
@@ -1372,64 +1276,24 @@ function edit() {
 
   if (editButton) {
     editButton.click();
-  } else {
-    moreButton.click();
   }
 }
 
 function toggleExpand() {
-  const expandButton = currentEntry.getElementsByClassName("thumbnail rounded overflow-hidden d-inline-block bg-transparent")[0];
-  const textExpandButton = currentEntry.querySelector(".post-title>button");
-  const videoexpandButton = currentEntry.getElementsByClassName("thumbnail rounded bg-light d-flex justify-content-center")[0];
-  const commentExpandButton = currentEntry.querySelector(".ms-2>div>button");
-  const moreExpandButton = currentEntry.querySelector(".ms-1>button");
+  const expandButton = currentEntry.getElementsByClassName("expando-button")[0];
 
   if (expandButton) {
     expandButton.click();
 
     // Scroll into view if picture/text preview cut off
-    const imgContainer = currentEntry.querySelector("a.d-inline-block");
+    const imgContainer = currentEntry.querySelector(".expando>.image");
 
     if (imgContainer) {
       // Check container positions once image is loaded
       imgContainer.querySelector("img").addEventListener("load", function() {
         scrollIntoViewWithOffset(imgContainer, pageOffset);
       }, true);
-      currentEntry.getElementsByClassName("offset-sm-3 my-2 d-none d-sm-block")[0].className = "my-2 d-none d-sm-block";
     }
-  }
-
-  if (textExpandButton) {
-    textExpandButton.click();
-
-    const textContainers = [currentEntry.querySelector("#postContent"), currentEntry.querySelector(".card-body")];
-    textContainers.forEach(container => {
-      if (container) {
-        scrollIntoViewWithOffset(container, pageOffset);
-      }
-    });
-  }
-
-  if (videoexpandButton) {
-    if (videoexpandButton.textContent === "play") { // check if it's a video and not a link or something // this works between languages :>
-      videoexpandButton.click();
-
-      // Scroll into view if video/text preview cut off
-      const vidContainer = currentEntry.querySelector("div.embed-responsive");
-
-      if (vidContainer) {
-          scrollIntoViewWithOffset(vidContainer, pageOffset);
-      }
-    }
-  }
-
-  if (commentExpandButton) {
-    commentExpandButton.click();
-  }
-
-  if (moreExpandButton) {
-    moreExpandButton.click();
-    selectEntry(getPrevEntry(currentEntry), true);
   }
 }
 
@@ -1446,24 +1310,14 @@ function collapseEntry() {
 }
 
 function expandAll() {
-  let imageExpand = document.getElementsByClassName("thumbnail rounded overflow-hidden d-inline-block bg-transparent");
-  let textExpand = document.getElementsByClassName("btn btn-sm btn-link link-dark link-opacity-75 link-opacity-100-hover align-baseline");
+  let expandButtons = document.getElementsByClassName("expando-button");
 
   goToTop();
   console.log(`Expanding`);
-  if (expandOption === "text" || expandOption === "both") {
-    for (let i = 1; i < textExpand.length; i += 2) {
-      try {
-        textExpand[i].click();
-      } catch {}
-    }
-  }
-  if (expandOption === "images" || expandOption === "both") {
-    for (let i = 0; i < imageExpand.length; i++) {
-      try {
-        imageExpand[i].click();
-      } catch {}
-    }
+  for (let i = 0; i < expandButtons.length; i++) {
+    try {
+      expandButtons[i].click();
+    } catch {}
   }
   goToTop();
 }
