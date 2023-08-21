@@ -1172,8 +1172,8 @@ function checkSelection() {
     }
 
     if (window.location.pathname.includes("/post/")) {
-      contextCheck = currentEntry.getElementsByClassName("btn btn-link btn-animate")[8].href; // check for direct link button
-      if (contextCheck === `${window.location.origin}/create_post`) {
+      contextCheck = currentEntry.getElementsByClassName("btn btn-link btn-animate")[9].href; // check for direct link button
+      if (contextCheck === `${window.location.origin}/create_post` || !/(.@)/g.test(currentEntry.getElementsByClassName("person-listing d-inline-flex align-items-baseline text-info")[0].href)) {
         selectionType = "post-page"
       } else {
         selectionType = "post-page-fedi"
