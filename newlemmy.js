@@ -1,4 +1,24 @@
+// ==UserScript==
+// @name          lemmy-keyboard-navigation
+// @match         https://*/*
+// @grant         none
+// @version       2.2
+// @author        vmavromatis
+// @author        howdy@thesimplecorner.org
+// @author        InfinibyteF4
+// @author        aglidden
+// @license       GPL3
+// @icon          https://raw.githubusercontent.com/vmavromatis/Lemmy-keyboard-navigation/main/icon.png?inline=true
+// @homepageURL   https://github.com/vmavromatis/Lemmy-keyboard-navigation
+// @namespace     https://github.com/vmavromatis/Lemmy-keyboard-navigation
+// @description   Easily navigate Lemmy with your keyboard
+// @run-at        document-end
+// ==/UserScript==
+
 /*global window,console,localStorage,sessionStorage,document,GM_addStyle,PRO_addStyle,addStyle,MutationObserver,location*/
+
+//isLemmySite
+if (document.querySelectorAll('.lemmy-site').length >= 1) {
 
 // DEBUGGING (ignore me!)
 //localStorage.clear();
@@ -1478,4 +1498,6 @@ function scrollPage(y) {
       top: y
     });
   }
+}
+
 }
