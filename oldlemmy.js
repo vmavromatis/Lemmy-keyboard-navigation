@@ -1,26 +1,6 @@
-// ==UserScript==
-// @name          mlmym-keyboard-navigation
-// @match         https://*/*
-// @grant         none
-// @version       1
-// @author        vmavromatis
-// @author        howdy@thesimplecorner.org
-// @author        InfinibyteF4
-// @author        aglidden
-// @license       GPL3
-// @icon          https://raw.githubusercontent.com/vmavromatis/Lemmy-keyboard-navigation/main/icon.png?inline=true
-// @homepageURL   https://github.com/vmavromatis/Lemmy-keyboard-navigation/tree/add-mlmym-support
-// @namespace     https://github.com/vmavromatis/Lemmy-keyboard-navigation/tree/add-mlmym-support
-// @description   Easily navigate Lemmy with your keyboard
-// @run-at        document-end
-// ==/UserScript==
 
 /*global window,console,localStorage,sessionStorage,document,GM_addStyle,PRO_addStyle,addStyle,MutationObserver,location*/
 
-// display warning if used on non Mlmym site
-if (!document.querySelectorAll('.spacer>a>.icon').length >= 1){
-  console.log('This userscript is intended to be used with mlmym.\nhttps://github.com/rystaf/mlmym');
-} else {
 // this userscript doesn't work with endless scrolling (yet!)
 console.log(`This userscript doesn't currently work with endless scrolling/auto load. These settings have been disabled.`)
 localStorage.setItem('endlessScrolling', false);
@@ -1352,6 +1332,4 @@ function scrollPage(y) {
       top: y
     });
   }
-}
-
 }
