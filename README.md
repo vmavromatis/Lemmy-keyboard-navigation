@@ -1,6 +1,8 @@
 # Lemmy-keyboard-navigation
 A RES-like userscript to navigate Lemmy with the keyboard. Supports both HJKL and arrow navigation.
 
+Works on lemmy-ui and mlmym websites.
+
 ## Installation & Usage:
 ### As a Chrome Extension
 Get from [here](https://chrome.google.com/webstore/detail/lemmy-keyboard-navigator/lamoeoaekeeklbcekclbceaeafjkdhbi)
@@ -10,12 +12,6 @@ Get from [here](https://chrome.google.com/webstore/detail/lemmy-keyboard-navigat
 - [Click here](https://greasyfork.org/en/scripts/470498-lemmy-keyboard-navigation) to install script from Greasyfork (there is a webhook that auto-syncs with this repo)
 - Press 'G' (dashboard) then 'O' to configure your settings
 - Voila! You may now navigate https://lemmy.world/ (or any other lemmy instance of your choice) with your keyboard
-
-> ***FOR EXPERIMENTAL STANDALONE MLMYM USERSCRIPT***
-> - Get latest script from [HERE](https://github.com/vmavromatis/Lemmy-keyboard-navigation/raw/add-mlmym-support/lemmy-keyboard-navigation.user.js)
-> - Known issues: parent comment jump & shift J/K (WIP branch 'add-mlmym-support')
-> - All credits go to @InfinibyteF4 🏆
-************************************
 
 ## Keybinds
 
