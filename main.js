@@ -1,12 +1,12 @@
 // ==UserScript==
-// @name          lemmy-keyboard-navigation-experimental
+// @name          lemmy-keyboard-navigation
 // @match         https://*/*
 // @grant         none
-// @version       0.1
+// @version       2.3
 // @author        vmavromatis
-// @author        howdy@thesimplecorner.org
 // @author        InfinibyteF4
 // @author        aglidden
+// @author        howdy-tsc
 // @license       GPL3
 // @require       https://github.com/vmavromatis/Lemmy-keyboard-navigation/raw/separate-js-files/lemmy-keyboard-navigation.user.js
 // @require       https://github.com/vmavromatis/Lemmy-keyboard-navigation/raw/separate-js-files/lemmy-keyboard-navigation-mlmym.user.js
