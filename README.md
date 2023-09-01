@@ -6,14 +6,19 @@ Works on lemmy-ui and mlmym websites.
 ## Installation:
 
 ### As a Userscript 
-- First, make sure you have [Tampermonkey](https://www.tampermonkey.net/) or [Violentmonkey](https://violentmonkey.github.io/) or [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/) installed 
-- Get from [HERE](https://github.com/vmavromatis/Lemmy-keyboard-navigation/raw/main/main.js)
+- Make sure you have [Tampermonkey](https://www.tampermonkey.net/) or [Violentmonkey](https://violentmonkey.github.io/) or [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/) installed 
+- Get from [>>HERE<<](https://github.com/vmavromatis/Lemmy-keyboard-navigation/raw/main/main.js)
 
-Alternatively, if you want standalone versions instead, use [this](https://greasyfork.org/en/scripts/470498-lemmy-keyboard-navigation) for lemmy ui and [this](https://github.com/vmavromatis/Lemmy-keyboard-navigation/blob/main/lemmy-keyboard-navigation-mlmym.user.js) for mlmym.
-
+_If you prefer to use standalone versions, use [this](https://greasyfork.org/en/scripts/470498-lemmy-keyboard-navigation) for lemmy ui and [this](https://github.com/vmavromatis/Lemmy-keyboard-navigation/blob/main/lemmy-keyboard-navigation-mlmym.user.js) for mlmym._
 
 ### As a Chrome Extension
-Get from [HERE](https://chrome.google.com/webstore/detail/lemmy-keyboard-navigator/lamoeoaekeeklbcekclbceaeafjkdhbi)
+- Get from [>>HERE<<](https://chrome.google.com/webstore/detail/lemmy-keyboard-navigator/lamoeoaekeeklbcekclbceaeafjkdhbi)
+
+_no mlmym support yet for the chrome extension =[_
+
+
+### As a Firefox Extension
+- Coming soon 😬
 
 
 ## Usage
