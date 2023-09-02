@@ -6,21 +6,13 @@ Works on lemmy-ui and mlmym websites.
 
 ## Installation:
 
-### As a Userscript 
-- Make sure you have [Tampermonkey](https://www.tampermonkey.net/) or [Violentmonkey](https://violentmonkey.github.io/) or [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/) installed 
-- Get from [>>HERE<<](https://github.com/vmavromatis/Lemmy-keyboard-navigation/raw/main/main.js)
+| Userscript* <br /> v2.3                                                                         | Chrome <br /> v2.2                                                                        | Firefox <br /> coming soon                                                                           | 
+| -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | 
+| [<img src="https://edent.github.io/SuperTinyIcons/images/svg/javascript.svg" width="100">](https://github.com/vmavromatis/Lemmy-keyboard-navigation/raw/main/main.user.js)| [<img src="https://edent.github.io/SuperTinyIcons/images/svg/chrome.svg" width="100" />](https://chrome.google.com/webstore/detail/lemmy-keyboard-navigator/lamoeoaekeeklbcekclbceaeafjkdhbi) | [<img src="https://edent.github.io/SuperTinyIcons/images/svg/firefox.svg" width="100" />](https://addons.mozilla.org/en-US/firefox/addon/lemmy-keyboard-navigation/) | 
 
-_If you prefer to use standalone versions, use [this](https://greasyfork.org/en/scripts/470498-lemmy-keyboard-navigation) for lemmy ui and [this](https://github.com/vmavromatis/Lemmy-keyboard-navigation/blob/main/lemmy-keyboard-navigation-mlmym.user.js) for mlmym._
+<sub><sup>*: Make sure you have one of [Tampermonkey](https://www.tampermonkey.net/) / [Violentmonkey](https://violentmonkey.github.io/) / [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/) installed<sup><sub>
 
-### As a Chrome Extension
-- Get from [>>HERE<<](https://chrome.google.com/webstore/detail/lemmy-keyboard-navigator/lamoeoaekeeklbcekclbceaeafjkdhbi)
-
-_no mlmym support yet for the chrome extension =[_
-
-
-### As a Firefox Extension
-- Coming soon 😬
-
+> v2.3 has been submitted to the Chrome and Firefox stores, approval may take a few days.
 
 ## Usage
 
