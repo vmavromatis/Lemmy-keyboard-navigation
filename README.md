@@ -16,8 +16,7 @@ Works on lemmy-ui and mlmym websites.
 
 ## Usage
 
-Press 'G' (dashboard) then 'O' to configure your settings
-
+### Default keys:
 |                         Link Pages                                |
 |----------------------------------------------------------------------|
 | <kbd>J</kbd> or <kbd>↓</kbd> = Next Post                                |
@@ -63,7 +62,11 @@ Press 'G' (dashboard) then 'O' to configure your settings
 
 ![comments](https://github.com/InfinibyteF4/Lemmy-keyboard-navigation/assets/75824710/4c448b29-13a2-4c11-b1b0-760f8c397245)
 
+### Options ('Ο'):
+<img width="200" alt="image" src="https://github.com/vmavromatis/Lemmy-keyboard-navigation/assets/8668731/5aa941d8-94ca-461f-bb10-7f1a590c1e1b">
 
+### Quicknav dialog ('G'):
+<img width="75" alt="image" src="https://github.com/vmavromatis/Lemmy-keyboard-navigation/assets/8668731/553df9c0-c5dd-423f-bc61-8d94f3465d1c">
 
 ## Licence & Credits: 
 - GPL 3.0
