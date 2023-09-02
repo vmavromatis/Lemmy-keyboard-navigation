@@ -663,6 +663,9 @@ function handleKeyPress(event) {
           dialogUpdate();
           goToDialog("open");
           break;
+        case modalOptionsKey:
+          options("open");
+          break;
         case contextKey:
           getContext(event);
           break;
