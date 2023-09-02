@@ -2,11 +2,11 @@
 // @name          lemmy-keyboard-navigation
 // @match         https://*/*
 // @grant         none
-// @version       2.2
+// @version       2.4
 // @author        vmavromatis
-// @author        howdy@thesimplecorner.org
 // @author        InfinibyteF4
 // @author        aglidden
+// @author        howdy-tsc
 // @license       GPL3
 // @icon          https://raw.githubusercontent.com/vmavromatis/Lemmy-keyboard-navigation/main/icon.png?inline=true
 // @homepageURL   https://github.com/vmavromatis/Lemmy-keyboard-navigation
@@ -557,7 +557,17 @@ const config = {
   subtree: true
 };
 
+//Fix for FF only - check for entries and load init() on very first window load
+window.onload = () => {
+    getEntries();
+};
+
+//Same as above but now do it via mutationobserver for any page changes
 const observer = new MutationObserver(() => {
+    getEntries();
+});
+
+function getEntries() {
   entries = document.querySelectorAll(".post-listing, .comment-node");
 
   if (entries.length > 0) {
@@ -567,7 +577,7 @@ const observer = new MutationObserver(() => {
     }
     init();
   }
-});
+}
 
 observer.observe(targetNode, config);
 
