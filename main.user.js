@@ -16,3 +16,6 @@
 // @description   Easily navigate Lemmy with your keyboard
 // @run-at        document-end
 // ==/UserScript==
+
+// For lemmy-ui view lemmy-keyboard-navigation.user.js
+// For mlmym view lemmy-keyboard-navigation-mlmym.user.js
