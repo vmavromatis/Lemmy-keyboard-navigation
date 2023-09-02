@@ -6,13 +6,13 @@ Works on lemmy-ui and mlmym websites.
 
 ## Installation:
 
-| Userscript* <br /> v2.3                                                                         | Chrome <br /> v2.2                                                                        | Firefox <br /> coming soon                                                                           | 
+| Userscript* <br /> v2.3                                                                         | Chrome <br /> v2.2                                                                        | Firefox <br /> v2.3                                                                           | 
 | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | 
 | [<img src="https://edent.github.io/SuperTinyIcons/images/svg/javascript.svg" width="100">](https://github.com/vmavromatis/Lemmy-keyboard-navigation/raw/main/main.user.js)| [<img src="https://edent.github.io/SuperTinyIcons/images/svg/chrome.svg" width="100" />](https://chrome.google.com/webstore/detail/lemmy-keyboard-navigator/lamoeoaekeeklbcekclbceaeafjkdhbi) | [<img src="https://edent.github.io/SuperTinyIcons/images/svg/firefox.svg" width="100" />](https://addons.mozilla.org/en-US/firefox/addon/lemmy-keyboard-navigation/) | 
 
 <sub><sup>*: Make sure you have one of [Tampermonkey](https://www.tampermonkey.net/) / [Violentmonkey](https://violentmonkey.github.io/) / [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/) installed<sup><sub>
 
-> v2.3 has been submitted to the Chrome and Firefox stores, approval may take a few days.
+> v2.3 has been submitted to the Chrome store, approval may take a few days.
 
 ## Usage
 
