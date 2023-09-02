@@ -1,4 +1,5 @@
-# Lemmy-keyboard-navigation
+<img width="600" alt="image" src="https://github.com/vmavromatis/Lemmy-keyboard-navigation/assets/8668731/77ddd70b-91fa-4cf1-b3c1-2f36e26c854a">
+
 A RES-like userscript to navigate Lemmy with the keyboard. Supports both HJKL and arrow navigation.
 
 Works on lemmy-ui and mlmym websites.
