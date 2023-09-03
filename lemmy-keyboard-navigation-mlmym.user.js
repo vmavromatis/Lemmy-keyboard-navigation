@@ -17,7 +17,7 @@
 
 /*global window,console,localStorage,sessionStorage,document,GM_addStyle,PRO_addStyle,addStyle,MutationObserver,location*/
 
-// display warning if used on non Mlmym site
+// display warning if used on non-Mlmym site
 if (!document.querySelectorAll('.spacer>a>.icon').length >= 1){
   console.log('This userscript is intended to be used with mlmym.\nhttps://github.com/rystaf/mlmym');
 } else {
