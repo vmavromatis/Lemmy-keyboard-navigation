@@ -3,6 +3,9 @@ name: Zip Files
 on:
   release:
     types: [published]
+  push:
+    branches:
+      - main
 
 jobs:
   zip-files:
