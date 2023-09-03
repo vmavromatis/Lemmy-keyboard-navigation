@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "Lemmy Keyboard Navigation",
+  "description": "Easily navigate Lemmy with your keyboard.",
+  "version": "2.3",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.lemmy.world/*",
+        "*://*.lemmy.ml/*",
+        "*://*.lemmy.ca/*",
+        "*://*.lemm.ee/*",
+        "*://*.feddit.de/*",
+        "*://*.lemmynsfw.com/*",
+        "*://*.sh.itjust.works/*",
+        "*://*.beehaw.org/*",
+        "*://*.midwest.social/*",
+        "*://*.lemmy.one/*",
+        "*://*.hexbear.net/*",
+        "*://*.programming.dev/*"
+      ],
+      "js": [
+        "lemmy-keyboard-navigation.user.js",
+        "lemmy-keyboard-navigation-mlmym.user.js"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{d8289f13-e545-409b-a2c6-dfb0df9fa1f2}"
+    }
+  }
+}
