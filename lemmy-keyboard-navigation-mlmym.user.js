@@ -594,6 +594,7 @@ function call() {
 call();
 
 function init() {
+  sessionStorage.setItem('currentselection', 0); //make sure selection is reset to first
   // If jumping to comments
   if (window.location.pathname.includes("/post/") &&
     entries.length > 1 &&
