@@ -582,6 +582,7 @@ function getEntries() {
 observer.observe(targetNode, config);
 
 function init() {
+  sessionStorage.setItem('currentselection', 0); //reset the selection to the first post
   // If jumping to comments
   if (window.location.search.includes("scrollToComments=true") &&
     entries.length > 1 &&
