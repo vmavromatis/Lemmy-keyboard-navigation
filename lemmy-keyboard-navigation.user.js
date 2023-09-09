@@ -519,9 +519,6 @@ document.getElementById("LKresetoptions").addEventListener("click", (e) => {
   localStorage.clear();
   window.location.reload();
 });
-document.getElementById("navTitle").addEventListener("click", () => {
-  sessionStorage.setItem('currentselection', 0);
-});
 
 // Global variables
 let currentEntry;
@@ -779,7 +776,6 @@ function handleKeyPress(event) {
             }
           }
         }
-        sessionStorage.setItem('currentselection', 0); //reset the selection back to the first post when switching pages
       }
       break;
     case modalMode = 1:
@@ -825,31 +821,26 @@ function handleKeyPress(event) {
           break;
         case modalSortOneKey:
           let firstbutton = document.getElementsByClassName("btn btn-outline-secondary")[0];
-          sessionStorage.setItem('currentselection', 0); //reset the selection to the first post when switching filters
           firstbutton.click();
           goToDialog("close");
           break;
         case modalSortTwoKey:
           let secondbutton = document.getElementsByClassName("btn btn-outline-secondary")[1];
-          sessionStorage.setItem('currentselection', 0);
           secondbutton.click();
           goToDialog("close");
           break;
         case modalSortThreeKey:
           let thirdbutton = document.getElementsByClassName("btn btn-outline-secondary")[2];
-          sessionStorage.setItem('currentselection', 0);
           thirdbutton.click();
           goToDialog("close");
           break;
         case modalSortFourKey:
           let fourthbutton = document.getElementsByClassName("btn btn-outline-secondary")[3];
-          sessionStorage.setItem('currentselection', 0);
           fourthbutton.click();
           goToDialog("close");
           break;
         case modalSortFiveKey:
           let fifthbutton = document.getElementsByClassName("btn btn-outline-secondary")[4];
-          sessionStorage.setItem('currentselection', 0);
           fifthbutton.click();
           goToDialog("close");
           break;
