@@ -9,8 +9,8 @@
 // @author        aglidden
 // @license       GPL3
 // @icon          https://raw.githubusercontent.com/vmavromatis/Lemmy-keyboard-navigation/main/icon.png?inline=true
-// @homepageURL   https://github.com/vmavromatis/Lemmy-keyboard-navigation/tree/add-mlmym-support
-// @namespace     https://github.com/vmavromatis/Lemmy-keyboard-navigation/tree/add-mlmym-support
+// @homepageURL   https://github.com/vmavromatis/Lemmy-keyboard-navigation/
+// @namespace     https://github.com/vmavromatis/Lemmy-keyboard-navigation/
 // @description   Easily navigate Lemmy with your keyboard
 // @run-at        document-end
 // ==/UserScript==
@@ -483,11 +483,11 @@ odiv.innerHTML = `
     </tbody>
   </table>
 </div>
-<hr />
+<hr/>
 <p>mlmym-keyboard-navigation links:</p>
-<a
-  href='https://github.com/vmavromatis/Lemmy-keyboard-navigation/tree/add-mlmym-support'>Github</a><br/>
-  <p>This settings page was taken from the <a href='https://github.com/howdy-tsc/LemmyTools'>LemmyTools</a> Userscript.</p>
+  <a href='https://github.com/vmavromatis/Lemmy-keyboard-navigation/'>Github</a><br/>
+  <a href='https://greasyfork.org/en/scripts/470498-lemmy-keyboard-navigation'>Greasyfork</a><br/>
+  <p>This settings page was taken from the <a href='https://github.com/howdy-tsc/LemmyTools'>LemmyTools</a> Userscript.</p></br></br></br>
 `;
 
 let LMbutton;
