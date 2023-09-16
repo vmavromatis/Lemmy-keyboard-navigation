@@ -77,7 +77,8 @@ function options(open) {
         m_saved: "KeyS",
         m_userpage: "KeyU",
         m_inbox: "KeyI",
-        m_options: "KeyO"
+        m_options: "KeyO",
+        s_search: "Period"
       },
       getSettingsFromLocalStorage()
     );
@@ -185,6 +186,9 @@ function options(open) {
     userOptions.m_options =
       document.getElementById("option_m_options").value;
 
+    userOptions.s_search =
+      document.getElementById("option_s_search").value;
+
     localStorage.setItem(optionsKey, JSON.stringify(userOptions));
     window.location.reload();
   }
@@ -255,6 +259,7 @@ const modalProfileKey = `${settings.m_userpage}`;
 const modalInboxKey = `${settings.m_inbox}`;
 const modalOptionsKey = `${settings.m_options}`;
 
+const searchKey = `${settings.s_search}`
 
 const escapeKey = 'Escape';
 let modalMode = 0;
@@ -300,6 +305,19 @@ let button = document.createElement("button");
 button.classList.add('CLOSEBUTTON1');
 button.innerHTML = `Press ESC or ${modalPopupKey} to Close`;
 myDialog.appendChild(button);
+
+//draw search bar
+const searchbar = document.createElement("div");
+searchbar.setAttribute("id", "lkSearch");
+searchbar.classList.add("lksearch");
+searchbar.innerHTML = `
+<div id="searchForm">
+  Press Enter to search or ESC to close</br>
+  <input id="searchInput" type="text" placeholder="Search Lemmy">
+  <button id="searchSubmit">Search</button>
+  <button id="searchCancel">Close</button>
+<div>
+`;
 
 //draw settings page
 const odiv = document.createElement("div");
@@ -466,6 +484,13 @@ odiv.innerHTML = `
         <td><textarea id='option_m_options'>${settings.m_options}</textarea></td>
       </tr>
       <tr>
+          <td><h3><b>Rebind Searchbar Keys</b></h3></td><td><td/>
+      </tr>
+      <tr>
+        <td><b>Open search bar</b><br/>Default: Period</td>
+        <td><textarea id='option_s_search'>${settings.s_search}</textarea></td>
+      </tr>
+      <tr>
         <td><b>Save and close settings</b></td>
         <td><button id='LKsaveoptions'>Save and Close</button></td>
       </tr>
@@ -502,9 +527,25 @@ let styleString = `
   padding: 0.5%;
   margin-top:35px;
 }
+
+.lksearch { /* from RES */
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  margin-left: -275px;
+  z-index: 10800000;
+  width: 550px;
+  border: 3px solid ${backgroundColor};
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #333;
+  color: #ccc;
+}
 `;
 document.head.appendChild(document.createElement("style")).innerHTML = styleString;
 document.body.appendChild(odiv); //options
+document.body.appendChild(searchbar); //cmdline
+document.getElementById('lkSearch').style.display = 'none';
 
 document.getElementById("LKsaveoptions").addEventListener("click", (e) => {
   e.preventDefault();
@@ -518,6 +559,20 @@ document.getElementById("LKresetoptions").addEventListener("click", (e) => {
   e.preventDefault();
   localStorage.clear();
   window.location.reload();
+});
+document.getElementById("searchSubmit").addEventListener("click", (e) => {
+  goToSearch("search");
+});
+document.getElementById("searchCancel").addEventListener("click", (e) => {
+  goToSearch("close");
+});
+document.getElementById("searchInput").addEventListener('keydown', function onEvent(event) {
+    if (event.key === "Enter") {
+        goToSearch("search");
+    }
+    if (event.key === "Escape") {
+        goToSearch("close");
+    }
 });
 
 // Global variables
@@ -656,6 +711,9 @@ function handleKeyPress(event) {
           break;
         case openCommentsKey:
           comments(event);
+          break;
+        case searchKey:
+          goToSearch("open");
           break;
         case modalPopupKey:
           dialogUpdate();
@@ -847,6 +905,13 @@ function handleKeyPress(event) {
         case modalOptionsKey:
           options("open");
           goToDialog("close");
+          break;
+      }
+      break;
+    case modalMode = 2:
+      switch (event.code) {
+        case escapeKey:
+          goToSearch("close");
           break;
       }
   }
@@ -1132,6 +1197,28 @@ function goToDialog(n) {
     myDialog.close();
     modalMode = 0;
     console.log(`modalMode: ${modalMode}`);
+  }
+}
+
+let searchQuery;
+function goToSearch(n) {
+  if (n === "open") {
+    document.getElementById('lkSearch').style.display = 'block';
+    document.getElementById('searchInput').focus();
+    setTimeout(function() {
+      document.getElementById('searchInput').value = ''; // this is to get rid of the '.' in the search box
+    }, 1);
+    modalMode = 2;
+    console.log(`modalMode: ${modalMode}`);
+  }
+  if (n === "close") {
+    document.getElementById('lkSearch').style.display = 'none';
+    modalMode = 0;
+    console.log(`modalMode: ${modalMode}`);
+  }
+  if (n === "search") {
+    searchQuery = document.getElementById("searchInput").value;
+    window.location = `${window.location.origin}/search?q=${searchQuery}&type=All&listingType=All&page=1&sort=TopAll`;
   }
 }
 
