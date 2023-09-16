@@ -31,19 +31,23 @@ Works on lemmy-ui and mlmym websites.
 | <kbd>=</kbd> = Grow Expanded Image                          | Q = Show context                                               |
 | G = Open Navigation Dialog                                  | G = Open Navigation Dialog                                     |
 | O = Open Options Page                                       | O = Open Options page                                          |
+| <kbd>.</kbd> = Open Quick Search                            | <kbd>.</kbd> = Open Quick Search                               |
 | C = View Comments (<kbd>⇧ Shift</kbd> + C to open in new tab) | P = Parent Comment                                           |
 | R = Go to community (<kbd>⇧ Shift</kbd>+ R to open in new tab) | R = Reply                                                   |
 | U = Go to poster's profile (<kbd>⇧ Shift</kbd> + U to open in new tab) | U = Go to commenter's profile (<kbd>⇧ Shift</kbd> + U to open in new tab) |
 | <kbd>⏎ Enter</kbd> = Visit Link (<kbd>⇧ Shift</kbd> + <kbd>⏎ Enter</kbd> to open in new tab) |                              |
 
-![linkpages](https://github.com/InfinibyteF4/Lemmy-keyboard-navigation/assets/75824710/94743f5f-ccdd-490a-8e61-e57502931de6)
-![comments](https://github.com/InfinibyteF4/Lemmy-keyboard-navigation/assets/75824710/6d4093ac-a6ce-4f56-9908-f5e49468b492)
+![linkpages](https://github.com/InfinibyteF4/Lemmy-keyboard-navigation/assets/75824710/1a3bc7d4-564c-4054-9e26-be7edce811c8)
+![comments](https://github.com/InfinibyteF4/Lemmy-keyboard-navigation/assets/75824710/b9b529d0-0736-4d91-9f8b-293e319a52c0)
 
 ### Options ('Ο'):
-<img width="200" alt="image" src="https://github.com/vmavromatis/Lemmy-keyboard-navigation/assets/8668731/5aa941d8-94ca-461f-bb10-7f1a590c1e1b">
+<img width="250" alt="image" src="https://github.com/vmavromatis/Lemmy-keyboard-navigation/assets/8668731/5aa941d8-94ca-461f-bb10-7f1a590c1e1b">
 
 ### Quicknav dialog ('G'):
-<img width="75" alt="image" src="https://github.com/vmavromatis/Lemmy-keyboard-navigation/assets/8668731/553df9c0-c5dd-423f-bc61-8d94f3465d1c">
+<img height="300" alt="image" src="https://github.com/vmavromatis/Lemmy-keyboard-navigation/assets/8668731/553df9c0-c5dd-423f-bc61-8d94f3465d1c">
+
+### Quick Search ('.'):
+![Flameshot_150](https://github.com/InfinibyteF4/Lemmy-keyboard-navigation/assets/75824710/5b429d02-540f-4bbb-926b-7d1de299d60c)
 
 ## Development: 
 #### For Chrome or Firefox extension
