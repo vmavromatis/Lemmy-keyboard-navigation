@@ -8,8 +8,8 @@
 // @author        aglidden
 // @author        howdy-tsc
 // @license       GPL3
-// @require       https://github.com/vmavromatis/Lemmy-keyboard-navigation/raw/main/lemmy-keyboard-navigation.user.js#md5=48cf15e357f6a179a01e759d47e79c37
-// @require       https://github.com/vmavromatis/Lemmy-keyboard-navigation/raw/main/lemmy-keyboard-navigation-mlmym.user.js#md5=ee958dafe64f1fa9207afdbb485ae337
+// @require       https://github.com/vmavromatis/Lemmy-keyboard-navigation/raw/main/lemmy-keyboard-navigation.user.js#md5=bcb84c1aeba9dc5881b28ff76c250b80
+// @require       https://github.com/vmavromatis/Lemmy-keyboard-navigation/raw/main/lemmy-keyboard-navigation-mlmym.user.js#md5=814d0d7d1bd7d9961bbf0d2898fcc6a4
 // @icon          https://raw.githubusercontent.com/vmavromatis/Lemmy-keyboard-navigation/main/icon.png?inline=true
 // @homepageURL   https://github.com/vmavromatis/Lemmy-keyboard-navigation
 // @namespace     https://github.com/vmavromatis/Lemmy-keyboard-navigation

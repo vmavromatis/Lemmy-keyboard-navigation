@@ -49,6 +49,8 @@ function options(open) {
     userOptions = Object.assign({}, {
         pageOffset: 5,
         vimKeyNavigation: true,
+        autoNext: false,
+        openNewTab: false,
         smoothScroll: false,
         scrollPosition: "middle",
         expandOption: "both",
@@ -89,6 +91,12 @@ function options(open) {
     //general
     userOptions.vimKeyNavigation =
       document.getElementById("option_vimKeyNavigation").checked;
+
+    userOptions.autoNext =
+      document.getElementById("option_autoNext").checked;
+
+    userOptions.openNewTab =
+      document.getElementById("option_openNewTab").checked;
 
     userOptions.smoothScroll =
       document.getElementById("option_smoothScroll").checked;
@@ -200,6 +208,8 @@ function options(open) {
 let settings = options("set");
 let vimKeyNavigation = checkedIfTrue(settings.vimKeyNavigation);
 let smoothScroll = checkedIfTrue(settings.smoothScroll);
+let autoNext = checkedIfTrue(settings.autoNext);
+let openNewTab = checkedIfTrue(settings.openNewTab);
 let pageOffset = window.innerHeight * settings.pageOffset / 100;
 let scrollPosition = settings.scrollPosition;
 let backgroundHex = settings.backgroundHex;
@@ -340,6 +350,14 @@ odiv.innerHTML = `
       <tr>
         <td><b>Use Vim key navigation</b><br/>Also known as HJKL navigation.<br/>Uncheck to use arrow keys instead.</td>
         <td><input type='checkbox' id='option_vimKeyNavigation' ${vimKeyNavigation} /></td>
+      </tr>
+      <tr>
+        <td><b>Skip to next selection after voting</b><br/>After upvoting/downvoting a post,</br>select the next one.</td>
+        <td><input type='checkbox' id='option_autoNext' ${autoNext} /></td>
+      </tr>
+      <tr>
+        <td><b>Always open comments/links in a new tab</b><br/>Automatically open comments and links</br>in a new tab without having to hold Shift.</td>
+        <td><input type='checkbox' id='option_openNewTab' ${openNewTab} /></td>
       </tr>
       <tr>
         <td><b>Smooth scrolling</b><br/>Scroll smoothly to the current selection.</td>
@@ -685,9 +703,11 @@ function handleKeyPress(event) {
           break;
         case upvoteKey:
           upVote();
+          previousKey(event);
           break;
         case downvoteKey:
           downVote();
+          previousKey(event);
           break;
         case expandKey:
           if (event.shiftKey) {
@@ -744,7 +764,7 @@ function handleKeyPress(event) {
           } else {
             const linkElement = currentEntry.querySelector(".col.flex-grow-1>p>a");
             if (linkElement) {
-              if (event.shiftKey) {
+              if (openNewTab || event.shiftKey) {
                 window.open(linkElement.href);
               } else {
                 linkElement.click();
@@ -1152,6 +1172,11 @@ function previousKey(event) {
       selectedEntry = getPrevEntry(currentEntry);
     }
   }
+  if (event.code === upvoteKey || event.code === downvoteKey) {
+    if (autoNext) {
+      selectedEntry = getNextEntry(currentEntry);
+    }
+  }
   if (selectedEntry) {
     if (expand) {
       collapseEntry();
@@ -1395,7 +1420,7 @@ function visitUser(event) {
 function comments(event) {
   identifyButtons();
 
-  if (event.shiftKey) {
+  if (openNewTab || event.shiftKey) {
     window.open(
       commentButton.href
     );
