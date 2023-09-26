@@ -14,7 +14,7 @@
 // @homepageURL   https://github.com/vmavromatis/Lemmy-keyboard-navigation
 // @namespace     https://github.com/vmavromatis/Lemmy-keyboard-navigation
 // @description   Easily navigate Lemmy with your keyboard
-// @run-at        document-end
+// @run-at        document-idle
 // ==/UserScript==
 
 // For vanilla lemmy-ui view lemmy-keyboard-navigation.user.js
