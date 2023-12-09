@@ -712,6 +712,11 @@ function init() {
     entry.addEventListener('click', clickEntry, true);
   });
 
+  let expandoButtons = document.getElementsByClassName("expando-button");
+  Array.from(expandoButtons).forEach(entry => {
+    entry.addEventListener('mousedown', (e) => {currentlyExpanded = !currentlyExpanded})
+  });
+
   document.removeEventListener("keydown", handleKeyPress, true);
   document.addEventListener("keydown", handleKeyPress, true);
 }
