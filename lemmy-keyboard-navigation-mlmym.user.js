@@ -60,6 +60,7 @@ function options(open) {
         pageOffset: 5,
         vimKeyNavigation: true,
         autoNext: false,
+        expandNext: true,
         openNewTab: false,
         smoothScroll: false,
         scrollPosition: "middle",
@@ -106,6 +107,9 @@ function options(open) {
 
     userOptions.autoNext =
       document.getElementById("option_autoNext").checked;
+
+    userOptions.expandNext =
+      document.getElementById("option_expandNext").checked;
 
     userOptions.openNewTab =
       document.getElementById("option_openNewTab").checked;
@@ -218,6 +222,7 @@ let settings = options("set");
 let vimKeyNavigation = checkedIfTrue(settings.vimKeyNavigation);
 let smoothScroll = checkedIfTrue(settings.smoothScroll);
 let autoNext = checkedIfTrue(settings.autoNext);
+let expandNext = checkedIfTrue(settings.expandNext);
 let openNewTab = checkedIfTrue(settings.openNewTab);
 let pageOffset = window.innerHeight * settings.pageOffset / 100;
 let scrollPosition = settings.scrollPosition;
@@ -280,6 +285,7 @@ const modalOptionsKey = `${settings.m_options}`;
 const searchKey = `${settings.s_search}`
 
 const escapeKey = 'Escape';
+let currentlyExpanded = false;
 let modalMode = 0;
 console.log(`modalMode: ${modalMode}`);
 
@@ -366,6 +372,10 @@ odiv.innerHTML = `
       <tr>
         <td><b>Skip to next selection after voting</b><br/>After upvoting/downvoting a post,</br>select the next one.</td>
         <td><input type='checkbox' id='option_autoNext' ${autoNext} /></td>
+      </tr>
+      <tr>
+        <td><b>Auto expand next post</b><br/>If you navigate away from an expanded</br>post, unexpand it and expand the new post.</td>
+        <td><input type='checkbox' id='option_expandNext' ${expandNext} /></td>
       </tr>
       <tr>
         <td><b>Always open comments/links in a new tab</b><br/>Automatically open comments and links</br>in a new tab without having to hold Shift.</td>
@@ -702,6 +712,11 @@ function init() {
     entry.addEventListener('click', clickEntry, true);
   });
 
+  let expandoButtons = document.getElementsByClassName("expando-button");
+  Array.from(expandoButtons).forEach(entry => {
+    entry.addEventListener('mousedown', (e) => {currentlyExpanded = !currentlyExpanded})
+  });
+
   document.removeEventListener("keydown", handleKeyPress, true);
   document.addEventListener("keydown", handleKeyPress, true);
 }
@@ -727,6 +742,7 @@ function handleKeyPress(event) {
           previousKey(event);
           break;
         case expandKey:
+          currentlyExpanded = !currentlyExpanded;
           if (event.shiftKey) {
             expandAll();
           } else {
@@ -1093,6 +1109,9 @@ function isExpanded() {
 
 function previousKey(event) {
   let selectedEntry;
+  if (expandNext && currentlyExpanded) {
+    toggleExpand();
+  }
   // Next button
   if (event.code === nextKey) {
     if (event.shiftKey && vimKeyNavigation) {
@@ -1124,6 +1143,9 @@ function previousKey(event) {
     if (expand) {
       expandEntry();
     }
+  }
+  if (expandNext && currentlyExpanded) {
+    toggleExpand();
   }
 }
 function upVote() {
