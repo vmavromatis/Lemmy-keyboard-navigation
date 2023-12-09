@@ -685,6 +685,15 @@ function init() {
     entry.addEventListener('click', clickEntry, true);
   });
 
+  let expandImageButtons = document.getElementsByClassName("thumbnail rounded overflow-hidden d-inline-block position-relative p-0 border-0 bg-transparent");
+  let expandTextButtons = document.getElementsByClassName("btn btn-sm btn-link link-dark link-opacity-75 link-opacity-100-hover py-0 align-baseline");
+  Array.from(expandImageButtons).forEach(entry => {
+    entry.addEventListener('mousedown', (e) => {expand = !isExpanded() ? true : false})
+  });
+  Array.from(expandTextButtons).forEach(entry => {
+    entry.addEventListener('mousedown', (e) => {expand = !isExpanded() ? true : false})
+  });
+
   document.removeEventListener("keydown", handleKeyPress, true);
   document.addEventListener("keydown", handleKeyPress, true);
 }
