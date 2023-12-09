@@ -839,10 +839,20 @@ function handleKeyPress(event) {
           const pageButtons = Array.from(document.querySelectorAll(".paginator>button"));
 
           if (pageButtons && (document.getElementsByClassName('paginator').length > 0)) {
-            if (event.code === nextPageKey) {
-              document.querySelectorAll(".paginator>.btn.btn-secondary")[1].click(); //next
-            } else {
-              document.querySelectorAll(".paginator>.btn.btn-secondary")[0].click(); //prev
+            if (pageButtons.length === 2) {
+              if (event.code === nextPageKey) {
+                document.querySelectorAll(".paginator>.btn.btn-secondary")[1].click(); //next
+              } else {
+                document.querySelectorAll(".paginator>.btn.btn-secondary")[0].click(); //prev
+              }
+            } else { // Lemmy 0.19 (no back button)
+              if (event.code === nextPageKey) {
+                document.querySelectorAll(".paginator>.btn.btn-secondary")[0].click(); //next
+              } else {
+                if (window.location != window.origin+window.location.pathname) {
+                  history.back(); //prev
+                }
+              }
             }
           }
           // Jump next block of comments
