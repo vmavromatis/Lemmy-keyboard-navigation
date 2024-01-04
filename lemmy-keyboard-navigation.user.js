@@ -2,7 +2,7 @@
 // @name          lemmy-keyboard-navigation
 // @match         https://*/*
 // @grant         none
-// @version       2.3
+// @version       2.5
 // @author        vmavromatis
 // @author        InfinibyteF4
 // @author        aglidden
@@ -48,6 +48,7 @@ function options(open) {
     //First run set defaults or pull from localstorage.
     userOptions = Object.assign({}, {
         pageOffset: 5,
+        optionsLink: true,
         vimKeyNavigation: true,
         autoNext: false,
         openNewTab: false,
@@ -89,6 +90,9 @@ function options(open) {
     //save button
     odiv.style.display = "none";
     //general
+    userOptions.optionsLink =
+      document.getElementById("option_optionsLink").checked;
+
     userOptions.vimKeyNavigation =
       document.getElementById("option_vimKeyNavigation").checked;
 
@@ -191,8 +195,11 @@ function options(open) {
     userOptions.m_inbox =
       document.getElementById("option_m_inbox").value;
 
-    userOptions.m_options =
-      document.getElementById("option_m_options").value;
+    if (document.getElementById("option_m_options").value === "") {
+      userOptions.m_options = "KeyO"; //if left blank, reset to default
+    } else {
+      userOptions.m_options = document.getElementById("option_m_options").value;
+    }
 
     userOptions.s_search =
       document.getElementById("option_s_search").value;
@@ -206,6 +213,7 @@ function options(open) {
 }
 
 let settings = options("set");
+let optionsLink = checkedIfTrue(settings.optionsLink);
 let vimKeyNavigation = checkedIfTrue(settings.vimKeyNavigation);
 let smoothScroll = checkedIfTrue(settings.smoothScroll);
 let autoNext = checkedIfTrue(settings.autoNext);
@@ -292,6 +300,9 @@ const css = `
     color: ${textColor};
     }`;
 
+// add an options button in the nav bar
+navbarLinks();
+
 // dialog box
 let myDialog = document.createElement("dialog");
 document.body.appendChild(myDialog);
@@ -309,12 +320,11 @@ para.innerHTML = `
   ${modalProfileKey} = User Profile Page</br>
   ${modalInboxKey} = Inbox</br></p>
   <h6>${modalOptionsKey} = Options Page</br></br></h6>
+  <button class="OPTIONSBUTTON1">Open Options Page</button>
+  <br/><br/>
+  <button class="CLOSEBUTTON1">Press ESC or ${modalPopupKey} to Close</button>
   `;
 myDialog.appendChild(para);
-let button = document.createElement("button");
-button.classList.add('CLOSEBUTTON1');
-button.innerHTML = `Press ESC or ${modalPopupKey} to Close`;
-myDialog.appendChild(button);
 
 //draw search bar
 const searchbar = document.createElement("div");
@@ -347,6 +357,10 @@ odiv.innerHTML = `
     </thead>
     </tr>
     <tbody>
+      <tr>
+        <td><b>Link to Options in the navbar</b><br/>Show 'Keyboard Navigation Options' in<br/>the navbar at the top of the page.</td>
+        <td><input type='checkbox' id='option_optionsLink' ${optionsLink} /></td>
+      </tr>
       <tr>
         <td><b>Use Vim key navigation</b><br/>Also known as HJKL navigation.<br/>Uncheck to use arrow keys instead.</td>
         <td><input type='checkbox' id='option_vimKeyNavigation' ${vimKeyNavigation} /></td>
@@ -630,6 +644,9 @@ const config = {
 //Fix for FF only - check for entries and load init() on very first window load
 window.onload = () => {
     getEntries();
+    if (document.getElementById("LKoptionpagelink") === null) {
+      navbarLinks();
+    }
 };
 
 //Same as above but now do it via mutationobserver for any page changes
@@ -994,6 +1011,20 @@ function getPrevEntrySameLevel(e) {
   return prevSibling.getElementsByTagName("article")[0];
 }
 
+function navbarLinks() {
+  if (optionsLink) {
+    let navbarlinks = document.getElementById("navbarLinks");
+    let optionpagelink = document.createElement("li");
+    optionpagelink.classList.add('nav-item');
+    optionpagelink.innerHTML = `<a class="nav-link" id="LKoptionpagelink" title="Lemmy-keyboard-navigation Options" href="#">Keyboard Navigation Options</a>`;
+    navbarlinks.appendChild(optionpagelink);
+    document.getElementById("LKoptionpagelink").addEventListener("click", (e) => {
+      e.preventDefault();
+      options("open");
+    });
+  }  
+}
+
 function dialogUpdate() {
   para.remove();
   para = document.createElement("p");
@@ -1010,9 +1041,11 @@ function dialogUpdate() {
     ${modalProfileKey} = User Profile Page</br>
     ${modalInboxKey} = Inbox</br></p>
     <h6>${modalOptionsKey} = Options Page</br></br></h6>
+    <button class="OPTIONSBUTTON1">Open Options Page</button>
+    <br/><br/>
+    <button class="CLOSEBUTTON1">Press ESC or ${modalPopupKey} to Close</button>
     `;
   myDialog.appendChild(para);
-  myDialog.appendChild(button);
 }
 
 function dialogLocation(n) {
@@ -1226,11 +1259,19 @@ function downVote() {
 function goToDialog(n) {
 
   const closeButton = document.getElementsByClassName("CLOSEBUTTON1")[0];
+  const optionsButton = document.getElementsByClassName("OPTIONSBUTTON1")[0];
   closeButton.addEventListener("click", () => {
     myDialog.close();
     modalMode = 0;
     console.log(`modalMode: ${modalMode}`);
   });
+  optionsButton.addEventListener("click", () => {
+    myDialog.close();
+    modalMode = 0;
+    console.log(`modalMode: ${modalMode}`);
+    options("open");
+  });
+
   if (n === "open") {
     myDialog.showModal();
     modalMode = 1;
