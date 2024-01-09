@@ -1013,16 +1013,16 @@ function getPrevEntrySameLevel(e) {
 
 function navbarLinks() {
   if (optionsLink) {
-    let navbarlinks = document.getElementById("navbarLinks");
+    let navbarlinks = document.getElementById("navbarIcons");
     let optionpagelink = document.createElement("li");
     optionpagelink.classList.add('nav-item');
-    optionpagelink.innerHTML = `<a class="nav-link" id="LKoptionpagelink" title="Lemmy-keyboard-navigation Options" href="#">Keyboard Navigation Options</a>`;
+    optionpagelink.innerHTML = `<a class="nav-link" id="LKoptionpagelink" title="Lemmy-keyboard-navigation Options" href="#">⌨️</a>`;
     navbarlinks.appendChild(optionpagelink);
     document.getElementById("LKoptionpagelink").addEventListener("click", (e) => {
       e.preventDefault();
       options("open");
     });
-  }  
+  }
 }
 
 function dialogUpdate() {
