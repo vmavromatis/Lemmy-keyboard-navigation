@@ -6,11 +6,11 @@ Works on lemmy-ui and mlmym websites.
 
 ## Installation
 
-| Greasy Fork <br /> v2.5                               | Chrome <br /> v2.5                                                                       | Firefox <br /> v2.5                                                                           | Edge <br /> v2.4                                                                           | Opera <br /> v2.5                                                                           | 
+| Greasy Fork <br /> v2.6                               | Chrome <br /> v2.5                                                                       | Firefox <br /> v2.6                                                                           | Edge <br /> v2.4                                                                           | Opera <br /> v2.5                                                                           | 
 | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |  --------------------------------------------------------------------------------------- |   --------------------------------------------------------------------------------------- |  
 | [<img src="https://github.com/denilsonsa/denilsonsa.github.io/blob/master/icons/GreasyFork.svg" width="100">](https://greasyfork.org/en/scripts/470498-lemmy-keyboard-navigation)| [<img src="https://edent.github.io/SuperTinyIcons/images/svg/chrome.svg" width="100" />](https://chrome.google.com/webstore/detail/lemmy-keyboard-navigator/lamoeoaekeeklbcekclbceaeafjkdhbi) | [<img src="https://edent.github.io/SuperTinyIcons/images/svg/firefox.svg" width="100" />](https://addons.mozilla.org/en-US/firefox/addon/lemmy-keyboard-navigation/) | [<img src="https://edent.github.io/SuperTinyIcons/images/svg/edge.svg" width="100" />](https://microsoftedge.microsoft.com/addons/detail/lemmy-keyboard-navigation/bjnfcimfnaefjmefhagbfabgclhgmfdo/) | [<img src="https://edent.github.io/SuperTinyIcons/images/svg/opera.svg" width="100" />](https://addons.opera.com/en/extensions/details/lemmy-keyboard-navigation/) |  
 
-_Note: Version 2.5 has been submitted on all stores and pending approval_
+_Note: Version 2.6 has been submitted on all stores and pending approval_
 
 ## Usage
 
@@ -43,7 +43,7 @@ _Note: Version 2.5 has been submitted on all stores and pending approval_
 ### Options ('Ο'):
 <img width="250" alt="image" src="https://github.com/vmavromatis/Lemmy-keyboard-navigation/assets/8668731/5aa941d8-94ca-461f-bb10-7f1a590c1e1b">
 
-### Quicknav dialog ('G'):
+### Quicknav ('G'):
 <img height="300" alt="image" src="https://github.com/vmavromatis/Lemmy-keyboard-navigation/assets/8668731/553df9c0-c5dd-423f-bc61-8d94f3465d1c">
 
 ### Quick Search ('.'):
