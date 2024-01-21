@@ -2,7 +2,7 @@
 // @name          mlmym-keyboard-navigation
 // @match         https://*/*
 // @grant         none
-// @version       1
+// @version       2.5
 // @author        vmavromatis
 // @author        howdy@thesimplecorner.org
 // @author        InfinibyteF4
@@ -22,7 +22,7 @@ if (!document.querySelectorAll('.spacer>a>.icon').length >= 1){
   console.log('This userscript is intended to be used with mlmym.\nhttps://github.com/rystaf/mlmym');
 } else {
 // this userscript doesn't work with endless scrolling (yet!)
-console.log(`This userscript doesn't currently work with endless scrolling/auto load. These settings have been disabled.`)
+console.log(`This userscript doesn't currently work with endless scrolling/auto load. These settings have been disabled.`);
 localStorage.setItem('endlessScrolling', false);
 localStorage.setItem('autoLoad', false);
 
@@ -58,6 +58,7 @@ function options(open) {
     userOptions = Object.assign({}, {
         mlmymFixButton: true,
         pageOffset: 5,
+        optionsLink: true,
         vimKeyNavigation: true,
         autoNext: false,
         expandNext: true,
@@ -101,6 +102,9 @@ function options(open) {
     //general
     userOptions.mlmymFixButton =
     document.getElementById("option_mlmymFixButton").checked;
+
+    userOptions.optionsLink =
+      document.getElementById("option_optionsLink").checked;
 
     userOptions.vimKeyNavigation =
       document.getElementById("option_vimKeyNavigation").checked;
@@ -204,8 +208,11 @@ function options(open) {
     userOptions.m_inbox =
       document.getElementById("option_m_inbox").value;
 
-    userOptions.m_options =
-      document.getElementById("option_m_options").value;
+    if (document.getElementById("option_m_options").value === "") {
+      userOptions.m_options = "KeyO"; //if left blank, reset to default
+    } else {
+      userOptions.m_options = document.getElementById("option_m_options").value;
+    }
 
     userOptions.s_search =
       document.getElementById("option_s_search").value;
@@ -219,6 +226,7 @@ function options(open) {
 }
 
 let settings = options("set");
+let optionsLink = checkedIfTrue(settings.optionsLink);
 let vimKeyNavigation = checkedIfTrue(settings.vimKeyNavigation);
 let smoothScroll = checkedIfTrue(settings.smoothScroll);
 let autoNext = checkedIfTrue(settings.autoNext);
@@ -306,6 +314,9 @@ const css = `
     font-weight: normal !important;
     }`;
 
+// add an options button in the nav bar
+navbarLinks();
+
 // dialog box
 let myDialog = document.createElement("dialog");
 document.body.appendChild(myDialog);
@@ -323,12 +334,11 @@ para.innerHTML = `
   ${modalProfileKey} = User Profile Page</br>
   ${modalInboxKey} = Inbox</br></p>
   <h6>${modalOptionsKey} = Options Page</br></br></h6>
+  <button class="OPTIONSBUTTON1">Open Options Page</button>
+  <br/><br/>
+  <button class="CLOSEBUTTON1">Press ESC or ${modalPopupKey} to Close</button>
   `;
 myDialog.appendChild(para);
-let button = document.createElement("button");
-button.classList.add('CLOSEBUTTON1');
-button.innerHTML = `Press ESC or ${modalPopupKey} to Close`;
-myDialog.appendChild(button);
 
 //draw search bar
 const searchbar = document.createElement("div");
@@ -364,6 +374,10 @@ odiv.innerHTML = `
       <tr>
         <td><b>Enable mlmym fix selections button</b><br/>Click this button if you can't select a post or comment.<br/>Uncheck to hide this button.</td>
         <td><input type='checkbox' id='option_mlmymFixButton' ${mlmymFixButton} /></td>
+      </tr>
+      <tr>
+        <td><b>Link to Options in the navbar</b><br/>Show 'keyboard navigation options' in<br/>the navbar near the top of the page.</td>
+        <td><input type='checkbox' id='option_optionsLink' ${optionsLink} /></td>
       </tr>
       <tr>
         <td><b>Use Vim key navigation</b><br/>Also known as HJKL navigation.<br/>Uncheck to use arrow keys instead.</td>
@@ -981,6 +995,19 @@ function getPrevEntrySameLevel(e) {
   return prevSibling.getElementsByTagName("article")[0];
 }
 
+function navbarLinks() {
+  if (optionsLink) {
+    let navbarlinks = document.getElementsByTagName("ul")[0];
+    let optionpagelink = document.createElement("li");
+    optionpagelink.innerHTML = `<a id="LKoptionpagelink" href="#">keyboard navigation options</a>`;
+    navbarlinks.appendChild(optionpagelink);
+    document.getElementById("LKoptionpagelink").addEventListener("click", (e) => {
+      e.preventDefault();
+      options("open");
+    });
+  }  
+}
+
 function clickEntry(event) {
   const e = event.currentTarget;
   const target = event.target;
@@ -1169,10 +1196,17 @@ function downVote() {
 function goToDialog(n) {
 
   const closeButton = document.getElementsByClassName("CLOSEBUTTON1")[0];
+  const optionsButton = document.getElementsByClassName("OPTIONSBUTTON1")[0];
   closeButton.addEventListener("click", () => {
     myDialog.close();
     modalMode = 0;
     console.log(`modalMode: ${modalMode}`);
+  });
+  optionsButton.addEventListener("click", () => {
+    myDialog.close();
+    modalMode = 0;
+    console.log(`modalMode: ${modalMode}`);
+    options("open");
   });
   if (n === "open") {
     myDialog.showModal();
