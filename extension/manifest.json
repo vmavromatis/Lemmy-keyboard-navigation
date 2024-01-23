@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Lemmy Keyboard Navigation",
   "description": "Easily navigate Lemmy with your keyboard.",
-  "version": "2.6",
+  "version": "2.6.1",
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",
@@ -16,6 +16,7 @@
         "*://*.lemmy.ca/*",
         "*://*.lemm.ee/*",
         "*://*.feddit.de/*",
+        "*://*.feddit.uk/*",
         "*://*.lemmynsfw.com/*",
         "*://*.sh.itjust.works/*",
         "*://*.beehaw.org/*",
