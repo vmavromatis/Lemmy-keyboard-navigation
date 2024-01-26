@@ -39,6 +39,7 @@ function checkedIfTrue(val) {
   return val ? "checked" : "";
 }
 
+
 function options(open) {
   const odiv = document.getElementById("lkOptions");
   let userOptions = {};
@@ -55,7 +56,7 @@ function options(open) {
         smoothScroll: false,
         scrollPosition: "middle",
         expandOption: "both",
-        backgroundHex: "#373737",
+        backgroundHex: "",
         kb_expand: "KeyX",
         kb_comments: "KeyC",
         kb_openLink: "Enter",
@@ -120,8 +121,15 @@ function options(open) {
     userOptions.expandOption =
     document.getElementById("option_expandOption").value;
 
+    //if empty set to light/dark defaults, else set to user selection
+    if (document.getElementById("option_backgroundHex").value == "" && document.getElementById("app").getAttribute("data-bs-theme")==="light"){
+    userOptions.backgroundHex = "#FFDEAD"
+    }else if (document.getElementById("option_backgroundHex").value == "" && document.getElementById("app").getAttribute("data-bs-theme")==="dark"){
+    userOptions.backgroundHex = "#373737"
+    }else{
     userOptions.backgroundHex =
-      document.getElementById("option_backgroundHex").value;
+      document.getElementById("option_backgroundHex").value;}
+
     //keybinds
     userOptions.kb_expand =
       document.getElementById("option_kb_expand").value;
@@ -399,7 +407,7 @@ odiv.innerHTML = `
             </select></td>
       </tr>
       <tr>
-        <td><b>Selected Hex Code</b><br/>The background color of selected posts/comments.<br/>Default: #373737</td>
+        <td><b>Selected Hex Code</b><br/>The background color of selected posts/comments.<br/>Leave empty for default</td>
         <td><textarea id='option_backgroundHex'>${settings.backgroundHex}</textarea></td>
       </tr>
       <tr>
