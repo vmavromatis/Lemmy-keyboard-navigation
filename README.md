@@ -2,7 +2,10 @@
 
 A RES-like userscript to easily navigate Lemmy with your keyboard. 
 
-Works on lemmy-ui and mlmym websites.
+Works on both lemmy-ui (such as https://lemmy.world/) and mlmym (such as https://old.lemmy.world/)
+
+![gif](https://github.com/vmavromatis/Lemmy-keyboard-navigation/assets/8668731/ddfcb01c-4fa0-4870-8732-66183bb08502)
+
 
 ## Installation
 
