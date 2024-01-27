@@ -55,7 +55,8 @@ function options(open) {
         smoothScroll: false,
         scrollPosition: "middle",
         expandOption: "both",
-        backgroundHex: "#373737",
+        backgroundHexDark: "#373737",
+        backgroundHexLight: "#dadbdd",
         kb_expand: "KeyX",
         kb_comments: "KeyC",
         kb_openLink: "Enter",
@@ -120,8 +121,12 @@ function options(open) {
     userOptions.expandOption =
     document.getElementById("option_expandOption").value;
 
-    userOptions.backgroundHex =
-      document.getElementById("option_backgroundHex").value;
+    userOptions.backgroundHexDark =
+      document.getElementById("option_backgroundHexDark").value;
+
+    userOptions.backgroundHexLight =
+      document.getElementById("option_backgroundHexLight").value;
+
     //keybinds
     userOptions.kb_expand =
       document.getElementById("option_kb_expand").value;
@@ -220,12 +225,17 @@ let autoNext = checkedIfTrue(settings.autoNext);
 let openNewTab = checkedIfTrue(settings.openNewTab);
 let pageOffset = window.innerHeight * settings.pageOffset / 100;
 let scrollPosition = settings.scrollPosition;
-let backgroundHex = settings.backgroundHex;
+let backgroundHexDark = settings.backgroundHexDark;
+let backgroundHexLight = settings.backgroundHexLight;
 let expandOption = settings.expandOption;
 
 // Set selected entry colors
-const backgroundColor = `${backgroundHex}`;
-const textColor = 'white';
+var backgroundColor = `${backgroundHexDark}`;
+var textColor = 'white';
+if (document.getElementById("app").getAttribute("data-bs-theme") === "light") {
+  backgroundColor = `${backgroundHexLight}`;
+  textColor = 'black';
+}
 
 // Set navigation keys with keycodes here: https://www.toptal.com/developers/keycode
 let nextKey = 'ArrowDown';
@@ -399,8 +409,12 @@ odiv.innerHTML = `
             </select></td>
       </tr>
       <tr>
-        <td><b>Selected Hex Code</b><br/>The background color of selected posts/comments.<br/>Default: #373737</td>
-        <td><textarea id='option_backgroundHex'>${settings.backgroundHex}</textarea></td>
+        <td><b>Selected Hex Code (Dark Mode)</b><br/>The background color of selected posts/comments.<br/>Default: #373737</td>
+        <td><textarea id='option_backgroundHexDark'>${settings.backgroundHexDark}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Selected Hex Code (Light Mode)</b><br/>The background color of selected posts/comments.<br/>Default: #dadbdd</td>
+        <td><textarea id='option_backgroundHexLight'>${settings.backgroundHexLight}</textarea></td>
       </tr>
       <tr>
           <td><h3><b>Rebind Keys</b></h3>Set keybinds with keycodes here:<br/><a href='https://www.toptal.com/developers/keycode'>https://www.toptal.com/developers/keycode</a></td><td><td/>
@@ -1678,3 +1692,4 @@ function scrollPage(y) {
 }
 
 }
+ 
