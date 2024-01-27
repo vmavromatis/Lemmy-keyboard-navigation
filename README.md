@@ -13,27 +13,94 @@ Works on lemmy-ui and mlmym websites.
 ## Usage
 
 ### Default keybinds:
-| Posts                                                       | Comments                                                       |
-|-------------------------------------------------------------|----------------------------------------------------------------|
-| J or <kbd>↓</kbd> = Next Post                               | J or <kbd>↓</kbd> = Next Comment                               |
-| K or <kbd>↑</kbd> = Previous Post                           | K or <kbd>↑</kbd> = Previous Comment                           |
-| L or <kbd>→</kbd> = Next Page                               | <kbd>⇧ Shift</kbd> + J or L or <kbd>→</kbd> = Next same-level Comment     |
-| H or <kbd>←</kbd> = Previous Page                           | <kbd>⇧ Shift</kbd> + K or H or <kbd>←</kbd> = Previous same-level Comment |
-| T = Go to Top                                               | T = Go to Top                                                  |
-| A = Upvote                                                  | A = Upvote                                                     |
-| Z = Downvote                                                | Z = Downvote                                                   |
-| S = Save Post                                               | S = Save comment / Show more options                           |
-| E = Edit Post                                               | E = Edit comment / Show more options                           |
-| X = Expand/Collapse Post (⇧ Shift + X to expand all posts)  | X or <kbd>⏎ Enter</kbd> = Toggle collapse / Show more replies  |
-| <kbd>-</kbd> = Shrink Expanded Image                        | <kbd>1</kbd> ... <kbd>0</kbd> = Click links in comment         |
-| <kbd>=</kbd> = Grow Expanded Image                          | Q = Show context                                               |
-| G = Open Navigation Dialog                                  | G = Open Navigation Dialog                                     |
-| O = Open Options Page                                       | O = Open Options page                                          |
-| <kbd>.</kbd> = Open Quick Search                            | <kbd>.</kbd> = Open Quick Search                               |
-| C = View Comments (<kbd>⇧ Shift</kbd> + C to open in new tab) | P = Parent Comment                                           |
-| R = Go to community (<kbd>⇧ Shift</kbd>+ R to open in new tab) | R = Reply                                                   |
-| U = Go to poster's profile (<kbd>⇧ Shift</kbd> + U to open in new tab) | U = Go to commenter's profile (<kbd>⇧ Shift</kbd> + U to open in new tab) |
-| <kbd>⏎ Enter</kbd> = Visit Link (<kbd>⇧ Shift</kbd> + <kbd>⏎ Enter</kbd> to open in new tab) |                              |
+<table>
+<thead>
+<tr>
+<th>Posts</th>
+<th>Comments</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>J  = Next Post</td>
+<td>J  = Next Comment</td>
+</tr>
+<tr>
+<td>K = Previous Post</td>
+<td>K = Previous Comment</td>
+</tr>
+<tr>
+<td>L = Next Page</td>
+<td><kbd>⇧ Shift</kbd> + J or L = Next same-level Comment</td>
+</tr>
+<tr>
+<td>H = Previous Page</td>
+<td><kbd>⇧ Shift</kbd> + K or H = Previous same-level Comment</td>
+</tr>
+<tr>
+<td colspan="2"><div align="center"><p style="color:#00008B;"><i>Hint 💡 Turn Vim-mode off from Options to use arrow navigation (↓↑→←<) instead!</i></p></div></td>
+</tr>
+<tr>
+<td>T = Go to Top</td>
+<td>T = Go to Top</td>
+</tr>
+<tr>
+<td>A = Upvote</td>
+<td>A = Upvote</td>
+</tr>
+<tr>
+<td>Z = Downvote</td>
+<td>Z = Downvote</td>
+</tr>
+<tr>
+<td>S = Save Post</td>
+<td>S = Save comment / Show more options</td>
+</tr>
+<tr>
+<td>E = Edit Post</td>
+<td>E = Edit comment / Show more options</td>
+</tr>
+<tr>
+<td>X = Expand/Collapse Post (⇧ Shift + X to expand all posts)</td>
+<td>X or <kbd>⏎ Enter</kbd> = Toggle collapse / Show more replies</td>
+</tr>
+<tr>
+<td><kbd>-</kbd> = Shrink Expanded Image</td>
+<td><kbd>1</kbd> ... <kbd>0</kbd> = Click links in comment</td>
+</tr>
+<tr>
+<td><kbd>=</kbd> = Grow Expanded Image</td>
+<td>Q = Show context</td>
+</tr>
+<tr>
+<td>G = Open Navigation Dialog</td>
+<td>G = Open Navigation Dialog</td>
+</tr>
+<tr>
+<td>O = Open Options Page</td>
+<td>O = Open Options page</td>
+</tr>
+<tr>
+<td><kbd>.</kbd> = Open Quick Search</td>
+<td><kbd>.</kbd> = Open Quick Search</td>
+</tr>
+<tr>
+<td>C = View Comments (<kbd>⇧ Shift</kbd> + C to open in new tab)</td>
+<td>P = Parent Comment</td>
+</tr>
+<tr>
+<td>R = Go to community (<kbd>⇧ Shift</kbd>+ R to open in new tab)</td>
+<td>R = Reply</td>
+</tr>
+<tr>
+<td>U = Go to poster&#39;s profile (<kbd>⇧ Shift</kbd> + U to open in new tab)</td>
+<td>U = Go to commenter&#39;s profile (<kbd>⇧ Shift</kbd> + U to open in new tab)</td>
+</tr>
+<tr>
+<td><kbd>⏎ Enter</kbd> = Visit Link (<kbd>⇧ Shift</kbd> + <kbd>⏎ Enter</kbd> to open in new tab)</td>
+<td></td>
+</tr>
+</tbody></table>
+
 
 ![linkpages](https://github.com/InfinibyteF4/Lemmy-keyboard-navigation/assets/75824710/1a3bc7d4-564c-4054-9e26-be7edce811c8)
 ![comments](https://github.com/InfinibyteF4/Lemmy-keyboard-navigation/assets/75824710/b9b529d0-0736-4d91-9f8b-293e319a52c0)
