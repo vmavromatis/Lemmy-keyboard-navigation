@@ -229,6 +229,8 @@ let backgroundHexDark = settings.backgroundHexDark;
 let backgroundHexLight = settings.backgroundHexLight;
 let expandOption = settings.expandOption;
 
+let majorversion = parseInt(document.querySelectorAll("footer")[0].outerText.match(/^.*$/m)[0].match(/(?<=BE: )[^.\s].*/g)[0].match(/(?<=\.)(.*?)(?=\.)/g)[0]);
+
 // Set selected entry colors
 var backgroundColor = `${backgroundHexDark}`;
 var textColor = 'white';
@@ -870,7 +872,7 @@ function handleKeyPress(event) {
           const pageButtons = Array.from(document.querySelectorAll(".paginator>button"));
 
           if (pageButtons && (document.getElementsByClassName('paginator').length > 0)) {
-            if (pageButtons.length === 2) {
+            if (majorversion <= 18) {
               if (event.code === nextPageKey) {
                 document.querySelectorAll(".paginator>.btn.btn-secondary")[1].click(); //next
               } else {
@@ -878,7 +880,7 @@ function handleKeyPress(event) {
               }
             } else { // Lemmy 0.19 (no back button)
               if (event.code === nextPageKey) {
-                document.querySelectorAll(".paginator>.btn.btn-secondary")[0].click(); //next
+                document.querySelectorAll(".main-content-wrapper>div>.paginator>.btn.btn-secondary")[0].click(); //next
               } else {
                 if (window.location != window.origin+window.location.pathname) {
                   history.back(); //prev
@@ -1357,34 +1359,48 @@ function checkSelection() {
 
   if (postSelection) {
     selectionType = "post";
-    contextCheck = currentEntry.getElementsByClassName("btn btn-link btn-animate")[11]; // check for direct link button (rainbow star)
-    if (contextCheck) {
-      selectionType = `${selectionType}-fedi`;
-    }
+      if (posterusername === username) {
+          selectionType = `my-${selectionType}`;
+      }
+    contextCheck = currentEntry.getElementsByClassName("btn btn-link btn-animate")[8]; // check for direct link button (rainbow star)
+    try {
+      if ((contextCheck.href.match(/^(?:https?:\/\/)?(?:[^\/])?([^:\/?\n]+)/g)[0] !== window.location.origin) && (posterusername !== username)) {
+        selectionType = `${selectionType}-fedi`;
+      } 
+    } catch {}
 
     if (window.location.pathname.includes("/post/")) {
       contextCheck = currentEntry.getElementsByClassName("btn btn-link btn-animate")[9].href; // check for direct link button
       if (contextCheck === `${window.location.origin}/create_post` || !/(.@)/g.test(currentEntry.getElementsByClassName("person-listing d-inline-flex align-items-baseline text-info")[0].href)) {
-        selectionType = "post-page"
+        selectionType = `${selectionType}-page`;
       } else {
         selectionType = "post-page-fedi"
       }
     }
   } else {
     selectionType = "comment";
-    let contextButton = currentEntry.getElementsByClassName("btn btn-link btn-animate text-muted btn-sm")[0].href;
-    let contextButton2 = currentEntry.getElementsByClassName("btn btn-link btn-animate")[2].href;
+    let contextButton = currentEntry.getElementsByClassName("btn btn-link btn-animate text-muted btn-sm");
+    let contextButton2 = currentEntry.getElementsByClassName("btn btn-link btn-animate");
+    let getButton2 = currentEntry.getElementsByClassName("btn btn-link btn-animate");
 
-    if (contextButton === contextButton2) {
-      selectionType = `${selectionType}-context`;
+    if (username === posterusername) {
+      selectionType = `my-${selectionType}`
     }
-
+    if (majorversion <= 18) {
+      if ((getButton2[0].href === getButton2[2].href) && (getButton2[0].href)) {
+        selectionType = `${selectionType}-context`;
+      }
+    } else {
+      if ((contextButton[0].href === contextButton2[1].href) || (contextButton[0].href === contextButton2[2].href) && (contextButton[0].href)) {
+        selectionType = `${selectionType}-context`;
+      }
+    }
+    if ((getButton2[1].href === getButton2[3].href && getButton2[1].href) || (selectionType === "comment" && getButton2[1].href)) {
+      selectionType = `${selectionType}-fedi`;
+    }
     if (window.location.pathname.includes("/inbox")) {
       selectionType = "comment-inbox";
     }
-  }
-  if (username === posterusername) {
-    selectionType = `my-${selectionType}`;
   }
   console.log(`current selection: ${selectionType}`);
 }
@@ -1399,56 +1415,124 @@ var commentButton;
 function identifyButtons() {
   checkSelection();
   let getButton = currentEntry.getElementsByClassName("btn btn-link btn-animate");
-  if (selectionType === "post") { // posts on link pages
-    upvoteButton = getButton[0];
-    downvoteButton = getButton[1];
-    saveButton = getButton[2];
-    commentButton = currentEntry.getElementsByClassName("btn btn-link btn-sm text-muted ps-0")[1];
-    if (selectionType === "my-post") { // add edit button if the post is yours
-      editButton = currentEntry.getElementsByClassName("btn btn-link btn-sm d-flex align-items-center rounded-0 dropdown-item")[2];
+  if (majorversion <= 18 ) {
+    if (selectionType === "post" || selectionType === "my-post") { // posts on link pages
+      upvoteButton = getButton[0];
+      downvoteButton = getButton[1];
+      saveButton = getButton[2];
+      commentButton = currentEntry.getElementsByClassName("btn btn-link btn-sm text-muted ps-0")[1];
+      if (selectionType === "my-post") { // add edit button if the post is yours
+        editButton = currentEntry.getElementsByClassName("btn btn-link btn-sm d-flex align-items-center rounded-0 dropdown-item")[2];
+      }
+    } else if (selectionType === "post-fedi" || selectionType === "post-page-fedi") { // federated posts on link pages and on the page
+      upvoteButton = getButton[1];
+      downvoteButton = getButton[2];
+      saveButton = getButton[3];
+      commentButton = currentEntry.getElementsByClassName("btn btn-link btn-sm text-muted ps-0")[1];
+    } else if (selectionType === "post-page" || selectionType === "my-post-page") { // on the page of the post
+      upvoteButton = getButton[0];
+      downvoteButton = getButton[1];
+      saveButton = getButton[2];
+      commentButton = currentEntry.getElementsByClassName("btn btn-link btn-sm text-muted ps-0")[1];
+      if (selectionType === "my-post-page") { // add edit button if the post is yours
+        editButton = currentEntry.getElementsByClassName("btn btn-link btn-sm d-flex align-items-center rounded-0 dropdown-item")[2];
+      }
+    } else if (selectionType === "comment" || selectionType === "my-comment") { // 6 - 10 comments
+      upvoteButton = getButton[2];
+      downvoteButton = getButton[3];
+      replyButton = getButton[4];
+      moreButton = getButton[5];
+      if (selectionType === "my-comment") { // 6 - 9 add edit button if the comment is yours
+        saveButton = getButton[5];
+        editButton = getButton[7];
+      } else {
+        saveButton = getButton[8];
+      }
+    } else if (selectionType === "comment-context" || selectionType === "my-comment-context" || selectionType === "comment-context-fedi" || selectionType === "my-comment-context-fedi") { // 8 - 12 comments with context buttons
+      upvoteButton = getButton[4];
+      downvoteButton = getButton[5];
+      replyButton = getButton[6];
+      moreButton = getButton[7];
+      if (selectionType === "my-comment-context" || selectionType === "my-comment-context-fedi") { // 8 - 11 add edit button if the comment is yours
+        saveButton = getButton[7];
+        editButton = getButton[9];
+      } else {
+        saveButton = getButton[10];
+      }
+    } else if (selectionType === "comment-inbox") { // 9 - 13 comments in your inbox
+      upvoteButton = getButton[5];
+      downvoteButton = getButton[6];
+      replyButton = getButton[7];
+      moreButton = getButton[8];
+      saveButton = getButton[11];
     }
-  } else if (selectionType === "post-fedi" || selectionType === "post-page-fedi") { // federated posts on link pages and on the page
-    upvoteButton = getButton[1];
-    downvoteButton = getButton[2];
-    saveButton = getButton[3];
-    commentButton = currentEntry.getElementsByClassName("btn btn-link btn-sm text-muted ps-0")[1];
-  } else if (selectionType === "post-page" || selectionType === "my-post-page") { // on the page of the post
-    upvoteButton = getButton[0];
-    downvoteButton = getButton[1];
-    saveButton = getButton[2];
-    commentButton = currentEntry.getElementsByClassName("btn btn-link btn-sm text-muted ps-0")[1];
-    if (selectionType === "my-post-page") { // add edit button if the post is yours
-      editButton = currentEntry.getElementsByClassName("btn btn-link btn-sm d-flex align-items-center rounded-0 dropdown-item")[2];
-    }
-  // X - X numbers is the getButton array size depending on if moreButton was clicked or not
-  } else if (selectionType === "comment" || selectionType === "my-comment") { // 6 - 10 comments
-    upvoteButton = getButton[2];
-    downvoteButton = getButton[3];
-    replyButton = getButton[4];
-    moreButton = getButton[5];
-    if (selectionType === "my-comment") { // 6 - 9 add edit button if the comment is yours
-      saveButton = getButton[5];
-      editButton = getButton[7];
-    } else {
+  } else { // Lemmy 0.19+
+    if (selectionType === "post" || selectionType === "my-post") { // posts on link pages
+      upvoteButton = getButton[0];
+      downvoteButton = getButton[1];
+      saveButton = getButton[2];
+      commentButton = currentEntry.getElementsByClassName("btn btn-link btn-sm text-muted ps-0")[1];
+      if (selectionType === "my-post") { // add edit button if the post is yours
+        editButton = currentEntry.getElementsByClassName("btn btn-link btn-sm d-flex align-items-center rounded-0 dropdown-item")[2];
+      }
+    } else if (selectionType === "post-fedi" || selectionType === "post-page-fedi") { // federated posts on link pages and on the page
+      upvoteButton = getButton[1];
+      downvoteButton = getButton[2];
+      commentButton = currentEntry.getElementsByClassName("btn btn-link btn-sm text-muted ps-0")[1];
+        if (selectionType === "post-page-fedi") {
+            saveButton = getButton[4];
+        } else {
+            saveButton = getButton[3];
+        }
+    } else if (selectionType === "post-page" || selectionType === "my-post-page") { // on the page of the post
+      upvoteButton = getButton[0];
+      downvoteButton = getButton[1];
+      saveButton = getButton[3];
+      commentButton = currentEntry.getElementsByClassName("btn btn-link btn-sm text-muted ps-0")[1];
+      if (selectionType === "my-post-page") { // add edit button if the post is yours
+        editButton = currentEntry.getElementsByClassName("btn btn-link btn-sm d-flex align-items-center rounded-0 dropdown-item")[2];
+      }
+    } else if (selectionType === "comment" || selectionType === "my-comment") {
+      upvoteButton = getButton[1];
+      downvoteButton = getButton[2];
+      if (selectionType === "my-comment") {
+        replyButton = getButton[4];
+        saveButton = getButton[5];
+        editButton = getButton[6];
+        moreButton = getButton[6];
+      } else {
+        replyButton = getButton[4];
+        saveButton = getButton[5];
+        moreButton = getButton[6];
+      }
+    } else if (selectionType === "comment-context" || selectionType === "my-comment-context") {
+      upvoteButton = getButton[2];
+      downvoteButton = getButton[3];
+      replyButton = getButton[5];
+      moreButton = getButton[7];
+      saveButton = getButton[6];
+      if (selectionType === "my-comment-context") {
+        editButton = getButton[7];
+      }
+    } else if (selectionType === "comment-fedi") {
+      upvoteButton = getButton[2];
+      downvoteButton = getButton[3];
+      replyButton = getButton[5];
+      moreButton = getButton[7];
+      saveButton = getButton[6];
+    } else if (selectionType === "comment-context-fedi") {
+      upvoteButton = getButton[4];
+      downvoteButton = getButton[5];
+      replyButton = getButton[7];
+      moreButton = getButton[9];
       saveButton = getButton[8];
-    }
-  } else if (selectionType === "comment-context" || selectionType === "my-comment-context") { // 8 - 12 comments with context buttons
-    upvoteButton = getButton[4];
-    downvoteButton = getButton[5];
-    replyButton = getButton[6];
-    moreButton = getButton[7];
-    if (selectionType === "my-comment-context") { // 8 - 11 add edit button if the comment is yours
+    } else if (selectionType === "comment-inbox") {
+      upvoteButton = getButton[3];
+      downvoteButton = getButton[4];
+      replyButton = getButton[6];
+      moreButton = getButton[8];
       saveButton = getButton[7];
-      editButton = getButton[9];
-    } else {
-      saveButton = getButton[10];
     }
-  } else if (selectionType === "comment-inbox") { // 9 - 13 comments in your inbox
-    upvoteButton = getButton[5];
-    downvoteButton = getButton[6];
-    replyButton = getButton[7];
-    moreButton = getButton[8];
-    saveButton = getButton[11];
   }
 }
 
@@ -1692,4 +1776,3 @@ function scrollPage(y) {
 }
 
 }
- 
