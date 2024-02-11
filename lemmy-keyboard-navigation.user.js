@@ -229,15 +229,11 @@ let backgroundHexDark = settings.backgroundHexDark;
 let backgroundHexLight = settings.backgroundHexLight;
 let expandOption = settings.expandOption;
 
-let majorversion = parseInt(document.querySelectorAll("footer")[0].outerText.match(/^.*$/m)[0].match(/(?<=BE: )[^.\s].*/g)[0].match(/(?<=\.)(.*?)(?=\.)/g)[0]);
+let majorversion = parseInt(document.getElementsByClassName("app-footer container-lg")[0].outerText.match(/^.*$/m)[0].match(/(?<=BE: )[^.\s].*/g)[0].match(/(?<=\.)(.*?)(?=\.)/g)[0]);
 
 // Set selected entry colors
 var backgroundColor = `${backgroundHexDark}`;
 var textColor = 'white';
-if (document.getElementById("app").getAttribute("data-bs-theme") === "light") {
-  backgroundColor = `${backgroundHexLight}`;
-  textColor = 'black';
-}
 
 // Set navigation keys with keycodes here: https://www.toptal.com/developers/keycode
 let nextKey = 'ArrowDown';
@@ -663,6 +659,10 @@ window.onload = () => {
     if (document.getElementById("LKoptionpagelink") === null) {
       navbarLinks();
     }
+    if (document.getElementById("app").getAttribute("data-bs-theme") === "light") {
+      backgroundColor = `${backgroundHexLight}`;
+      textColor = 'black';
+    }
 };
 
 //Same as above but now do it via mutationobserver for any page changes
@@ -871,7 +871,7 @@ function handleKeyPress(event) {
         case prevPageKey: {
           const pageButtons = Array.from(document.querySelectorAll(".paginator>button"));
 
-          if (pageButtons && (document.getElementsByClassName('paginator').length > 0)) {
+          if (pageButtons && (document.getElementsByClassName('paginator').length > 0) && (document.getElementsByClassName('paginator').length < 3)) {
             if (majorversion <= 18) {
               if (event.code === nextPageKey) {
                 document.querySelectorAll(".paginator>.btn.btn-secondary")[1].click(); //next
@@ -1437,7 +1437,7 @@ function identifyButtons() {
       if (selectionType === "my-post-page") { // add edit button if the post is yours
         editButton = currentEntry.getElementsByClassName("btn btn-link btn-sm d-flex align-items-center rounded-0 dropdown-item")[2];
       }
-    } else if (selectionType === "comment" || selectionType === "my-comment") { // 6 - 10 comments
+    } else if (selectionType === "comment" || selectionType === "my-comment" || selectionType === "comment-fedi") { // 6 - 10 comments
       upvoteButton = getButton[2];
       downvoteButton = getButton[3];
       replyButton = getButton[4];
