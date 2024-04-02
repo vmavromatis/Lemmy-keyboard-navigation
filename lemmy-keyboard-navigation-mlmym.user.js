@@ -1417,7 +1417,7 @@ function getContext(event) {
 }
 
 function imgResize(n) {
-  let expandedImg = currentEntry.getElementsByClassName("image")[0].children[0];
+  let expandedImg = currentEntry.getElementsByClassName("image")[0];
   let expandedHeight = expandedImg.height;
   let expandedWidth = expandedImg.width;
 
@@ -1464,7 +1464,7 @@ function toggleExpand() {
 
     if (imgContainer) {
       // Check container positions once image is loaded
-      imgContainer.querySelector("img").addEventListener("load", function() {
+      imgContainer.addEventListener("load", function() {
         scrollIntoViewWithOffset(imgContainer, pageOffset);
       }, true);
     }
