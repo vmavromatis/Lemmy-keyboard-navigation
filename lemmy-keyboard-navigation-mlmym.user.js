@@ -59,13 +59,17 @@ function options(open) {
         mlmymFixButton: true,
         pageOffset: 5,
         optionsLink: true,
-        vimKeyNavigation: true,
+        enableArrowKeyScrolling: true,
         autoNext: false,
         expandNext: true,
         openNewTab: false,
         smoothScroll: false,
         scrollPosition: "middle",
         backgroundHex: `${background}`,
+        kb_prevPage: "KeyH",
+        kb_nextPage: "KeyL",
+        kb_prevKey: "KeyK",
+        kb_nextKey: "KeyJ",
         kb_expand: "KeyX",
         kb_comments: "KeyC",
         kb_openLink: "Enter",
@@ -106,8 +110,8 @@ function options(open) {
     userOptions.optionsLink =
       document.getElementById("option_optionsLink").checked;
 
-    userOptions.vimKeyNavigation =
-      document.getElementById("option_vimKeyNavigation").checked;
+    userOptions.enableArrowKeyScrolling =
+      document.getElementById("option_enableArrowKeyScrolling").checked;
 
     userOptions.autoNext =
       document.getElementById("option_autoNext").checked;
@@ -136,6 +140,18 @@ function options(open) {
     userOptions.backgroundHex =
       document.getElementById("option_backgroundHex").value;
     //keybinds
+    userOptions.kb_prevPage =
+      document.getElementById("option_kb_prevPage").value;
+
+    userOptions.kb_nextPage =
+      document.getElementById("option_kb_nextPage").value;
+
+    userOptions.kb_prevKey =
+      document.getElementById("option_kb_prevKey").value;
+
+    userOptions.kb_nextKey =
+      document.getElementById("option_kb_nextKey").value;
+
     userOptions.kb_expand =
       document.getElementById("option_kb_expand").value;
 
@@ -227,7 +243,7 @@ function options(open) {
 
 let settings = options("set");
 let optionsLink = checkedIfTrue(settings.optionsLink);
-let vimKeyNavigation = checkedIfTrue(settings.vimKeyNavigation);
+let enableArrowKeyScrolling = checkedIfTrue(settings.enableArrowKeyScrolling);
 let smoothScroll = checkedIfTrue(settings.smoothScroll);
 let autoNext = checkedIfTrue(settings.autoNext);
 let expandNext = checkedIfTrue(settings.expandNext);
@@ -240,18 +256,10 @@ let mlmymFixButton = checkedIfTrue(settings.mlmymFixButton);
 // Set selected entry colors
 const backgroundColor = `${backgroundHex}`;
 
-// Set navigation keys with keycodes here: https://www.toptal.com/developers/keycode
-let nextKey = 'ArrowDown';
-let prevKey = 'ArrowUp';
-let nextPageKey = 'ArrowRight';
-let prevPageKey = 'ArrowLeft';
-
-if (vimKeyNavigation) {
-  nextKey = 'KeyJ';
-  prevKey = 'KeyK';
-  nextPageKey = 'KeyL';
-  prevPageKey = 'KeyH';
-}
+const nextPageKey = `${settings.kb_nextPage}`;
+const prevPageKey = `${settings.kb_prevPage}`;
+const nextKey = `${settings.kb_nextKey}`;
+const prevKey = `${settings.kb_prevKey}`;
 
 const expandKey = `${settings.kb_expand}`;
 const openCommentsKey = `${settings.kb_comments}`;
@@ -297,9 +305,9 @@ let currentlyExpanded = false;
 let modalMode = 0;
 console.log(`modalMode: ${modalMode}`);
 
-// Stop arrows from moving the page if not using Vim navigation
+// Stop arrows from moving the page if arrow key scrolling is disabled
 window.addEventListener("keydown", function(e) {
-  if (["ArrowUp", "ArrowDown"].indexOf(e.code) > -1 && !vimKeyNavigation) {
+  if (["ArrowUp", "ArrowDown"].indexOf(e.code) > -1 && !enableArrowKeyScrolling) {
     e.preventDefault();
   }
 }, false);
@@ -380,8 +388,8 @@ odiv.innerHTML = `
         <td><input type='checkbox' id='option_optionsLink' ${optionsLink} /></td>
       </tr>
       <tr>
-        <td><b>Use Vim key navigation</b><br/>Also known as HJKL navigation.<br/>Uncheck to use arrow keys instead.</td>
-        <td><input type='checkbox' id='option_vimKeyNavigation' ${vimKeyNavigation} /></td>
+        <td><b>Enable Arrow Key Scrolling</b><br/>Uncheck this option to disable the ability<br/>to use the arrow keys to scroll the page.</td>
+        <td><input type='checkbox' id='option_enableArrowKeyScrolling' ${enableArrowKeyScrolling} /></td>
       </tr>
       <tr>
         <td><b>Skip to next selection after voting</b><br/>After upvoting/downvoting a post,</br>select the next one.</td>
@@ -420,6 +428,22 @@ odiv.innerHTML = `
           <td><h3><b>Rebind Keys</b></h3>Set keybinds with keycodes here:<br/><a href='https://www.toptal.com/developers/keycode'>https://www.toptal.com/developers/keycode</a></td><td><td/>
       </tr>
       <tr>
+      <tr>
+        <td><b>Next Page Key</b><br/>Go to the next page.<br/>Default: KeyL</td>
+        <td><textarea id='option_kb_nextPage'>${settings.kb_nextPage}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Previous Page Key</b><br/>Go to the previous page.<br/>Default: KeyH</td>
+        <td><textarea id='option_kb_prevPage'>${settings.kb_prevPage}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Next Selection Key</b><br/>Go to the next post/comment.<br/>Default: KeyJ</td>
+        <td><textarea id='option_kb_nextKey'>${settings.kb_nextKey}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Previous Selection Key</b><br/>Go to the previous post/comment.<br/>Default: KeyK</td>
+        <td><textarea id='option_kb_prevKey'>${settings.kb_prevKey}</textarea></td>
+      </tr>
       <tr>
         <td><b>Expand/Collapse</b><br/>Expand/collapse both post and comment content.<br/>Default: KeyX</td>
         <td><textarea id='option_kb_expand'>${settings.kb_expand}</textarea></td>
@@ -1141,7 +1165,7 @@ function previousKey(event) {
   }
   // Next button
   if (event.code === nextKey) {
-    if (event.shiftKey && vimKeyNavigation) {
+    if (event.shiftKey && enableArrowKeyScrolling) {
       selectedEntry = getNextEntrySameLevel(currentEntry);
 
     } else {
@@ -1150,7 +1174,7 @@ function previousKey(event) {
   }
   // Previous button
   if (event.code === prevKey) {
-    if (event.shiftKey && vimKeyNavigation) {
+    if (event.shiftKey && enableArrowKeyScrolling) {
       selectedEntry = getPrevEntrySameLevel(currentEntry);
 
     } else {
