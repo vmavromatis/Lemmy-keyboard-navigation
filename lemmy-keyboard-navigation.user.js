@@ -51,10 +51,12 @@ function options(open) {
         optionsLink: true,
         enableArrowKeyScrolling: true,
         autoNext: false,
+        autoPage: false,
         openNewTab: false,
         smoothScroll: false,
         scrollPosition: "middle",
         expandOption: "both",
+        colorOption: "auto",
         backgroundHexDark: "#373737",
         backgroundHexLight: "#dadbdd",
         kb_prevPage: "KeyH",
@@ -104,6 +106,9 @@ function options(open) {
     userOptions.autoNext =
       document.getElementById("option_autoNext").checked;
 
+    userOptions.autoPage =
+      document.getElementById("option_autoPage").checked;
+
     userOptions.openNewTab =
       document.getElementById("option_openNewTab").checked;
 
@@ -124,6 +129,9 @@ function options(open) {
 
     userOptions.expandOption =
     document.getElementById("option_expandOption").value;
+
+    userOptions.colorOption =
+      document.getElementById("option_colorOption").value;
 
     userOptions.backgroundHexDark =
       document.getElementById("option_backgroundHexDark").value;
@@ -238,9 +246,11 @@ let optionsLink = checkedIfTrue(settings.optionsLink);
 let enableArrowKeyScrolling = checkedIfTrue(settings.enableArrowKeyScrolling);
 let smoothScroll = checkedIfTrue(settings.smoothScroll);
 let autoNext = checkedIfTrue(settings.autoNext);
+let autoPage = checkedIfTrue(settings.autoPage);
 let openNewTab = checkedIfTrue(settings.openNewTab);
 let pageOffset = window.innerHeight * settings.pageOffset / 100;
 let scrollPosition = settings.scrollPosition;
+let colorOption = settings.colorOption;
 let backgroundHexDark = settings.backgroundHexDark;
 let backgroundHexLight = settings.backgroundHexLight;
 let expandOption = settings.expandOption;
@@ -250,6 +260,14 @@ let majorversion = parseInt(document.getElementsByClassName("app-footer containe
 // Set selected entry colors
 var backgroundColor = `${backgroundHexDark}`;
 var textColor = 'white';
+if (document.getElementById("app").getAttribute("data-bs-theme") === "light" || colorOption === "light") {
+  backgroundColor = `${backgroundHexLight}`;
+  textColor = 'black';
+}
+if (colorOption === "dark") {
+  backgroundColor = `${backgroundHexDark}`;
+  textColor = 'white';
+}
 
 const nextPageKey = `${settings.kb_nextPage}`;
 const prevPageKey = `${settings.kb_prevPage}`;
@@ -362,9 +380,9 @@ odiv.classList.add("lkoptions", "border-secondary", "card");
 odiv.innerHTML = `
   <h4>Lemmy-keyboard-navigation Options</h4>
 </hr>
-<div class='table-responsive'>
-  <table class='table'>
-    <thead class='pointer'>
+<div>
+  <table>
+    <thead>
         <td><b>Save and close settings</b></td>
         <td><button id='LKsaveoptionsTop'>Save and Close</button></td>
         </tr>
@@ -374,31 +392,35 @@ odiv.innerHTML = `
     </tr>
     <tbody>
       <tr>
-        <td><b>Link to Options in the navbar</b><br/>Show 'Keyboard Navigation Options' in<br/>the navbar at the top of the page.</td>
+        <td><b>Link to Options in the navbar</b><br/>Show 'Keyboard Navigation Options' in<br/>the navbar at the top of the page.</br></br></td>
         <td><input type='checkbox' id='option_optionsLink' ${optionsLink} /></td>
       </tr>
       <tr>
-        <td><b>Enable Arrow Key Scrolling</b><br/>Uncheck this option to disable the ability<br/>to use the arrow keys to scroll the page.</td>
+        <td><b>Enable Arrow Key Scrolling</b><br/>Uncheck this option to disable the ability<br/>to use the arrow keys to scroll the page.</br></br></td>
         <td><input type='checkbox' id='option_enableArrowKeyScrolling' ${enableArrowKeyScrolling} /></td>
       </tr>
       <tr>
-        <td><b>Skip to next selection after voting</b><br/>After upvoting/downvoting a post,</br>select the next one.</td>
+        <td><b>Skip to next selection after voting</b><br/>After upvoting/downvoting a post,</br>select the next one.</br></br></td>
         <td><input type='checkbox' id='option_autoNext' ${autoNext} /></td>
       </tr>
       <tr>
-        <td><b>Always open comments/links in a new tab</b><br/>Automatically open comments and links</br>in a new tab without having to hold Shift.</td>
+        <td><b>Auto Next/Prev Page</b><br/>Skip to the next/previous page when the Next/Prev Page</br>Key is pressed when the last post is selected.</br></br></td>
+        <td><input type='checkbox' id='option_autoPage' ${autoPage} /></td>
+      </tr>
+      <tr>
+        <td><b>Always open comments/links in a new tab</b><br/>Automatically open comments and links</br>in a new tab without having to hold Shift.</br></br></td>
         <td><input type='checkbox' id='option_openNewTab' ${openNewTab} /></td>
       </tr>
       <tr>
-        <td><b>Smooth scrolling</b><br/>Scroll smoothly to the current selection.</td>
+        <td><b>Smooth scrolling</b><br/>Scroll smoothly to the current selection.</br></br></td>
         <td><input type='checkbox' id='option_smoothScroll' ${smoothScroll} /></td>
       </tr>
       <tr>
-        <td><b>Page Offset</b><br/>Percent of page to offset selected entry when scrolling.<br/>0-20% recommended<br/>Default: 5</td>
+        <td><b>Page Offset</b><br/>Percent of page to offset selected entry when scrolling.<br/>0-20% recommended<br/>Default: 5</br></br></td>
         <td><textarea id='option_pageOffset'>${settings.pageOffset}</textarea>%</td>
       </tr>
       <tr>
-        <td><b>Scrolling position</b><br/>middle: only scroll the page if selection is near the bottom.<br/>top: always scroll to keep the selection near the top.</td>
+        <td><b>Scrolling position</b><br/>middle: only scroll the page if selection is near the bottom.<br/>top: always scroll to keep the selection near the top.</br></br></td>
         <td><select id="option_scrollPosition">
             <option value='${settings.scrollPosition}'>${settings.scrollPosition}</option>
             <option value='middle'>middle</option>
@@ -406,7 +428,7 @@ odiv.innerHTML = `
             </select></td>
       </tr>
       <tr>
-        <td><b>Expand All Posts</b><br/>Pressing Shift + X will expand all posts.<br/>both: expand both text boxes and images.<br/>images: only expand images.<br/>text: only expand text boxes</td>
+        <td><b>Expand All Posts</b><br/>Pressing Shift + X will expand all posts.<br/>both: expand both text boxes and images.<br/>images: only expand images.<br/>text: only expand text boxes</br></br></td>
         <td><select id="option_expandOption">
             <option value='${settings.expandOption}'>${settings.expandOption}</option>
             <option value='both'>both</option>
@@ -415,11 +437,20 @@ odiv.innerHTML = `
             </select></td>
       </tr>
       <tr>
-        <td><b>Selected Hex Code (Dark Mode)</b><br/>The background color of selected posts/comments.<br/>Default: #373737</td>
+        <td><b>Selection Dark/Light Mode</b><br/>auto: automatically detect light/dark mode<br/>dark: set selections to dark mode<br/>light: set selections to light mode</br></br></td>
+        <td><select id="option_colorOption">
+            <option value='${settings.colorOption}'>${settings.colorOption}</option>
+            <option value='auto'>auto</option>
+            <option value='dark'>dark</option>
+            <option value='light'>light</option>
+            </select></td>
+      </tr>
+      <tr>
+        <td><b>Selected Hex Code (Dark Mode)</b><br/>The background color of selected posts/comments.<br/>Default: #373737</br></br></td>
         <td><textarea id='option_backgroundHexDark'>${settings.backgroundHexDark}</textarea></td>
       </tr>
       <tr>
-        <td><b>Selected Hex Code (Light Mode)</b><br/>The background color of selected posts/comments.<br/>Default: #dadbdd</td>
+        <td><b>Selected Hex Code (Light Mode)</b><br/>The background color of selected posts/comments.<br/>Default: #dadbdd</br></br></td>
         <td><textarea id='option_backgroundHexLight'>${settings.backgroundHexLight}</textarea></td>
       </tr>
       <tr>
@@ -427,135 +458,135 @@ odiv.innerHTML = `
       </tr>
       <tr>
       <tr>
-        <td><b>Next Page Key</b><br/>Go to the next page.<br/>Default: KeyL</td>
+        <td><b>Next Page Key</b><br/>Go to the next page.<br/>Default: KeyL</br></br></td>
         <td><textarea id='option_kb_nextPage'>${settings.kb_nextPage}</textarea></td>
       </tr>
       <tr>
-        <td><b>Previous Page Key</b><br/>Go to the previous page.<br/>Default: KeyH</td>
+        <td><b>Previous Page Key</b><br/>Go to the previous page.<br/>Default: KeyH</br></br></td>
         <td><textarea id='option_kb_prevPage'>${settings.kb_prevPage}</textarea></td>
       </tr>
       <tr>
-        <td><b>Next Selection Key</b><br/>Go to the next post/comment.<br/>Default: KeyJ</td>
+        <td><b>Next Selection Key</b><br/>Go to the next post/comment.<br/>Default: KeyJ</br></br></td>
         <td><textarea id='option_kb_nextKey'>${settings.kb_nextKey}</textarea></td>
       </tr>
       <tr>
-        <td><b>Previous Selection Key</b><br/>Go to the previous post/comment.<br/>Default: KeyK</td>
+        <td><b>Previous Selection Key</b><br/>Go to the previous post/comment.<br/>Default: KeyK</br></br></td>
         <td><textarea id='option_kb_prevKey'>${settings.kb_prevKey}</textarea></td>
       </tr>
       <tr>
-        <td><b>Expand/Collapse</b><br/>Expand/collapse both post and comment content.<br/>Default: KeyX</td>
+        <td><b>Expand/Collapse</b><br/>Expand/collapse both post and comment content.<br/>Default: KeyX</br></br></td>
         <td><textarea id='option_kb_expand'>${settings.kb_expand}</textarea></td>
       </tr>
       <tr>
-        <td><b>Open Comments</b><br/>Go to the comments of a post.<br/>Default: KeyC</td>
+        <td><b>Open Comments</b><br/>Go to the comments of a post.<br/>Default: KeyC</br></br></td>
         <td><textarea id='option_kb_comments'>${settings.kb_comments}</textarea></td>
       </tr>
       <tr>
-        <td><b>Open Links</b><br/>Open Links on a post.<br/>(can also be used to collapse comments!)<br/>Default: Enter</td>
+        <td><b>Open Links</b><br/>Open Links on a post.<br/>(can also be used to collapse comments!)<br/>Default: Enter</br></br></td>
         <td><textarea id='option_kb_openLink'>${settings.kb_openLink}</textarea></td>
       </tr>
       <tr>
-        <td><b>Go to Parent Comment</b><br/>Goes one level up the comment chain.<br/>Default: KeyP</td>
+        <td><b>Go to Parent Comment</b><br/>Goes one level up the comment chain.<br/>Default: KeyP</br></br></td>
         <td><textarea id='option_kb_parent'>${settings.kb_parent}</textarea></td>
       </tr>
       <tr>
-        <td><b>Upvote</b><br/>:\)<br/>Default: KeyA</td>
+        <td><b>Upvote</b><br/>:\)<br/>Default: KeyA</br></br></td>
         <td><textarea id='option_kb_upvote'>${settings.kb_upvote}</textarea></td>
       </tr>
       <tr>
-        <td><b>Downvote</b><br/>:\(<br/>Default: KeyZ</td>
+        <td><b>Downvote</b><br/>:\(<br/>Default: KeyZ</br></br></td>
         <td><textarea id='option_kb_downvote'>${settings.kb_downvote}</textarea></td>
       </tr>
       <tr>
-        <td><b>Reply/Go to community</b><br/>Posts: goes to the post's community<br/>Comments: replies to the selected comment<br/>Default: KeyR</td>
+        <td><b>Reply/Go to community</b><br/>Posts: goes to the post's community<br/>Comments: replies to the selected comment<br/>Default: KeyR</br></br></td>
         <td><textarea id='option_kb_replyComm'>${settings.kb_replyComm}</textarea></td>
       </tr>
       <tr>
-        <td><b>Save post/comment</b><br/>Saves the selected post/comment.<br/>Default: KeyS</td>
+        <td><b>Save post/comment</b><br/>Saves the selected post/comment.<br/>Default: KeyS</br></br></td>
         <td><textarea id='option_kb_save'>${settings.kb_save}</textarea></td>
       </tr>
       <tr>
-        <td><b>Get context of comment</b><br/>Goes to the context of the selected comment.<br/>Default: KeyQ</td>
+        <td><b>Get context of comment</b><br/>Goes to the context of the selected comment.<br/>Default: KeyQ</br></br></td>
         <td><textarea id='option_kb_context'>${settings.kb_context}</textarea></td>
       </tr>
       <tr>
-        <td><b>Shrink expanded image</b><br/>Make an expanded image smaller.<br/>Default: Minus</td>
+        <td><b>Shrink expanded image</b><br/>Make an expanded image smaller.<br/>Default: Minus</br></br></td>
         <td><textarea id='option_kb_smallerImg'>${settings.kb_smallerImg}</textarea></td>
       </tr>
       <tr>
-        <td><b>Grow expanded image</b><br/>Make an expanded image larger.<br/>Default: Equal</td>
+        <td><b>Grow expanded image</b><br/>Make an expanded image larger.<br/>Default: Equal</br></br></td>
         <td><textarea id='option_kb_largerImg'>${settings.kb_largerImg}</textarea></td>
       </tr>
       <tr>
-        <td><b>Go to poster's profile</b><br/>Go to the profile of whoever posted the selected post/comment.<br/>Default: KeyU</td>
+        <td><b>Go to poster's profile</b><br/>Go to the profile of whoever posted the selected post/comment.<br/>Default: KeyU</br></br></td>
         <td><textarea id='option_kb_user'>${settings.kb_user}</textarea></td>
       </tr>
       <tr>
-        <td><b>Edit the selected post/comment</b><br/>It only works on your own posts!<br/>Default: KeyE</td>
+        <td><b>Edit the selected post/comment</b><br/>It only works on your own posts!<br/>Default: KeyE</br></br></td>
         <td><textarea id='option_kb_edit'>${settings.kb_edit}</textarea></td>
       </tr>
       <tr>
-        <td><b>Scroll to top</b><br/>Scroll to the top of the page.<br/>Default: KeyT</td>
+        <td><b>Scroll to top</b><br/>Scroll to the top of the page.<br/>Default: KeyT</br></br></td>
         <td><textarea id='option_kb_top'>${settings.kb_top}</textarea></td>
       </tr>
       <tr>
           <td><h3><b>Rebind Dialog Keys</b></h3></td><td><td/>
       </tr>
       <tr>
-        <td><b>Open/Close Dialog</b><br/>Default: KeyG</td>
+        <td><b>Open/Close Dialog</b><br/>Default: KeyG</br></br></td>
         <td><textarea id='option_m_dialog'>${settings.m_dialog}</textarea></td>
       </tr>
       <tr>
       <tr>
           <td><h4><b>Sort buttons</b></h4>For example: If you were to press G then 3 on the front page,<br/>it would sort by subscribed, but doing the same in a<br/>comment section would sort by new. The dialog<br/>text will change with what sort buttons are avaliable!</td><td><td/>
       </tr>
-        <td><b>First Sort Button</b><br/>Default: Digit1</td>
+        <td><b>First Sort Button</b><br/>Default: Digit1</br></br></td>
         <td><textarea id='option_m_first'>${settings.m_first}</textarea></td>
       </tr>
       <tr>
-        <td><b>Second Sort Button</b><br/>Default: Digit2</td>
+        <td><b>Second Sort Button</b><br/>Default: Digit2</br></br></td>
         <td><textarea id='option_m_second'>${settings.m_second}</textarea></td>
       </tr>
       <tr>
-        <td><b>Third Sort Button</b><br/>Default: Digit3</td>
+        <td><b>Third Sort Button</b><br/>Default: Digit3</br></br></td>
         <td><textarea id='option_m_third'>${settings.m_third}</textarea></td>
       </tr>
       <tr>
-        <td><b>Fourth Sort Button</b><br/>Default: Digit4</td>
+        <td><b>Fourth Sort Button</b><br/>Default: Digit4</br></br></td>
         <td><textarea id='option_m_fourth'>${settings.m_fourth}</textarea></td>
       </tr>
       <tr>
-        <td><b>Fifth Sort Button</b><br/>Default: Digit5</td>
+        <td><b>Fifth Sort Button</b><br/>Default: Digit5</br></br></td>
         <td><textarea id='option_m_fifth'>${settings.m_fifth}</textarea></td>
       </tr>
       <tr>
           <td><h4><b>Go to page</b></h4></td><td><td/>
       </tr>
       <tr>
-        <td><b>Go to Frontpage</b><br/>Default: KeyF</td>
+        <td><b>Go to Frontpage</b><br/>Default: KeyF</br></br></td>
         <td><textarea id='option_m_frontpage'>${settings.m_frontpage}</textarea></td>
       </tr>
       <tr>
-        <td><b>Go to Saved posts/comments</b><br/>Default: KeyS</td>
+        <td><b>Go to Saved posts/comments</b><br/>Default: KeyS</br></br></td>
         <td><textarea id='option_m_saved'>${settings.m_saved}</textarea></td>
       </tr>
       <tr>
-        <td><b>Go to Current User's Profile</b><br/>Default: KeyU</td>
+        <td><b>Go to Current User's Profile</b><br/>Default: KeyU</br></br></td>
         <td><textarea id='option_m_userpage'>${settings.m_userpage}</textarea></td>
       </tr>
       <tr>
-        <td><b>Go to Inbox</b><br/>Default: KeyI</td>
+        <td><b>Go to Inbox</b><br/>Default: KeyI</br></br></td>
         <td><textarea id='option_m_inbox'>${settings.m_inbox}</textarea></td>
       </tr>
       <tr>
-        <td><b>Open options page</b><br/>Default: KeyO</td>
+        <td><b>Open options page</b><br/>Default: KeyO</br></br></td>
         <td><textarea id='option_m_options'>${settings.m_options}</textarea></td>
       </tr>
       <tr>
           <td><h3><b>Rebind Searchbar Keys</b></h3></td><td><td/>
       </tr>
       <tr>
-        <td><b>Open search bar</b><br/>Default: Period</td>
+        <td><b>Open search bar</b><br/>Default: Period</br></br></td>
         <td><textarea id='option_s_search'>${settings.s_search}</textarea></td>
       </tr>
       <tr>
@@ -571,7 +602,7 @@ odiv.innerHTML = `
     </tbody>
   </table>
 </div>
-<hr />
+<hr/>
 <p>lemmy-keyboard-navigation links:</p>
 <a
   href='https://github.com/vmavromatis/Lemmy-keyboard-navigation'>Github</a><br/><a
@@ -682,10 +713,6 @@ window.onload = () => {
     getEntries();
     if (document.getElementById("LKoptionpagelink") === null) {
       navbarLinks();
-    }
-    if (document.getElementById("app").getAttribute("data-bs-theme") === "light") {
-      backgroundColor = `${backgroundHexLight}`;
-      textColor = 'black';
     }
 };
 
@@ -892,44 +919,8 @@ function handleKeyPress(event) {
           clickLink(0);
           break;
         case nextPageKey:
-        case prevPageKey: {
-          const pageButtons = Array.from(document.querySelectorAll(".paginator>button"));
-
-          if (pageButtons && (document.getElementsByClassName('paginator').length > 0)) {
-            if (majorversion <= 18) {
-              if (event.code === nextPageKey) {
-                document.querySelectorAll(".paginator>.btn.btn-secondary")[1].click(); //next
-              } else {
-                document.querySelectorAll(".paginator>.btn.btn-secondary")[0].click(); //prev
-              }
-            } else { // Lemmy 0.19 (no back button)
-              if (event.code === nextPageKey) {
-                document.querySelectorAll(".main-content-wrapper>div>.paginator>.btn.btn-secondary")[0].click(); //next
-              } else {
-                if (window.location != window.origin+window.location.pathname) {
-                  history.back(); //prev
-                }
-              }
-            }
-          }
-          // Jump next block of comments
-          if (event.code === nextPageKey) {
-            commentBlock = getNextEntrySameLevel(currentEntry);
-          }
-          // Jump previous block of comments
-          if (event.code === prevPageKey) {
-            commentBlock = getPrevEntrySameLevel(currentEntry);
-          }
-          if (commentBlock) {
-            if (expand) {
-              collapseEntry();
-            }
-            selectEntry(commentBlock, true);
-            if (expand) {
-              expandEntry();
-            }
-          }
-        }
+        case prevPageKey:
+          previousPageKey(event);
       }
       break;
     case modalMode = 1:
@@ -1026,6 +1017,9 @@ function getPrevEntry(e) {
   const currentEntryIndex = Array.from(entries).indexOf(e);
 
   if (currentEntryIndex - 1 < 0) {
+    if (autoPage) {
+      previousPageKey(prevKey);
+    }
     return e;
   }
   return entries[currentEntryIndex - 1];
@@ -1252,6 +1246,12 @@ function previousKey(event) {
       selectedEntry = getNextEntrySameLevel(currentEntry);
 
     } else {
+      checkSelection();
+      if (Array.from(entries).indexOf(currentEntry) === entries.length-1 && autoPage) {
+        if (selectionType.match(/post/g)) {
+          previousPageKey(event);
+        }
+      }
       selectedEntry = getNextEntry(currentEntry);
     }
   }
@@ -1274,6 +1274,45 @@ function previousKey(event) {
       collapseEntry();
     }
     selectEntry(selectedEntry, true);
+    if (expand) {
+      expandEntry();
+    }
+  }
+}
+
+function previousPageKey(event) {
+  const pageButtons = Array.from(document.querySelectorAll(".paginator>button"));
+
+  if (pageButtons && (document.getElementsByClassName('paginator').length > 0)) {
+    if (majorversion <= 18) {
+      if (event.code === nextPageKey || event.code === nextKey) {
+        document.querySelectorAll(".paginator>.btn.btn-secondary")[1].click(); //next
+      } else {
+        document.querySelectorAll(".paginator>.btn.btn-secondary")[0].click(); //prev
+      }
+    } else { // Lemmy 0.19 (no back button)
+      if (event.code === nextPageKey || event.code === nextKey) {
+        document.querySelectorAll(".main-content-wrapper>div>.paginator>.btn.btn-secondary")[0].click(); //next
+      } else {
+        if (window.location != window.origin+window.location.pathname) {
+          history.back(); //prev
+        }
+      }
+    }
+  }
+  // Jump next block of comments
+  if (event.code === nextPageKey) {
+    commentBlock = getNextEntrySameLevel(currentEntry);
+  }
+  // Jump previous block of comments
+  if (event.code === prevPageKey) {
+    commentBlock = getPrevEntrySameLevel(currentEntry);
+  }
+  if (commentBlock) {
+    if (expand) {
+      collapseEntry();
+    }
+    selectEntry(commentBlock, true);
     if (expand) {
       expandEntry();
     }
