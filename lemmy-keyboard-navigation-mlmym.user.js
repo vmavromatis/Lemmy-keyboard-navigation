@@ -61,11 +61,13 @@ function options(open) {
         optionsLink: true,
         enableArrowKeyScrolling: true,
         autoNext: false,
+        autoPage: false,
         expandNext: true,
         openNewTab: false,
         smoothScroll: false,
         scrollPosition: "middle",
-        backgroundHex: `${background}`,
+        backgroundHexDark: "#303030",
+        backgroundHexLight: "#f0f3fc",
         kb_prevPage: "KeyH",
         kb_nextPage: "KeyL",
         kb_prevKey: "KeyK",
@@ -116,6 +118,9 @@ function options(open) {
     userOptions.autoNext =
       document.getElementById("option_autoNext").checked;
 
+    userOptions.autoPage =
+      document.getElementById("option_autoPage").checked;
+
     userOptions.expandNext =
       document.getElementById("option_expandNext").checked;
 
@@ -137,8 +142,11 @@ function options(open) {
     userOptions.scrollPosition =
       document.getElementById("option_scrollPosition").value;
 
-    userOptions.backgroundHex =
-      document.getElementById("option_backgroundHex").value;
+    userOptions.backgroundHexDark =
+      document.getElementById("option_backgroundHexDark").value;
+
+    userOptions.backgroundHexLight =
+      document.getElementById("option_backgroundHexLight").value;
     //keybinds
     userOptions.kb_prevPage =
       document.getElementById("option_kb_prevPage").value;
@@ -246,15 +254,20 @@ let optionsLink = checkedIfTrue(settings.optionsLink);
 let enableArrowKeyScrolling = checkedIfTrue(settings.enableArrowKeyScrolling);
 let smoothScroll = checkedIfTrue(settings.smoothScroll);
 let autoNext = checkedIfTrue(settings.autoNext);
+let autoPage = checkedIfTrue(settings.autoPage);
 let expandNext = checkedIfTrue(settings.expandNext);
 let openNewTab = checkedIfTrue(settings.openNewTab);
 let pageOffset = window.innerHeight * settings.pageOffset / 100;
 let scrollPosition = settings.scrollPosition;
-let backgroundHex = settings.backgroundHex;
+let backgroundHexDark = settings.backgroundHexDark;
+let backgroundHexLight = settings.backgroundHexLight;
 let mlmymFixButton = checkedIfTrue(settings.mlmymFixButton);
 
 // Set selected entry colors
-const backgroundColor = `${backgroundHex}`;
+var backgroundColor = `${backgroundHexLight}`;
+if (document.getElementsByClassName("dark").length >= 1) {
+  backgroundColor = `${backgroundHexDark}`;
+}
 
 const nextPageKey = `${settings.kb_nextPage}`;
 const prevPageKey = `${settings.kb_prevPage}`;
@@ -396,6 +409,10 @@ odiv.innerHTML = `
         <td><input type='checkbox' id='option_autoNext' ${autoNext} /></td>
       </tr>
       <tr>
+        <td><b>Auto Next/Prev Page</b><br/>Skip to the next/previous page when the Next/Prev Page</br>Key is pressed when the last post is selected.</td>
+        <td><input type='checkbox' id='option_autoPage' ${autoPage} /></td>
+      </tr>
+      <tr>
         <td><b>Auto expand next post</b><br/>If you navigate away from an expanded</br>post, unexpand it and expand the new post.</td>
         <td><input type='checkbox' id='option_expandNext' ${expandNext} /></td>
       </tr>
@@ -421,8 +438,12 @@ odiv.innerHTML = `
             </select></td>
       </tr>
       <tr>
-        <td><b>Selected Hex Code</b><br/>The background color of selected posts/comments.<br/>Dark mode default: #303030<br/>Light mode default: #f0f3fc</td>
-        <td><textarea id='option_backgroundHex'>${settings.backgroundHex}</textarea></td>
+        <td><b>Selected Hex Code (Dark Mode)</b><br/>The background color of selected posts/comments.<br/>Default: #303030</td>
+        <td><textarea id='option_backgroundHexDark'>${settings.backgroundHexDark}</textarea></td>
+      </tr>
+      <tr>
+        <td><b>Selected Hex Code (Light Mode)</b><br/>The background color of selected posts/comments.<br/>Default: #f0f3fc</td>
+        <td><textarea id='option_backgroundHexLight'>${settings.backgroundHexLight}</textarea></td>
       </tr>
       <tr>
           <td><h3><b>Rebind Keys</b></h3>Set keybinds with keycodes here:<br/><a href='https://www.toptal.com/developers/keycode'>https://www.toptal.com/developers/keycode</a></td><td><td/>
@@ -896,38 +917,8 @@ function handleKeyPress(event) {
           clickLink(0);
           break;
         case nextPageKey:
-        case prevPageKey: {
-          const pageButtons = Array.from(document.querySelectorAll(".paginator>button"));
-
-          if (pageButtons && (document.getElementsByClassName('pager').length > 0)) {
-            sessionStorage.setItem('currentselection', 0);
-            if (document.querySelectorAll(".pager")[0].children.length === 1) {
-              document.querySelectorAll(".pager")[0].children[0].click();
-            }
-            if (event.code === nextPageKey) {
-              document.querySelectorAll(".pager")[0].children[1].click(); //next
-            } else {
-              document.querySelectorAll(".pager")[0].children[0].click(); //prev
-            }
-          }
-          // Jump next block of comments
-          if (event.code === nextPageKey) {
-            commentBlock = getNextEntrySameLevel(currentEntry);
-          }
-          // Jump previous block of comments
-          if (event.code === prevPageKey) {
-            commentBlock = getPrevEntrySameLevel(currentEntry);
-          }
-          if (commentBlock) {
-            if (expand) {
-              collapseEntry();
-            }
-            selectEntry(commentBlock, true);
-            if (expand) {
-              expandEntry();
-            }
-          }
-        }
+        case prevPageKey:
+          previousPageKey(event);
       }
       break;
     case modalMode = 1:
@@ -994,6 +985,9 @@ function getPrevEntry(e) {
   const currentEntryIndex = Array.from(entries).indexOf(e);
 
   if (currentEntryIndex - 1 < 0) {
+    if (autoPage) {
+      previousPageKey(prevKey);
+    }
     return e;
   }
   return entries[currentEntryIndex - 1];
@@ -1169,6 +1163,12 @@ function previousKey(event) {
       selectedEntry = getNextEntrySameLevel(currentEntry);
 
     } else {
+      checkSelection();
+      if (Array.from(entries).indexOf(currentEntry) === entries.length-1 && autoPage) {
+        if (selectionType.match(/post/g)) {
+          previousPageKey(event);
+        }
+      }
       selectedEntry = getNextEntry(currentEntry);
     }
   }
@@ -1199,6 +1199,40 @@ function previousKey(event) {
     toggleExpand();
   }
 }
+
+function previousPageKey(event) {
+  const pageButtons = Array.from(document.querySelectorAll(".paginator>button"));
+
+  if (pageButtons && (document.getElementsByClassName('pager').length > 0)) {
+    sessionStorage.setItem('currentselection', 0);
+    if (document.querySelectorAll(".pager")[0].children.length === 1) {
+      document.querySelectorAll(".pager")[0].children[0].click();
+    }
+    if (event.code === nextPageKey || event.code === nextKey) {
+      document.querySelectorAll(".pager")[0].children[1].click(); //next
+    } else {
+      document.querySelectorAll(".pager")[0].children[0].click(); //prev
+    }
+  }
+  // Jump next block of comments
+  if (event.code === nextPageKey) {
+    commentBlock = getNextEntrySameLevel(currentEntry);
+  }
+  // Jump previous block of comments
+  if (event.code === prevPageKey) {
+    commentBlock = getPrevEntrySameLevel(currentEntry);
+  }
+  if (commentBlock) {
+    if (expand) {
+      collapseEntry();
+    }
+    selectEntry(commentBlock, true);
+    if (expand) {
+      expandEntry();
+    }
+  }
+}
+
 function upVote() {
   identifyButtons();
 
