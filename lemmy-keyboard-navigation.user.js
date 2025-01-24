@@ -255,7 +255,12 @@ let backgroundHexDark = settings.backgroundHexDark;
 let backgroundHexLight = settings.backgroundHexLight;
 let expandOption = settings.expandOption;
 
-let majorversion = parseInt(document.getElementsByClassName("app-footer container-lg")[0].outerText.match(/^.*$/m)[0].match(/(?<=BE: )[^.\s].*/g)[0].match(/(?<=\.)(.*?)(?=\.)/g)[0]);
+let majorversion;
+try {
+  majorversion = parseInt(document.getElementsByClassName("app-footer container-lg")[0].outerText.match(/(?<=\.)\d+(?=\.)/g)[0]);
+} catch {
+  majorversion = 19;
+}
 
 // Set selected entry colors
 var backgroundColor = `${backgroundHexDark}`;
@@ -1226,7 +1231,14 @@ function clickLink(n) {
   }
 }
 
-function isExpanded() {
+function isExpanded(types) {
+  if (types = "comment") {
+    if (currentEntry.querySelector(".comment-content")) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   if (
     currentEntry.querySelector("a.d-inline-block:not(.thumbnail)") ||
     currentEntry.querySelector("#postContent") ||
@@ -1442,6 +1454,7 @@ function checkSelection() {
     }
   } else {
     selectionType = "comment";
+    let expandedStatus = isExpanded(selectionType);
     let contextButton = currentEntry.getElementsByClassName("btn btn-link btn-animate text-muted btn-sm");
     let contextButton2 = currentEntry.getElementsByClassName("btn btn-link btn-animate");
     let getButton2 = currentEntry.getElementsByClassName("btn btn-link btn-animate");
@@ -1454,12 +1467,14 @@ function checkSelection() {
         selectionType = `${selectionType}-context`;
       }
     } else {
-      if ((contextButton[0].href === contextButton2[1].href) || (contextButton[0].href === contextButton2[2].href) && (contextButton[0].href)) {
-        selectionType = `${selectionType}-context`;
+      if (expandedStatus) {
+        if ((contextButton[0].href === contextButton2[1].href) || (contextButton[0].href === contextButton2[2].href) && (contextButton[0].href)) {
+          selectionType = `${selectionType}-context`;
+        }
+        if ((getButton2[1].href === getButton2[3].href && getButton2[1].href) || (selectionType === "comment" && getButton2[1].href)) {
+          selectionType = `${selectionType}-fedi`;
+        }
       }
-    }
-    if ((getButton2[1].href === getButton2[3].href && getButton2[1].href) || (selectionType === "comment" && getButton2[1].href)) {
-      selectionType = `${selectionType}-fedi`;
     }
     if (window.location.pathname.includes("/inbox")) {
       selectionType = "comment-inbox";
