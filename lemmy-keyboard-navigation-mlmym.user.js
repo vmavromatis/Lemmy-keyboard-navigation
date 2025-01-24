@@ -316,6 +316,7 @@ const searchKey = `${settings.s_search}`
 const escapeKey = 'Escape';
 let currentlyExpanded = false;
 let modalMode = 0;
+var username;
 console.log(`modalMode: ${modalMode}`);
 
 // Stop arrows from moving the page if arrow key scrolling is disabled
@@ -1326,21 +1327,23 @@ function instanceAndUser(n) {
 var selectionType;
 function checkSelection() {
   let postSelection = document.getElementsByClassName("post selected")[0];
-  let username;
   let posterusername;
 
   try {
     username = document.querySelectorAll('body>nav>.right>a')[0].textContent;
+    if (username === "log in" || !username) {
+      username = false;
+    }
   } catch {
-    username = ''; // logged out
+    username = false; // logged out
   }
 
   if (postSelection) {
     selectionType = "post";
-    posterusername = currentEntry.querySelectorAll(".meta>a")[0].innerText;
+    posterusername = currentEntry.querySelector(".submitter").innerText.match(/^[^@]*/g)[0];
   } else {
     selectionType = "comment";
-    posterusername = currentEntry.querySelectorAll(".meta>a")[1].innerText;
+    posterusername = currentEntry.querySelector(".creator").innerText.match(/^[^@]*/g)[0];
   }
   if (username === posterusername) {
     selectionType = `my-${selectionType}`;
@@ -1359,26 +1362,28 @@ function identifyButtons() {
   checkSelection();
   let getButton = currentEntry.getElementsByClassName("buttons")[0].children;
   let voteButton = currentEntry.querySelector('.score>.link-btn');
-  upvoteButton = voteButton[0];
-  downvoteButton = voteButton[3];
+  if (voteButton) {
+    upvoteButton = voteButton[0];
+    downvoteButton = voteButton[3];
+  }
   // posts
   if (selectionType === "post" || selectionType === "my-post") { // posts on link pages
     commentButton = getButton[0];
     if (selectionType === "my-post") { // add edit button if the post is yours
-      editButton = getButton[2];
+      editButton = getButton[4];
+      saveButton = getButton[6].children[2];
+    } else if (username) {
       saveButton = getButton[4].children[2];
-    } else {
-      saveButton = getButton[2].children[2];
     }
   } else if (selectionType === "comment" || selectionType === "my-comment") {
     contextButton = getButton[0].children[0];
     if (selectionType === "my-comment") {
       saveButton = getButton[5].children[0].children[2];
       editButton = getButton[3].children[0];
-      replyButton = getButton[6].children[0];
-    } else {
+      replyButton = getButton[8].children[0];
+    } else if (username) {
       saveButton = getButton[3].children[0].children[2];
-      replyButton = getButton[4].children[0];
+      replyButton = getButton[6].children[0];
     }
   }
 }
