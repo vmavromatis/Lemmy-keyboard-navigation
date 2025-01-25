@@ -51,6 +51,7 @@ function options(open) {
         optionsLink: true,
         enableArrowKeyScrolling: true,
         autoNext: false,
+        autoNextCollapse: false,
         autoPage: false,
         openNewTab: false,
         smoothScroll: false,
@@ -105,6 +106,9 @@ function options(open) {
 
     userOptions.autoNext =
       document.getElementById("option_autoNext").checked;
+
+    userOptions.autoNextCollapse =
+      document.getElementById("option_autoNextCollapse").checked;
 
     userOptions.autoPage =
       document.getElementById("option_autoPage").checked;
@@ -246,6 +250,7 @@ let optionsLink = checkedIfTrue(settings.optionsLink);
 let enableArrowKeyScrolling = checkedIfTrue(settings.enableArrowKeyScrolling);
 let smoothScroll = checkedIfTrue(settings.smoothScroll);
 let autoNext = checkedIfTrue(settings.autoNext);
+let autoNextCollapse = checkedIfTrue(settings.autoNextCollapse);
 let autoPage = checkedIfTrue(settings.autoPage);
 let openNewTab = checkedIfTrue(settings.openNewTab);
 let pageOffset = window.innerHeight * settings.pageOffset / 100;
@@ -407,6 +412,10 @@ odiv.innerHTML = `
       <tr>
         <td><b>Skip to next selection after voting</b><br/>After upvoting/downvoting a post,</br>select the next one.</br></br></td>
         <td><input type='checkbox' id='option_autoNext' ${autoNext} /></td>
+      </tr>
+      <tr>
+        <td><b>Skip to next selection after collapse</b><br/>After collapsing a comment,</br>select the next one.</br></br></td>
+        <td><input type='checkbox' id='option_autoNextCollapse' ${autoNextCollapse} /></td>
       </tr>
       <tr>
         <td><b>Auto Next/Prev Page</b><br/>Skip to the next/previous page when the Next/Prev Page</br>Key is pressed when the last post is selected.</br></br></td>
@@ -813,6 +822,7 @@ function handleKeyPress(event) {
           } else {
             toggleExpand();
             expand = isExpanded() ? true : false;
+            previousKey(event);
           }
           break;
         case smallerImgKey:
@@ -1231,14 +1241,7 @@ function clickLink(n) {
   }
 }
 
-function isExpanded(types) {
-  if (types = "comment") {
-    if (currentEntry.querySelector(".comment-content")) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+function isExpanded() {
   if (
     currentEntry.querySelector("a.d-inline-block:not(.thumbnail)") ||
     currentEntry.querySelector("#postContent") ||
@@ -1248,6 +1251,14 @@ function isExpanded(types) {
   }
 
   return false;
+}
+
+function isExpandedComment() {
+  if (currentEntry.querySelector(".comment-content")) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 function previousKey(event) {
@@ -1279,6 +1290,14 @@ function previousKey(event) {
   if (event.code === upvoteKey || event.code === downvoteKey) {
     if (autoNext) {
       selectedEntry = getNextEntry(currentEntry);
+    }
+  }
+  if (event.code === expandKey) {
+    if (autoNextCollapse) {
+      checkSelection();
+      if (!expandedStatus && isComment) {
+        selectedEntry = getNextEntry(currentEntry);
+      }
     }
   }
   if (selectedEntry) {
@@ -1421,6 +1440,8 @@ function instanceAndUser(n) {
 }
 
 var selectionType;
+var expandedStatus;
+var isComment;
 function checkSelection() {
   let postSelection = document.getElementsByClassName("post-listing mt-2 selected")[0];
   let username;
@@ -1433,6 +1454,7 @@ function checkSelection() {
   let contextCheck;
 
   if (postSelection) {
+    isComment = false;
     selectionType = "post";
       if (posterusername === username) {
           selectionType = `my-${selectionType}`;
@@ -1441,7 +1463,7 @@ function checkSelection() {
     try {
       if ((contextCheck.href.match(/^(?:https?:\/\/)?(?:[^\/])?([^:\/?\n]+)/g)[0] !== window.location.origin) && (posterusername !== username)) {
         selectionType = `${selectionType}-fedi`;
-      } 
+      }
     } catch {}
 
     if (window.location.pathname.includes("/post/")) {
@@ -1453,8 +1475,9 @@ function checkSelection() {
       }
     }
   } else {
+    isComment = true;
     selectionType = "comment";
-    let expandedStatus = isExpanded(selectionType);
+    expandedStatus = isExpandedComment();
     let contextButton = currentEntry.getElementsByClassName("btn btn-link btn-animate text-muted btn-sm");
     let contextButton2 = currentEntry.getElementsByClassName("btn btn-link btn-animate");
     let getButton2 = currentEntry.getElementsByClassName("btn btn-link btn-animate");
@@ -1546,9 +1569,9 @@ function identifyButtons() {
     }
   } else { // Lemmy 0.19+
     if (selectionType === "post" || selectionType === "my-post") { // posts on link pages
-      upvoteButton = getButton[0];
-      downvoteButton = getButton[1];
-      saveButton = getButton[2];
+      upvoteButton = getButton[1];
+      downvoteButton = getButton[2];
+      saveButton = getButton[3];
       commentButton = currentEntry.getElementsByClassName("btn btn-link btn-sm text-muted ps-0")[1];
       if (selectionType === "my-post") { // add edit button if the post is yours
         editButton = currentEntry.getElementsByClassName("btn btn-link btn-sm d-flex align-items-center rounded-0 dropdown-item")[2];
