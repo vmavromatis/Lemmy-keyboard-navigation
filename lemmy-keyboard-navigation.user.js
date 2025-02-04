@@ -1,6 +1,7 @@
 // ==UserScript==
 // @name          lemmy-keyboard-navigation
 // @match         https://*/*
+// @include       https://*/*
 // @grant         none
 // @version       2.6
 // @author        vmavromatis
@@ -822,7 +823,6 @@ function handleKeyPress(event) {
           } else {
             toggleExpand();
             expand = isExpanded() ? true : false;
-            previousKey(event);
           }
           break;
         case smallerImgKey:
@@ -1021,11 +1021,23 @@ function handleKeyPress(event) {
 
 function getNextEntry(e) {
   const currentEntryIndex = Array.from(entries).indexOf(e);
+  var nextEntry = entries[currentEntryIndex + 1];
+  var nextIndex = currentEntryIndex + 1;
 
   if (currentEntryIndex + 1 >= entries.length) {
-    return e;
+    nextEntry = e;
   }
-  return entries[currentEntryIndex + 1];
+
+  for (let i = 0; i < entries.length; i++) {
+    if (!nextEntry.isConnected || nextEntry.clientHeight === 0) {
+      nextEntry = entries[nextIndex + 1];
+      nextIndex += 1;
+    } else {
+      break;
+    }
+  }
+
+  return nextEntry;
 }
 
 function getPrevEntry(e) {
@@ -1040,14 +1052,18 @@ function getPrevEntry(e) {
   return entries[currentEntryIndex - 1];
 }
 
-function getNextEntrySameLevel(e) {
-  const nextSibling = e.parentElement.nextElementSibling;
 
-  if (!nextSibling || nextSibling.getElementsByTagName("article").length < 1) {
-    return getNextEntry(e);
+function getNextEntrySameLevel(e) {
+  var nextSameLevel;
+
+  toggleExpand(false);
+  try {
+    nextSameLevel = getNextEntry(e);
+  } catch {} finally {
+    toggleExpand(false);
   }
 
-  return nextSibling.getElementsByTagName("article")[0];
+  return nextSameLevel;
 }
 
 function getPrevEntrySameLevel(e) {
@@ -1122,19 +1138,21 @@ function clickEntry(event) {
   const e = event.currentTarget;
   const target = event.target;
 
-  // Deselect if already selected, also ignore if clicking on any link/button
-  if (e === currentEntry && e.classList.contains(selectedClass) &&
-    !(
-      target.tagName.toLowerCase() === "button" || target.tagName.toLowerCase() === "a" ||
-      target.parentElement.tagName.toLowerCase() === "button" ||
-      target.parentElement.tagName.toLowerCase() === "a" ||
-      target.parentElement.parentElement.tagName.toLowerCase() === "button" ||
-      target.parentElement.parentElement.tagName.toLowerCase() === "a"
-    )
-  ) {
-    e.classList.remove(selectedClass);
-  } else {
-    selectEntry(e);
+  if (!(target.parentElement.querySelector(".ms-1>button"))) {
+    // Deselect if already selected, also ignore if clicking on any link/button
+    if (e === currentEntry && e.classList.contains(selectedClass) &&
+      !(
+        target.tagName.toLowerCase() === "button" || target.tagName.toLowerCase() === "a" ||
+        target.parentElement.tagName.toLowerCase() === "button" ||
+        target.parentElement.tagName.toLowerCase() === "a" ||
+        target.parentElement.parentElement.tagName.toLowerCase() === "button" ||
+        target.parentElement.parentElement.tagName.toLowerCase() === "a"
+      )
+    ) {
+      e.classList.remove(selectedClass);
+    } else {
+      selectEntry(e);
+    }
   }
 }
 
@@ -1292,14 +1310,6 @@ function previousKey(event) {
       selectedEntry = getNextEntry(currentEntry);
     }
   }
-  if (event.code === expandKey) {
-    if (autoNextCollapse) {
-      checkSelection();
-      if (!expandedStatus && isComment) {
-        selectedEntry = getNextEntry(currentEntry);
-      }
-    }
-  }
   if (selectedEntry) {
     if (expand) {
       collapseEntry();
@@ -1445,12 +1455,17 @@ var isComment;
 function checkSelection() {
   let postSelection = document.getElementsByClassName("post-listing mt-2 selected")[0];
   let username;
+  let posterusername;  
   try {
     username = '@' + document.getElementsByClassName("btn dropdown-toggle")[0].textContent;
   } catch {
-    username = ''; // logged out
+    username = false; // logged out
   }
-  let posterusername = currentEntry.getElementsByClassName("person-listing d-inline-flex align-items-baseline text-info")[0].innerText;
+  try {
+    posterusername = currentEntry.getElementsByClassName("person-listing d-inline-flex align-items-baseline text-info")[0].innerText;
+  } catch {
+    posterusername = false;
+  }
   let contextCheck;
 
   if (postSelection) {
@@ -1467,11 +1482,15 @@ function checkSelection() {
     } catch {}
 
     if (window.location.pathname.includes("/post/")) {
-      contextCheck = currentEntry.getElementsByClassName("btn btn-link btn-animate")[9].href; // check for direct link button
-      if (contextCheck === `${window.location.origin}/create_post` || !/(.@)/g.test(currentEntry.getElementsByClassName("person-listing d-inline-flex align-items-baseline text-info")[0].href)) {
-        selectionType = `${selectionType}-page`;
+      if (username) {
+        contextCheck = currentEntry.getElementsByClassName("btn btn-link btn-animate")[9].href; // check for direct link button
+        if (contextCheck === `${window.location.origin}/create_post` || !/(.@)/g.test(currentEntry.getElementsByClassName("person-listing d-inline-flex align-items-baseline text-info")[0].href)) {
+          selectionType = `${selectionType}-page`;
+        } else {
+          selectionType = "post-page-fedi"
+        }
       } else {
-        selectionType = "post-page-fedi"
+        selectionType = "post-page"
       }
     }
   } else {
@@ -1485,19 +1504,23 @@ function checkSelection() {
     if (username === posterusername) {
       selectionType = `my-${selectionType}`
     }
-    if (majorversion <= 18) {
-      if ((getButton2[0].href === getButton2[2].href) && (getButton2[0].href)) {
-        selectionType = `${selectionType}-context`;
-      }
-    } else {
-      if (expandedStatus) {
-        if ((contextButton[0].href === contextButton2[1].href) || (contextButton[0].href === contextButton2[2].href) && (contextButton[0].href)) {
+    if (username && getButton2[2]) {
+      if (majorversion <= 18) {
+        if ((getButton2[0].href === getButton2[2].href) && (getButton2[0].href)) {
           selectionType = `${selectionType}-context`;
         }
-        if ((getButton2[1].href === getButton2[3].href && getButton2[1].href) || (selectionType === "comment" && getButton2[1].href)) {
-          selectionType = `${selectionType}-fedi`;
+      } else {
+        if (expandedStatus) {
+          if ((contextButton[0].href === contextButton2[1].href) || (contextButton[0].href === contextButton2[2].href) && (contextButton[0].href)) {
+            selectionType = `${selectionType}-context`;
+          }
+          if ((getButton2[1].href === getButton2[3].href && getButton2[1].href) || (selectionType === "comment" && getButton2[1].href)) {
+            selectionType = `${selectionType}-fedi`;
+          }
         }
       }
+    } else {
+      selectionType = "comment-noaction"
     }
     if (window.location.pathname.includes("/inbox")) {
       selectionType = "comment-inbox";
@@ -1753,7 +1776,7 @@ function edit() {
   }
 }
 
-function toggleExpand() {
+function toggleExpand(n = true) {
   const expandButton = currentEntry.getElementsByClassName("thumbnail rounded overflow-hidden d-inline-block bg-transparent")[0];
   const textExpandButton = currentEntry.querySelector(".post-title>button");
   const videoexpandButton = currentEntry.getElementsByClassName("thumbnail rounded bg-light d-flex justify-content-center")[0];
@@ -1800,7 +1823,12 @@ function toggleExpand() {
   }
 
   if (commentExpandButton) {
-    commentExpandButton.click();
+    if (autoNextCollapse && n) {
+      commentExpandButton.click();
+      selectEntry(getNextEntry(currentEntry), true);
+    } else {
+      commentExpandButton.click();
+    }
   }
 
   if (moreExpandButton) {
