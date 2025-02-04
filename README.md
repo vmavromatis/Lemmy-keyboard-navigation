@@ -131,7 +131,7 @@ Then upload the zipped file to publish new version.
 
 ## Licence & Credits: 
 - GPL 3.0
-- Initially based on boobslider100's [script](https://lemmy.world/post/10035360)
+- Initially based on boobslider100's [script](https://lemmy.world/post/1003536)
 - Major contributions and HJKL support by @aglidden
 - Rebased entirely from @InfinibyteF4 to support extra features like Save Comment/Post (S) , View Community (R) and bugfixes
 
