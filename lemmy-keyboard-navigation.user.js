@@ -1823,7 +1823,7 @@ function toggleExpand(n = true) {
   }
 
   if (commentExpandButton) {
-    if (autoNextCollapse && n) {
+    if (autoNextCollapse && n && isExpandedComment()) {
       commentExpandButton.click();
       selectEntry(getNextEntry(currentEntry), true);
     } else {
