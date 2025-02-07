@@ -26,13 +26,6 @@ console.log(`This userscript doesn't currently work with endless scrolling/auto 
 localStorage.setItem('endlessScrolling', false);
 localStorage.setItem('autoLoad', false);
 
-// set background color based on if dark mode is on or not
-let background;
-if (document.getElementsByClassName("dark").length >= 1) {
-  background = '#303030';
-} else {
-  background = '#f0f3fc';
-}
 // settings page (this is from lemmyTools)
 const optionsKey = "mlmym-keyboard-navigation-Options";
 
@@ -66,8 +59,8 @@ function options(open) {
         openNewTab: false,
         smoothScroll: false,
         scrollPosition: "middle",
-        backgroundHexDark: "#303030",
-        backgroundHexLight: "#f0f3fc",
+        backgroundRGBA: "rgba(141, 141, 141, 0.1)",
+        kb_fixButton: "KeyW",
         kb_prevPage: "KeyH",
         kb_nextPage: "KeyL",
         kb_prevKey: "KeyK",
@@ -142,12 +135,12 @@ function options(open) {
     userOptions.scrollPosition =
       document.getElementById("option_scrollPosition").value;
 
-    userOptions.backgroundHexDark =
-      document.getElementById("option_backgroundHexDark").value;
-
-    userOptions.backgroundHexLight =
-      document.getElementById("option_backgroundHexLight").value;
+    userOptions.backgroundRGBA =
+      document.getElementById("option_backgroundRGBA").value;
     //keybinds
+    userOptions.kb_fixButton =
+      document.getElementById("option_kb_fixButton").value;
+
     userOptions.kb_prevPage =
       document.getElementById("option_kb_prevPage").value;
 
@@ -259,16 +252,13 @@ let expandNext = checkedIfTrue(settings.expandNext);
 let openNewTab = checkedIfTrue(settings.openNewTab);
 let pageOffset = window.innerHeight * settings.pageOffset / 100;
 let scrollPosition = settings.scrollPosition;
-let backgroundHexDark = settings.backgroundHexDark;
-let backgroundHexLight = settings.backgroundHexLight;
+let backgroundRGBA = settings.backgroundRGBA;
 let mlmymFixButton = checkedIfTrue(settings.mlmymFixButton);
 
 // Set selected entry colors
-var backgroundColor = `${backgroundHexLight}`;
-if (document.getElementsByClassName("dark").length >= 1) {
-  backgroundColor = `${backgroundHexDark}`;
-}
+var backgroundColor = `${backgroundRGBA}`;
 
+const fixKey = `${settings.kb_fixButton}`
 const nextPageKey = `${settings.kb_nextPage}`;
 const prevPageKey = `${settings.kb_prevPage}`;
 const nextKey = `${settings.kb_nextKey}`;
@@ -394,7 +384,7 @@ odiv.innerHTML = `
     </tr>
     <tbody>
       <tr>
-        <td><b>Enable mlmym fix selections button</b><br/>Click this button if you can't select a post or comment.<br/>Uncheck to hide this button.</td>
+        <td><b>Enable mlmym fix selections button</b><br/>Click this button if you can't select a post or comment.<br/>Uncheck to hide this button.<br/>A keybind is also available.</td>
         <td><input type='checkbox' id='option_mlmymFixButton' ${mlmymFixButton} /></td>
       </tr>
       <tr>
@@ -439,17 +429,17 @@ odiv.innerHTML = `
             </select></td>
       </tr>
       <tr>
-        <td><b>Selected Hex Code (Dark Mode)</b><br/>The background color of selected posts/comments.<br/>Default: #303030</td>
-        <td><textarea id='option_backgroundHexDark'>${settings.backgroundHexDark}</textarea></td>
-      </tr>
-      <tr>
-        <td><b>Selected Hex Code (Light Mode)</b><br/>The background color of selected posts/comments.<br/>Default: #f0f3fc</td>
-        <td><textarea id='option_backgroundHexLight'>${settings.backgroundHexLight}</textarea></td>
+        <td><b>Selected Background Color</b><br/>The background color of selected posts/comments.<br/>The first three values are red, green, and blue.<br/>The last value is alpha, which is transparency.<br/>Default: rgba(141, 141, 141, 0.1)</br></br></td>
+        <td><textarea id='option_backgroundRGBA'>${settings.backgroundRGBA}</textarea></td>
       </tr>
       <tr>
           <td><h3><b>Rebind Keys</b></h3>Set keybinds with keycodes here:<br/><a href='https://www.toptal.com/developers/keycode'>https://www.toptal.com/developers/keycode</a></td><td><td/>
       </tr>
       <tr>
+      <tr>
+        <td><b>Mlmym Fix Keybind</b><br/>Press this key if you can't select a post or comment.<br/>Default: KeyW</td>
+        <td><textarea id='option_kb_fixButton'>${settings.kb_fixButton}</textarea></td>
+      </tr>
       <tr>
         <td><b>Next Page Key</b><br/>Go to the next page.<br/>Default: KeyL</td>
         <td><textarea id='option_kb_nextPage'>${settings.kb_nextPage}</textarea></td>
@@ -628,7 +618,8 @@ let styleString = `
   z-index: 1000;
   padding: 0.5%;
   margin-top:35px;
-  background-color: ${background};
+  background-color: #bababa;
+  color: #000000;
 }
 
 .lmfix {
@@ -789,6 +780,9 @@ function handleKeyPress(event) {
   switch (modalMode) {
     case modalMode = 0:
       switch (event.code) {
+        case fixKey:
+          call();
+          break;
         case nextKey:
         case prevKey:
           previousKey(event);
