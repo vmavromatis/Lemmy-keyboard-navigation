@@ -58,9 +58,7 @@ function options(open) {
         smoothScroll: false,
         scrollPosition: "middle",
         expandOption: "both",
-        colorOption: "auto",
-        backgroundHexDark: "#373737",
-        backgroundHexLight: "#dadbdd",
+        backgroundRGBA: "rgba(141, 141, 141, 0.1)",
         kb_prevPage: "KeyH",
         kb_nextPage: "KeyL",
         kb_prevKey: "KeyK",
@@ -135,14 +133,8 @@ function options(open) {
     userOptions.expandOption =
     document.getElementById("option_expandOption").value;
 
-    userOptions.colorOption =
-      document.getElementById("option_colorOption").value;
-
-    userOptions.backgroundHexDark =
-      document.getElementById("option_backgroundHexDark").value;
-
-    userOptions.backgroundHexLight =
-      document.getElementById("option_backgroundHexLight").value;
+    userOptions.backgroundRGBA =
+      document.getElementById("option_backgroundRGBA").value;
 
     //keybinds
     userOptions.kb_prevPage =
@@ -256,9 +248,7 @@ let autoPage = checkedIfTrue(settings.autoPage);
 let openNewTab = checkedIfTrue(settings.openNewTab);
 let pageOffset = window.innerHeight * settings.pageOffset / 100;
 let scrollPosition = settings.scrollPosition;
-let colorOption = settings.colorOption;
-let backgroundHexDark = settings.backgroundHexDark;
-let backgroundHexLight = settings.backgroundHexLight;
+let backgroundRGBA = settings.backgroundRGBA;
 let expandOption = settings.expandOption;
 
 let majorversion;
@@ -269,16 +259,7 @@ try {
 }
 
 // Set selected entry colors
-var backgroundColor = `${backgroundHexDark}`;
-var textColor = 'white';
-if (document.getElementById("app").getAttribute("data-bs-theme") === "light" || colorOption === "light") {
-  backgroundColor = `${backgroundHexLight}`;
-  textColor = 'black';
-}
-if (colorOption === "dark") {
-  backgroundColor = `${backgroundHexDark}`;
-  textColor = 'white';
-}
+var backgroundColor = `${backgroundRGBA}`;
 
 const nextPageKey = `${settings.kb_nextPage}`;
 const prevPageKey = `${settings.kb_prevPage}`;
@@ -342,8 +323,8 @@ document.documentElement.style = "scroll-behavior: auto";
 const css = `
   .selected {
     background-color: ${backgroundColor} !important;
-    color: ${textColor};
-    }`;
+  }
+`;
 
 // add an options button in the nav bar
 navbarLinks();
@@ -452,21 +433,8 @@ odiv.innerHTML = `
             </select></td>
       </tr>
       <tr>
-        <td><b>Selection Dark/Light Mode</b><br/>auto: automatically detect light/dark mode<br/>dark: set selections to dark mode<br/>light: set selections to light mode</br></br></td>
-        <td><select id="option_colorOption">
-            <option value='${settings.colorOption}'>${settings.colorOption}</option>
-            <option value='auto'>auto</option>
-            <option value='dark'>dark</option>
-            <option value='light'>light</option>
-            </select></td>
-      </tr>
-      <tr>
-        <td><b>Selected Hex Code (Dark Mode)</b><br/>The background color of selected posts/comments.<br/>Default: #373737</br></br></td>
-        <td><textarea id='option_backgroundHexDark'>${settings.backgroundHexDark}</textarea></td>
-      </tr>
-      <tr>
-        <td><b>Selected Hex Code (Light Mode)</b><br/>The background color of selected posts/comments.<br/>Default: #dadbdd</br></br></td>
-        <td><textarea id='option_backgroundHexLight'>${settings.backgroundHexLight}</textarea></td>
+        <td><b>Selected Background Color</b><br/>The background color of selected posts/comments.<br/>The first three values are red, green, and blue.<br/>The last value is alpha, which is transparency.<br/>Default: rgba(141, 141, 141, 0.1)</br></br></td>
+        <td><textarea id='option_backgroundRGBA'>${settings.backgroundRGBA}</textarea></td>
       </tr>
       <tr>
           <td><h3><b>Rebind Keys</b></h3>Set keybinds with keycodes here:<br/><a href='https://www.toptal.com/developers/keycode'>https://www.toptal.com/developers/keycode</a></td><td><td/>
